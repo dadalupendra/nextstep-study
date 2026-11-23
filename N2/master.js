@@ -69,6 +69,15 @@ async function fetchJson(url){
  finally{clearTimeout(timeout)}
 }
 async function fetchType(type){
+ if(type==='vocab'&&window.NEXTSTEP_N2_DATA&&Array.isArray(window.NEXTSTEP_N2_DATA.words)){
+  const source=window.NEXTSTEP_N2_DATA;
+  if(source.level!=='N2')throw new Error('Wrong vocabulary level.');
+  return source.words.map((w,i)=>({
+   id:w[3]||'n2-'+i,word:w[0],reading:w[1],
+   meanings:[w[2]],level:'N2',pos:String(w[4]||'').split(',').map(s=>s.trim()).filter(Boolean),
+   examples:[{ja:w[5]||'',en:w[6]||'',furigana:w[9]||''},{ja:w[7]||'',en:w[8]||'',furigana:w[10]||''}].filter(e=>e.ja)
+  }));
+ }
  const urls=[`${ROOT}data/${type}.json`,sourceUrl(type),mirrorUrl(type)];let error;
  for(let idx=0;idx<urls.length;idx++){
    const url=urls[idx];
