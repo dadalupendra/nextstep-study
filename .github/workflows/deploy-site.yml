@@ -5,6 +5,9 @@ on:
     branches: [main]
     paths:
       - 'index.html'
+      - 'community-config.js'
+      - 'feedback/**'
+      - 'scripts/test-feedback.cjs'
       - 'kanji-compounds.js'
       - 'daily-100.js'
       - 'daily-reminder.js'
@@ -84,6 +87,10 @@ jobs:
           node --check exams/studio.js
           node --check daily-100.js
           node --check daily-reminder.js
+          node --check community-config.js
+          node --check feedback/feedback.js
+          test -s feedback/index.html
+          test -s feedback/feedback.css
           test -s daily-reminder.css
           test -s exams/studio.css
 
@@ -91,12 +98,13 @@ jobs:
         run: |
           set -eu
           mkdir -p public-site
-          cp index.html kanji-compounds.js daily-100.js daily-reminder.js daily-reminder.css public-site/
+          cp index.html kanji-compounds.js daily-100.js daily-reminder.js daily-reminder.css community-config.js public-site/
           node --check kanji-compounds.js
           cp manifest.webmanifest sw.js public-site/
           mkdir -p public-site/icons
           cp icons/icon.svg public-site/icons/
           cp -R install public-site/
+          cp -R feedback public-site/
           cp -R exams public-site/
           cp .nojekyll public-site/
           for level in N1 N2 N3 N4 N5; do
@@ -146,6 +154,9 @@ jobs:
 
       - name: Test daily challenge navigation and saved progress in mobile browser
         run: node scripts/test-daily-100-browser.cjs public-site
+
+      - name: Test Facebook and GitHub feedback UI and privacy-safe submission flow
+        run: node scripts/test-feedback.cjs public-site
 
       - name: Test opt-in Today’s Challenge reminders and notification click support
         run: node scripts/test-daily-reminder.cjs public-site
