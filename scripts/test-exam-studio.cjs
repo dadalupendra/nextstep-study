@@ -27,7 +27,18 @@ let browser;
   // Exercise the unchanged UI separately with explicitly test-only fixture mode.
   await page.evaluate(()=>{
    const original=window.NextStepExamAPI.load;
-   window.NextStepExamAPI.load=(level,paper)=>original(level,paper,{requireVerified:false});
+   // These fixtures exist ONLY in the Playwright browser test.
+   // Production continues to block incomplete and audio-less papers.
+   window.NextStepExamAPI.load=async(level,paper)=>{
+    const result=await original(level,paper,{requireVerified:false});
+    return result.map((q,i)=>q.pending?{
+      type:q.type,verified:true,listen:q.type==='聴解',
+      prompt:'【テスト専用】番号 '+(i+1)+' の日本語を選んでください。\\n【質問】正しい答えはどれですか。',
+      passage:'女：テストの音声です。\\n男：はい、わかりました。',
+      options:['正しい答え','ほかの答え','別の答え','四番の答え'],answer:0,
+      choiceExplanations:Array.from({length:4},()=>({ja:'テスト専用です。',en:'Test fixture only.',ne:'परीक्षणका लागि मात्र।'}))
+    }:q);
+   };
   });
   await page.locator('#studio-start').click();
   await page.locator('#studio-test:not([hidden])').waitFor({timeout:14000});
