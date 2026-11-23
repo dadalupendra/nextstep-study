@@ -37,7 +37,7 @@ function chapterItems(book,ch){
      if(!correct){throw Error("No reading for kanji "+char)}
      const readPool=word?W.filter(x=>x[0]!==x[1]).map(x=>x[1]):K.map(x=>[...(x[3]||[]),...(x[4]||[])][0]).filter(Boolean);
      const label=word?"Choose the listed reading of this N2 vocabulary word:":"Choose an attested reading of this N2-tagged character:";
-     const display=word?word[0]:char;
+     const display=word?char+" → "+word[0]:char;
      const why={
        en:"Correct reading: "+correct+". Kanji "+char+" — "+(meanings||[]).join(", ")+". On-yomi: "+(on||[]).join(", ")+"; kun-yomi: "+(kun||[]).join(", ")+". "+(word?"The example word "+word[0]+" has this reading in the N2-tagged vocabulary data.":"The question tests one reading of the highlighted character, not a compound word."),
        ne:"सही पढाइ: "+correct+"। यो N2 वर्गीकरणको कान्जी "+char+" हो। अर्थ: "+(meanings||[]).slice(0,2).join(", ")+"। Onyomi "+(on||[]).join(", ")+" र Kunyomi "+(kun||[]).join(", ")+" तुलना गरेर सम्झनुहोस्।",
@@ -114,6 +114,31 @@ function chapterItems(book,ch){
  if(a.some(x=>x.options.length!==4||x.answer<0||x.answer>3||new Set(x.options).size!==4))throw Error("Invalid choices "+book+"/"+ch);
  return a;
 }
+
+function distractorNote(q,option,index){
+ if(index===q.answer)return "Correct. This choice agrees with the target N2 item and the recorded meaning, reading or formation in the explanation above.";
+ const book=q.id.split("-")[0];
+ if(book==="kanji"){
+   if(q.kind==="reading"){
+     const word=W.find(x=>x[1]===option);
+     const k=K.find(x=>(x[3]||[]).includes(option)||(x[4]||[]).includes(option));
+     return word?"Incorrect. The reading "+option+" occurs in the different N2-tagged vocabulary word "+word[0]+".":k?"Incorrect. The reading "+option+" is associated with another N2-tagged kanji: "+k[0]+".":"Incorrect. This is not the recorded reading of the highlighted character or target word.";
+   }
+   const other=K.find(x=>(x[2]||[])[0]===option);
+   return other?"Incorrect. The primary meaning "+option+" is listed for another N2 character, "+other[0]+".":"Incorrect. This meaning does not match the highlighted character.";
+ }
+ if(book==="vocab"){
+   if(q.kind==="reading"){
+     const other=W.find(x=>x[1]===option);
+     return other?"Incorrect. The reading "+option+" is listed for the different N2 vocabulary word "+other[0]+".":"Incorrect. This is not the target word's recorded reading.";
+   }
+   const other=W.find(x=>(x[2]||"").split("; ")[0]===option);
+   return other?"Incorrect. This gloss is listed for another N2 vocabulary item, "+other[0]+"（"+other[1]+"）.":"Incorrect. It is not the target word's main recorded English gloss.";
+ }
+ const g=GR.find(x=>x[0]===option||x[1]===option||x[4]===option||x[6]===option);
+ return g?"Incorrect. This option describes another N2 pattern, "+g[0]+", whose meaning is "+g[1]+".":"Incorrect. This choice does not match the tested grammar pattern.";
+}
+
 window.NEXTSTEP_N2_MAKE_QUIZ=chapterItems;
 function boot(){
  const holder=document.getElementById("quizroot");if(!holder)return;
@@ -130,7 +155,7 @@ function boot(){
    $("quiztitle").textContent="JLPT N2 "+title[book]+" — Chapter "+chap+" / 10";
    $("sub").textContent="50 original N2-tagged multiple-choice practice questions · one chapter · detailed answer explanations after grading.";
    $("progress").textContent="0 / 50 answered";$("grade").classList.remove("hide");$("summary").innerHTML="";
-   holder.innerHTML=list.map((q,i)=>'<fieldset class="qitem" data-qi="'+i+'"><legend><strong>Q'+(i+1)+' / 50.</strong> '+esc(q.prompt)+'</legend><div class="prompt-ja">'+JP(q.source).replace(/\n/g,"<br>")+'</div><div class="option-list">'+q.options.map((o,j)=>'<label class="choice"><input type="radio" name="q'+i+'" value="'+j+'" data-q="'+i+'"><span class="opttext">'+esc(o)+'</span></label>').join("")+'</div><details class="explanation hide" id="explain-'+i+'"><summary>Detailed answer explanation · विस्तृत व्याख्या</summary><p><b>Correct answer:</b> '+esc(q.options[q.answer])+'</p><p>'+esc(q.why.en)+'</p><p>'+NE(q.why.ne)+'</p><p>'+JP(q.why.ja)+'</p></details></fieldset>').join("");
+   holder.innerHTML=list.map((q,i)=>'<fieldset class="qitem" data-qi="'+i+'"><legend><strong>Q'+(i+1)+' / 50.</strong> '+esc(q.prompt)+'</legend><div class="prompt-ja">'+JP(q.source).replace(/\n/g,"<br>")+'</div><div class="option-list">'+q.options.map((o,j)=>'<label class="choice"><input type="radio" name="q'+i+'" value="'+j+'" data-q="'+i+'"><span class="opttext">'+esc(o)+'</span></label>').join("")+'</div><details class="explanation hide" id="explain-'+i+'"><summary>Detailed answer explanation · विस्तृत व्याख्या</summary><p><b>Correct answer:</b> '+esc(q.options[q.answer])+'</p><p>'+esc(q.why.en)+'</p><p>'+NE(q.why.ne)+'</p><p>'+JP(q.why.ja)+'</p><h4>Why each option is correct or incorrect</h4><ol>'+q.options.map((v,j)=>'<li><b>'+esc(v)+'</b> — '+esc(distractorNote(q,v,j))+'</li>').join('')+'</ol></details></fieldset>').join("");
    holder.querySelectorAll('input[type="radio"]').forEach(x=>x.addEventListener("change",e=>{
      answered[+e.target.dataset.q]=+e.target.value;$("progress").textContent=Object.keys(answered).length+" / 50 answered";
    }));
