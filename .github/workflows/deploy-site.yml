@@ -48,6 +48,11 @@ jobs:
             test -s "$page" || { echo "Missing: $page"; exit 1; }
           done
           node scripts/test-n2.cjs
+          test -s exams/index.html
+          test -s exams/app.js
+          test -s exams/full-papers.js
+          node --check exams/app.js
+          node --check exams/full-papers.js
 
       - name: Create a reader-only publishing folder
         run: |
