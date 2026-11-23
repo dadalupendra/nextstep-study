@@ -1,5 +1,5 @@
-/* NextStep Exam Studio — original Bunpro-inspired examination UI.
-   No Bunpro content is reused. Questions are supplied by NextStepExamAPI.
+/* NextStep Exam Studio — original NextStep Study examination interface.
+   Questions are supplied by NextStepExamAPI.
    This is educational practice, NOT an official JLPT mock exam. */
 (function(){
 'use strict';
