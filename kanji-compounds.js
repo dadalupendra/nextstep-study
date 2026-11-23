@@ -146,12 +146,13 @@ function renderList(){
  const shown=all.slice(0,limit),hasFurigana=document.getElementById('furiganaToggle')?.checked!==false;
  rootEl.querySelector('#ns-compounds-count').textContent=all.length+' matches · '+shown.length+' displayed';
  const list=rootEl.querySelector('#ns-compounds-list');
+ const expanded=new Set(Array.from(list.querySelectorAll('details[open][data-word]'),el=>el.dataset.word));
  list.innerHTML=shown.length?shown.map(item=>{
   const id=known.indexOf(item),mean=item.meanings.join('; '),description=item.reading?
    '「'+item.word+'」の読み方は「'+item.reading+'」です。'+(mean?' 英語の意味: '+mean+'。':''):
    'この熟語の読み方・意味は、現在の語彙データにありません。';
   const sentence=item.examples.find(x=>x?.ja);
-  return '<details class="ns-compound-item"><summary><span class="ns-compound-word" lang="ja">'+esc(item.word)+'</span><span class="ns-compound-reading" lang="ja">'+esc(item.reading||'読み未収録')+'</span>'+
+  return '<details class="ns-compound-item" data-word="'+esc(item.word)+'"><summary><span class="ns-compound-word" lang="ja">'+esc(item.word)+'</span><span class="ns-compound-reading" lang="ja">'+esc(item.reading||'読み未収録')+'</span>'+
   '<span class="ns-compound-gloss">'+esc(mean||'Meaning not in source')+'</span></summary>'+
   '<div class="ns-compound-details"><p>🇯🇵 '+esc(description)+'</p>'+
   '<p>🇬🇧 '+esc(item.word)+': '+esc(mean||'English meaning not supplied by dataset.')+'</p>'+
@@ -160,6 +161,7 @@ function renderList(){
   (sentence?'<div class="ns-compound-example"><b>例文:</b><div lang="ja">'+(hasFurigana&&sentence.furigana?furigana(sentence.furigana):esc(sentence.ja))+'</div>'+(sentence.en?'<div>'+esc(sentence.en)+'</div>':'')+'</div>':'<p class="ns-compounds-note">Example sentence not provided in source.</p>')+
   '<div class="ns-compound-actions"><button type="button" data-ns-speak="'+esc(item.word)+'">🔊 Japanese</button><button type="button" data-ns-translate="'+id+'">🌐 नेपाली・日本語 Meaning</button></div><div class="ns-compound-translations" hidden></div></div></details>';
  }).join(''):'<p>यो खोजमा शब्द भेटिएन। 該当する語が見つかりませんでした。</p>';
+ for(const el of list.querySelectorAll('details[data-word]'))if(expanded.has(el.dataset.word))el.open=true;
  const more=rootEl.querySelector('#ns-compounds-more');more.hidden=shown.length>=all.length;
 }
 function renderStatus(){
