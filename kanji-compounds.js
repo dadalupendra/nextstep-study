@@ -42,6 +42,8 @@ async function oneSource(level){
   throw new Error(level+' data unavailable: '+(last?.message||'unknown error'));
  })();
  dataPromises.set(level,promise);
+ // Do not permanently cache a network error; let a later click retry.
+ promise.catch(()=>{if(dataPromises.get(level)===promise)dataPromises.delete(level);});
  return promise;
 }
 function merge(kanji, local, fetched){
