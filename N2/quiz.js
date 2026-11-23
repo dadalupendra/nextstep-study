@@ -33,10 +33,11 @@ function wordWhy(w,correct,sourcePhrase){
 }
 const allVRead=W.filter(x=>x[0]!==x[1]&&x[1]),allKanjiChar=K.map(x=>x[0]);
 function kanjiChapter(ch){
- const pool=K.slice((ch-1)*40,Math.min(ch*40,398)),out=[];
+ const pool=K.slice((ch-1)*40,Math.min(ch*40,398)),out=[],usedExamples=new Set();
  const reads=K.flatMap(x=>x[3]||[]).filter(x=>!x.includes('.')&&x.length>=2);
  pool.forEach((k,i)=>{
-  const [char,ids,meaning,on,kun]=k,word=(ids||[]).map(id=>W[id]).find(w=>w&&w[0]!==w[1]);
+  const [char,ids,meaning,on,kun]=k,word=(ids||[]).map(id=>W[id]).find(w=>w&&w[0]!==w[1]&&!usedExamples.has(w[0]));
+  if(word)usedExamples.add(word[0]);
   const right=word?word[1]:(on?.[0]||kun?.[0]?.replace(/\./g,''));
   const wrongPool=word?allVRead.filter(w=>w[1].length>=2).sort((x,y)=>{
        const score=v=>Math.abs(v[1].length-right.length)*2+(v[1][0]===right[0]?0:5)+(v[1][1]===right[1]?0:2);
@@ -116,17 +117,17 @@ function grammarChapter(ch){
  for(let i=0;i<COUNT;i++){
    const g=pool[i%pool.length],step=Math.floor(i/pool.length),[pat,,ja,, , ,form,ja2,, ,reading,ja3, ,f1,f2,f3]=g;
    let prompt,source,right,wrong,kind,furi='';
-   if(step===0||step===1||step>=4){
+   if(step===0||step===1){
      kind='identify';
-     const ix=step===0?0:step===1?1:2;
+     const ix=step===0?0:1;
      source=ix===0?ja:ix===1?(ja2||ja):(ja3||ja2||ja);
      furi=ix===0?f1:ix===1?(f2||f1):(f3||f2||f1);
      prompt='次の例文で使われている文型として、最も適切なものを選びなさい。';
      right=pat;wrong=GR.filter(x=>x[0]!==pat).map(x=>({jp:x[0],rec:{grammar:x},furi:x[10]}));
-   }else if(step===2){
-     kind='example';
-     prompt='次の文型の用例として、正しい文を一つ選びなさい。';
-     source=pat;right=ja2||ja;
+   }else if(step===2||step>=4){
+     kind=step>=4?'exampleReview':'example';
+     prompt=step>=4?'次の文型を自然に使っている文はどれですか。':'次の文型の用例として、正しい文を一つ選びなさい。';
+     source=pat;right=step>=4?(ja3||ja):(ja2||ja);
      wrong=GR.filter(x=>x[0]!==pat&&(x[7]||x[2])!==right).map(x=>({jp:x[7]||x[2],furi:x[14]||x[13],rec:{grammar:x}}));
      furi=reading;
    }else{
@@ -137,7 +138,7 @@ function grammarChapter(ch){
      furi=reading;
    }
    const q=make('grammar',ch,kind,i+1,prompt,source,right,wrong,grammarWhy(g,right),
-     {sourceFuri:kind==='identify'?furi:'',target:pat,example:ja,exampleFuri:f1,hintFuri:kind!=='identify'?furi:'',answerFuri:kind==='example'?(f2||f1):'',metaGrammar:pat});
+     {sourceFuri:kind==='identify'?furi:'',target:pat,example:ja,exampleFuri:f1,hintFuri:kind!=='identify'?furi:'',answerFuri:(kind==='example'||kind==='exampleReview')?(step>=4?(f3||f1):(f2||f1)):'',patternFuri:reading,metaGrammar:pat});
    q.grammar=g;
    out.push(q);
  }
@@ -287,7 +288,11 @@ function draw(){
  (q.kind==='reading'?'<p class="reading-note">※ 読み方の問題では、答えが見えないように対象語のふりがなを表示しません。</p>':'')+
  '<div class="option-list" role="group" aria-label="選択肢">'+q.options.map((opt,j)=>
  '<button class="choice" type="button" data-qi="'+i+'" data-oi="'+j+'" aria-label="選択肢'+LETTERS[j]+': '+esc(opt.jp)+'"><b class="letter">'+LETTERS[j]+'</b> '+
- (opt.furi&&showFuri?ruby(opt.furi,true):jp(opt.jp))+'</button>').join('')+'</div>'+
+ (showFuri&&q.kind==='identify'&&q.grammar?
+  markedWord(opt.jp,opt.correct?q.grammar[10]:(opt.rec?.grammar?.[10]||''),true):
+  showFuri&&q.kind==='context'?
+   markedWord(opt.jp,opt.correct?q.answerFuri:(opt.rec?.word?.[1]||''),true):
+   showFuri&&opt.furi?ruby(opt.furi,true):jp(opt.jp))+'</button>').join('')+'</div>'+
  '<div id="feedback-'+i+'" class="feedback" aria-live="polite"></div></fieldset>').join('');
  if(history?.replaceState)history.replaceState(null,'','?exam='+exam+'&book='+book+'&chapter='+chap);
 }
