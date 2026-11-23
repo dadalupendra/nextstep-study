@@ -54,6 +54,10 @@ jobs:
           test -s exams/index.html
           test -s exams/app.js
           test -s exams/full-papers.js
+          test -s exams/reading-stories.js
+          test -s exams/section-content.js
+          node --check exams/reading-stories.js
+          node --check exams/section-content.js
           node --check exams/app.js
           node --check exams/full-papers.js
 
