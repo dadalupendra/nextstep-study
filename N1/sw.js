@@ -1,6 +1,6 @@
 /* NextStep Study N1: online-first updates, offline fallback. Never cache third-party hosts. */
 'use strict';
-const CACHE = 'nextstep-n1-shell-v3';
+const CACHE = 'nextstep-n1-shell-v4';
 const SHELL = ['./', './index.html', './style.css', './app.js',
   './THIRD-PARTY-NOTICE.txt', './manifest.webmanifest', './icon.svg'];
 
