@@ -1,67 +1,25 @@
-# NextStep Study — Facebook Feedback Connection
+# NextStep Study — Facebook Feedback Center
 
-This site is currently hosted on GitHub Pages. It cannot, by itself, read
-who views a Facebook post, receive Page webhooks, or deliver private Messenger
-messages to the owner.
+## Connected public Facebook link
 
-## What works now
+https://www.facebook.com/share/1HTRs8SwmG/?mibextid=wwXIfr
 
-- Public Feedback Center: `/nextstep-study/feedback/`.
-- Visitors may write a bug report, suggestion, question, content correction or
-  rating; they can copy the feedback themselves.
-- Visitors with GitHub accounts can open a **pre-filled GitHub Issue**. They
-  must log in, review the public issue and click **Submit new issue**. The
-  website does **not** silently send feedback and does not store submissions.
-- Once connected to the real public Facebook post, visitors can click
-  **Open Facebook Post**, paste their feedback as a **comment**, and post it.
-- Once connected to a real Facebook Page, a Messenger button opens a chat.
-  Sending the message is initiated by the visitor, not by the website.
+The site now includes Facebook Feedback shortcuts in the Home page, N1–N5 books, Exam Papers and Daily Challenge. The Feedback Center lets visitors compose ratings (1–5), suggestions, problems and questions, automatically carrying available JLPT level, question reference and originating page URL.
 
-## Complete the Facebook links (owner only)
+Visitors may **copy the feedback to Facebook** or choose to create a GitHub Issue. Opening a link does not post a comment or send any message automatically.
 
-Edit root `community-config.js` and fill the PUBLIC URLs you own:
+## Private feedback + owner alerts
 
-```js
-window.NextStepCommunityConfig=Object.freeze({
- facebookPostUrl:"", // Link to your actual NextStep Study Facebook post
- facebookPageUrl:"", // Optional: public Facebook Page URL
- messengerUrl:"",    // Optional: your Page's https://m.me/... link
- githubIssuesBase:"https://github.com/dadalupendra/nextstep-study/issues/new"
-});
-```
+A secure Supabase-backed implementation, rate limiting, Cloudflare Turnstile, a read-only administrator dashboard and optional Resend email notifications have been added as **configuration-ready source files**.
 
-Only public URLs belong in this file. **Never put Page access tokens,
-app secrets, Messenger tokens, email passwords or webhook verify tokens
-in GitHub Pages JavaScript.**
+**Private submission is OFF** until the owner sets up Supabase, Turnstile, the function and keys. Do not claim a database row is saved or an alert is delivered before end-to-end verification.
 
-When an actual link is supplied, connect it and retest the links; do not
-guess a Facebook identity or substitute a generic link for the user's post.
+For full instructions see [backend/feedback/SETUP.md](backend/feedback/SETUP.md).
 
-## Owner notifications on Facebook
+## Meta Page notifications
 
-**If the post is on a personal profile:** Use the Facebook app's native
-notifications for comments and reactions. Facebook does not give a list of
-ordinary post viewers, nor does its APIs support messaging the owner each
-time an identifiable person merely views a post.
+A signed Meta Page Webhook Worker template is included in [backend/feedback/meta-page-webhook.worker.js](backend/feedback/meta-page-webhook.worker.js). It has **not been deployed, authorized, subscribed or verified with Meta**. The user-provided Facebook share link does not verify that the linked account is an admin-managed Page.
 
-**If the post is published by a Facebook Page:** Turn on appropriate Page/
-Meta Business Suite notification settings for comments and messages. For a
-custom automatic alert, Meta Page Webhooks can deliver updates for `feed`
-changes and `messages` to a secure HTTPS backend. A Meta Developer App,
-Page administration permissions, possible app review, a verified public
-webhook endpoint and a secure delivery channel are required. GitHub Pages
-cannot serve this webhook endpoint on its own.
+For a personal-profile post, use the Facebook app's notifications. For an eligible managed Page, configure approved Meta API access, Page webhooks and email delivery in a separate HTTPS backend. No ordinary Facebook post viewer's identity can be collected or messaged just because they opened the post.
 
-Official references:
-- https://developers.facebook.com/docs/graph-api/webhooks/getting-started/webhooks-for-pages/
-- https://developers.facebook.com/docs/graph-api/webhooks/reference/page/
-
-**Important:** Notification settings are controlled by Facebook/Meta and
-the Page owner, not by NextStep Study or this repository.
-
-## Privacy and safety
-
-Do not ask people for Facebook passwords or copy access tokens into
-website code. Feedback submitted as a Facebook comment or GitHub Issue
-may be visible publicly. A profile visit/view is not consent to contact
-someone or collect their identifying details.
+Never publish access tokens, service-role keys, Turnstile secrets, Meta app secrets or admin passwords in GitHub Pages JavaScript.
