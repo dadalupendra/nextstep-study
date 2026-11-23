@@ -135,6 +135,7 @@ function mount({level,day,data,makeQuestion,feedbackHTML,container,legacyHTML=''
    '<details class="d100-flashcards"><summary>📖 Original 10 Daily Flashcards (5 Kanji + 5 Vocabulary)</summary>'+legacyHTML+'</details>'+
    '</div>';
   const root=container.querySelector('#nextstep-daily-100');
+  if(root)root.dataset.feedbackQuestionId=q.id;
   root.addEventListener('click',async event=>{
    const button=event.target.closest('button');
    if(!button)return;

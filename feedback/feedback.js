@@ -46,7 +46,8 @@ function formData(){
   rating,
   name:plain($('feedback-name').value,70),
   message,
-  page
+  page,
+  questionId:plain($('feedback-question-id')?.value,180)
  };
 }
 function textMessage(data){
@@ -58,6 +59,7 @@ function textMessage(data){
   '',
   data.message
  ];
+ if(data.questionId)parts.push('Question ID: '+data.questionId);
  if(data.page)parts.push('','Related page: '+data.page);
  if(data.name)parts.push('','From: '+data.name);
  return parts.join('\n');
