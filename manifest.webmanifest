@@ -1,0 +1,20 @@
+{
+  "id": "/nextstep-study/",
+  "name": "NextStep Study — JLPT N5–N1",
+  "short_name": "NextStep Study",
+  "description": "Read free Japanese study books and quizzes from N5 to N1.",
+  "start_url": "/nextstep-study/",
+  "scope": "/nextstep-study/",
+  "display": "standalone",
+  "background_color": "#081524",
+  "theme_color": "#081524",
+  "lang": "en",
+  "icons": [
+    {
+      "src": "icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
