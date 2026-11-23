@@ -29,8 +29,19 @@ let browser;
   await page.locator('#papers button').first().click();
   await page.waitForFunction(()=>document.getElementById('test-title')?.textContent.includes('100 questions'),null,{timeout:10000});
   assert.equal(await page.locator('#questions .question').count(),10);
+  // Next 10 navigation must follow the last question, not appear at top.
+  assert.equal(await page.locator('#questions').locator(':scope > :last-child').getAttribute('aria-label'),'Question page navigation');
+  const lastQuestionBox=await page.locator('#questions .question').last().boundingBox();
+  const nextBox=await page.getByRole('button',{name:'Next 10 →'}).boundingBox();
+  assert(nextBox.y>lastQuestionBox.y,'Next button should appear below question 10');
+
   assert.match(await page.locator('#questions .question').first().locator('h3').innerText(),/語彙|漢字/);
+  await page.locator('#questions .question').first().scrollIntoViewIfNeeded();
+  const scrollBefore=await page.evaluate(()=>window.scrollY);
   await page.locator('#questions .question').first().locator('button.option').first().click();
+  const scrollAfter=await page.evaluate(()=>window.scrollY);
+  assert(Math.abs(scrollAfter-scrollBefore)<35,'Answering should not jump back to the top');
+
   assert.equal(await page.locator('#questions .question').first().locator('.explain p').count(),4);
   const sectionCases=[['grammar',/文法/,10],['reading',/読解/,10],['listening',/聴解/,10],['vocab',/語彙|漢字/,10]];
   for(const [key,heading,count] of sectionCases){
