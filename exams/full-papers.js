@@ -50,12 +50,12 @@ function applyLevelLayout(level){
    }
   }
   if(num===2){
-   const batch=window.NextStepVerifiedReading02;
-   if(!batch)throw Error('Paper 02 original Japanese Reading data failed to load');
+   const batch=window.NextStepVerifiedReading02,language=window.NextStepVerifiedLanguage02;
+   if(!batch||!language)throw Error('Paper 02 reviewed Japanese data failed to load');
    for(let i=0;i<5;i++){
-    const question=batch.build(level,num,i);
-    if(!question)throw Error('Missing reviewed Reading '+level+' Paper 02 Question '+(i+1));
-    slots[config.vocab+config.grammar+i]=question;
+    const w=language.word(level,num,i),g=language.grammar(level,num,i),rd=batch.build(level,num,i);
+    if(!w||!g||!rd)throw Error('Missing reviewed content '+level+' Paper 02 Question '+(i+1));
+    slots[i]=w;slots[config.vocab+i]=g;slots[config.vocab+config.grammar+i]=rd;
    }
   }
   if(slots.length!==TOTAL)throw Error('Original paper slot layout changed unexpectedly');
@@ -105,7 +105,7 @@ function applyLevelLayout(level){
  }
  function choosePapers(level){
    applyLevelLayout(level);
-   paperGrid.replaceChildren();for(let i=1;i<=20;i++){let b=document.createElement('button');b.type='button';b.className='paper';b.textContent=level+' — Paper '+String(i).padStart(2,'0')+(i===1?' · 15/100 ready':i===2?' · 5/100 ready':' · Content pending');b.setAttribute('aria-label','JLPT '+level+' Paper '+i+', '+(i===1?'15 original questions available':i===2?'5 original Reading questions available':'original question content pending'));b.addEventListener('click',()=>openPaper(i));paperGrid.append(b);}
+   paperGrid.replaceChildren();for(let i=1;i<=20;i++){let b=document.createElement('button');b.type='button';b.className='paper';b.textContent=level+' — Paper '+String(i).padStart(2,'0')+(i===1?' · 15/100 ready':i===2?' · 15/100 ready':' · Content pending');b.setAttribute('aria-label','JLPT '+level+' Paper '+i+', '+(i===1?'15 original questions available':i===2?'15 original questions available':'original question content pending'));b.addEventListener('click',()=>openPaper(i));paperGrid.append(b);}
  }
  // Shared, validated source for the optional exam-mode UI.
  // Keeps the existing practice pages and printable questions intact.
