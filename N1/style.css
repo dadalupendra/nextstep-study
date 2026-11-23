@@ -11,3 +11,164 @@ ruby rt{font-size:.48em;color:#80d8ea;font-weight:500;line-height:1.1}ruby{ruby-
 .triple-detail{display:grid;gap:7px;margin-top:13px}.triple-detail>div{border-left:3px solid #2373ad;border-radius:5px;background:#0d253b;padding:9px 11px;font-size:12px;line-height:1.65}.triple-detail>div:nth-child(1){border-color:#e3af66}.triple-detail>div:nth-child(2){border-color:#6dbdff}.triple-detail>div:nth-child(3){border-color:#8de8ba}.triple-detail p{margin:6px 0;overflow-wrap:anywhere}.tr-button{margin-top:8px;width:100%}
 .option-explain{display:grid;gap:10px;margin-top:11px}.option-detail{background:#0b2537;border:1px solid #36516b;border-radius:9px;padding:10px 13px}.option-detail.is-correct{border-color:#5cbf89;background:#103f37}.option-detail h4{margin:2px 0 8px}.option-detail p{font-size:12px;line-height:1.8;margin:7px 0;overflow-wrap:anywhere}.grade-banner{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;padding:12px;margin-top:12px;border:1px solid #4d7389;border-radius:9px;background:#143950}.quiz-feedback:empty{display:none}.quiz-option.chosen{border-color:#66cdf2;background:#164d66}.quiz-question h3{white-space:pre-line}.daily-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.daily-flash{border:1px solid #356280;border-radius:12px;background:linear-gradient(135deg,#103d56,#102c4a);padding:18px;overflow-wrap:anywhere}.daily-flash .daily-main{font-size:clamp(30px,4vw,51px);line-height:1.45;color:#a5f4ff;text-align:center;margin:16px auto}.daily-flash p{font-size:12px;line-height:1.65}.daily-answer{border-top:1px dashed #4e7087;padding:10px 0}.btn.daily-complete{background:#176044;color:#d9ffe9}details{margin-top:14px}details summary{cursor:pointer;color:#88dbff;font-weight:700;padding:8px}.light .triple-detail>div,.light .option-detail,.light .daily-flash{background:#e7f4fa;color:#173b56}.light .option-detail.is-correct{background:#d8f9df}.light .furi-control{color:#123a53}
 @media(max-width:740px){.daily-grid{grid-template-columns:1fr}.triple-detail>div{font-size:12px}}@media print{.print-sheet .print-explain{border-top:1px solid #bfd4df;margin:8px 0;padding:5px 0}.print-sheet .print-explain p{font-size:9.5pt;line-height:1.35;margin:5px 0}}
+
+
+/* NextStep responsive typography and card layout v3 | 2026-11 */
+:root{
+  --card-outline:#2b5673;
+  --focus-ring:#62e2f3;
+}
+html{
+  width:100%;
+  max-width:100%;
+  -webkit-text-size-adjust:100%;
+  text-size-adjust:100%;
+}
+body{
+  min-width:0;
+  width:100%;
+  max-width:100%;
+  overflow-wrap:break-word;
+}
+.app-shell,.workarea,.content,.sidebar,.controlbar,.controlrow,.section-title,
+.cards,.card,.card-info,.headline,.triple-detail,.triple-detail>div,
+.quiz-shell,.quiz-question,.daily-grid,.daily-flash,.guide,.guide section{
+  min-width:0;
+  max-width:100%;
+}
+.app-shell{width:100%}
+.workarea{grid-template-columns:minmax(0,256px) minmax(0,1fr)}
+.content{width:100%;min-width:0}
+.cards{width:100%;grid-template-columns:repeat(2,minmax(0,1fr))}
+.card{
+  width:100%;
+  max-width:100%;
+  min-width:0;
+  overflow:visible;
+  background:linear-gradient(150deg,#132f4c 0%,#102941 55%,#0d2338 100%);
+  border:1px solid var(--card-outline);
+  box-shadow:0 8px 25px rgba(0,0,0,.12);
+}
+.card .headline{align-items:flex-start;min-width:0}
+.card .bigkanji{flex:0 0 auto}
+.card .card-info{flex:1 1 0;min-width:0;max-width:100%}
+.card h3{line-height:1.36;letter-spacing:-.01em}
+.card p,.card h3,.card .field,.card .meaning,.card .example,
+.card .translated,.card .small,.card .wordchips,.card .wordchips span,
+.card .card-info,.card .triple-detail,.card .triple-detail p,
+.option-detail,.option-detail p,.quiz-question,.quiz-option,.daily-flash,
+.guide,.notice,.status,.section-title,.section-title h2{
+  white-space:normal;
+  overflow-wrap:anywhere;
+  word-wrap:break-word;
+  min-width:0;
+  max-width:100%;
+}
+.card .meaning,.card .field,.card .translated,.card .example,
+.card .triple-detail>div{line-height:1.78}
+.card .meaning{
+  border-left:4px solid var(--gold);
+  border-radius:9px;
+  background:#1d3a54;
+  padding:12px 14px;
+}
+.triple-detail{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;margin-top:18px}
+.triple-detail>div{
+  width:100%;
+  min-width:0;
+  max-width:100%;
+  padding:13px 15px;
+  border-radius:10px;
+  border-left-width:4px;
+  box-shadow:inset 0 1px 0 #ffffff08;
+}
+.triple-detail>div p{
+  display:block;
+  max-width:100%;
+  margin:8px 0;
+  line-height:1.85;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+  line-break:loose;
+}
+.triple-detail>div b{display:inline;overflow-wrap:anywhere}
+.wordchips span{max-width:100%;white-space:normal;overflow-wrap:anywhere}
+.controlrow{min-width:0;max-width:100%}
+.controlrow input{flex:1 1 180px;min-width:0;max-width:100%}
+.controlrow select{min-width:0;max-width:100%}
+.controlrow label{max-width:100%}
+#searchBox{width:100%;max-width:100%}
+.quiz-options{grid-template-columns:repeat(2,minmax(0,1fr))}
+.quiz-option{min-width:0;overflow-wrap:anywhere}
+.guide section,.daily-flash{overflow-wrap:anywhere}
+.light .card{background:linear-gradient(150deg,#ffffff,#f4faff);border-color:#b8d3e3;box-shadow:0 7px 20px rgba(30,85,120,.09)}
+.light .card .meaning{background:#ecf6fb;color:#16394f;border-color:#c38b36}
+.light .triple-detail>div{background:#e9f5fb;color:#193c52}
+@media(hover:hover){
+  .card{transition:border-color .15s ease,box-shadow .15s ease,transform .15s ease}
+  .card:hover{border-color:#3981a5;box-shadow:0 14px 30px rgba(0,0,0,.20)}
+}
+@media(max-width:1100px){
+  .cards{grid-template-columns:minmax(0,1fr)}
+  .workarea{grid-template-columns:minmax(0,215px) minmax(0,1fr)}
+}
+@media(max-width:760px){
+  .topbar{gap:10px;flex-wrap:wrap;align-items:center}
+  .top-actions{min-width:0;max-width:100%;margin-left:auto;flex-wrap:wrap;justify-content:flex-end}
+  .brand{min-width:0;max-width:100%}
+  .brand strong{font-size:19px}
+  .brand small{letter-spacing:.11em;font-size:9px}
+  .hero{padding:25px 17px}
+  .hero h1{font-size:clamp(27px,7.5vw,43px);overflow-wrap:anywhere}
+  .hero em{font-size:clamp(16px,4vw,23px)}
+  .hero p{font-size:14px;overflow-wrap:anywhere}
+  .workarea{display:flex;flex-direction:column;min-width:0}
+  .sidebar{width:100%;padding:12px;border-right:0;border-bottom:1px solid var(--line)}
+  .lesson-nav{display:flex;flex-wrap:nowrap;gap:8px;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin}
+  .lesson-btn{flex:0 0 auto;min-width:112px;max-width:200px;white-space:normal}
+  .content{padding:12px}
+  .cards,.daily-grid,.quiz-options{grid-template-columns:minmax(0,1fr)}
+  .card{padding:17px;border-radius:15px}
+  .section-title{align-items:flex-start;flex-wrap:wrap}
+  .section-title h2{font-size:clamp(19px,5vw,25px)}
+  .card .headline{display:grid;grid-template-columns:minmax(0,70px) minmax(0,1fr);gap:14px;align-items:start}
+  .bigkanji{font-size:clamp(50px,14vw,68px);min-width:0;line-height:1.12}
+  .card .card-info h3{font-size:clamp(19px,5.5vw,24px);overflow-wrap:anywhere}
+  .card .meaning{font-size:clamp(14px,3.8vw,16px);line-height:1.72}
+  .field{font-size:13px;line-height:1.75}
+  .triple-detail>div{font-size:13px;line-height:1.75}
+  .triple-detail>div p{font-size:inherit;line-height:1.85}
+  .controlbar{gap:12px;padding:13px}
+  .controlrow{gap:10px}
+  .controlrow input[type=search]{flex-basis:100%}
+  .controlrow select{flex:1 1 160px;max-width:100%}
+  .controlrow .furi-control{white-space:normal}
+  .tabs{gap:6px;padding:9px 12px;scrollbar-width:thin}
+  .tab{flex:0 0 auto;min-width:108px;padding:11px 12px}
+  .card-actions{gap:9px}
+  .card-actions button,.card-actions a,.btn,.icon-btn,.tr-button,
+  .bottom-nav button,.lesson-btn,.quiz-option{min-height:44px;touch-action:manipulation}
+  .card-actions button{font-size:12px;padding:10px 12px}
+  .wordchips span{font-size:12px}
+}
+@media(max-width:420px){
+  .topbar{padding:10px 12px}
+  .network-badge{max-width:145px}
+  .hero{padding:22px 14px}
+  .stats{gap:8px}
+  .stats div{padding:11px}
+  .stats b{font-size:23px}
+  .content{padding:10px}
+  .card{padding:13px}
+  .card .headline{grid-template-columns:minmax(0,56px) minmax(0,1fr);gap:11px}
+  .bigkanji{font-size:52px}
+  .card .card-info h3{font-size:19px}
+  .card .meaning{padding:10px 11px}
+  .triple-detail>div{padding:11px 12px}
+  .controlrow select{flex-basis:135px}
+  .section-title h2{font-size:20px}
+}
+@media(prefers-reduced-motion:reduce){
+  .card{transition:none!important}
+  html{scroll-behavior:auto}
+}
