@@ -72,7 +72,7 @@
   finally{pending=false;choosePapers(active);}
  }
  function choosePapers(level){
-   paperGrid.replaceChildren();for(let i=1;i<=20;i++){let b=document.createElement('button');b.type='button';b.className='paper';b.textContent='Paper '+String(i).padStart(2,'0')+' · 100 Q';b.addEventListener('click',()=>openPaper(i));paperGrid.append(b);}
+   paperGrid.replaceChildren();for(let i=1;i<=20;i++){let b=document.createElement('button');b.type='button';b.className='paper';b.textContent=level+' — Paper '+String(i).padStart(2,'0')+' · 100 Q';b.setAttribute('aria-label','JLPT '+level+' Practice Paper '+i+', 100 questions');b.addEventListener('click',()=>openPaper(i));paperGrid.append(b);}
  }
  const levelButtons=Array.from(document.getElementById('levels').querySelectorAll('button'));
  levelButtons.forEach(btn=>btn.addEventListener('click',()=>{test.classList.add('hidden');choosePapers(btn.textContent);}));
