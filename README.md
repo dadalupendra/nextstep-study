@@ -18,7 +18,13 @@ Japanese self-study website, served as static HTML/CSS/JavaScript from GitHub Pa
 
 ## Publish on GitHub Pages
 
-In this repository select **Settings → Pages → Deploy from a branch → main → /(root) → Save**.
+For the prepared automated deployment, the repository owner must **enable GitHub Pages once**:
+1. Open **Settings → Pages → Build and deployment**.
+2. Set **Source = GitHub Actions** (not Deploy from a branch).
+3. Open **Actions → Publish NextStep Study (N5–N1) → Run workflow → main → Run workflow**.
+4. When the Pages deployment run succeeds, the public reader is available at the address below. Subsequent changes to N1–N5 or the homepage deploy automatically.
+
+The website's visitor mode is read-only (visitors cannot change the upstream repository). However, **no publicly readable HTML/JS/PDF/data can be made impossible to copy**. Because this repository is public, its source code is also viewable; a separate private repository or a backend-only architecture would be needed to keep unshipped source logic confidential. Third-party study datasets have independent CC BY-SA attribution and reuse rights.
 
 After deployment the address is:
 `https://dadalupendra.github.io/nextstep-study/`
