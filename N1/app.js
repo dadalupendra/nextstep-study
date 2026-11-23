@@ -359,6 +359,20 @@ function setup(){
  $('printChapter').addEventListener('click',()=>printChapter(app.section,app.chapter));
  $('openQuiz').addEventListener('click',()=>showQuiz(app.section,app.chapter));
  $('themeBtn').addEventListener('click',()=>{document.body.classList.toggle('light')});
+ const sizeInput=$('readerFontSize');
+ if(sizeInput){
+   let textSize='normal';
+   try{textSize=localStorage.getItem('nextstep-n1-reader-size')||'normal'}catch(e){}
+   if(!['small','normal','large'].includes(textSize))textSize='normal';
+   sizeInput.value=textSize;
+   document.body.dataset.readerSize=textSize;
+   sizeInput.addEventListener('change',e=>{
+     const selected=['small','normal','large'].includes(e.target.value)?e.target.value:'normal';
+     document.body.dataset.readerSize=selected;
+     try{localStorage.setItem('nextstep-n1-reader-size',selected)}catch(e){}
+   });
+ }
+
  document.addEventListener('click',e=>{
   let btn=e.target.closest('button');if(!btn||!app.loaded)return;
   if(btn.hasAttribute('data-navto')){app.chapter=Number(btn.dataset.navto);$('searchBox').value='';refreshView();window.scrollTo({top:0,behavior:'smooth'})}
