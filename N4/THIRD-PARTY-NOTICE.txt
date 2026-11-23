@@ -1,0 +1,24 @@
+NEXTSTEP STUDY N4 • SOURCE ATTRIBUTION AND LICENSING
+
+N4 separate Kanji / Vocabulary / Grammar study pages are derived from public
+OpenJLPT N4-tagged datasets:
+https://github.com/evanclan/OpenJLPT
+License: Creative Commons Attribution-ShareAlike 4.0 (CC BY-SA 4.0).
+License text: https://creativecommons.org/licenses/by-sa/4.0/
+
+The OpenJLPT project attributes kanji and vocabulary records to KANJIDIC2,
+JMdict, community JLPT study-level tags, and sample sentences to Tatoeba
+contributors according to its own NOTICE:
+https://github.com/evanclan/OpenJLPT/blob/main/NOTICE.md
+
+Records marked N4 are the community-maintained study category from that
+dataset. The official JLPT does not publish an exhaustive current list of
+vocabulary or kanji assigned to each level. This app does not claim to reproduce
+official JLPT questions or licensed textbooks.
+
+Japanese examples and English translations are source-derived. Machine
+translations in Nepali or other languages may need internet access and may
+contain mistakes. Confirm language details against trustworthy references.
+
+The NextStep reader includes independently written UI, review and print flows.
+Keep this notice with redistributed data.
