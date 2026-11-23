@@ -2,6 +2,7 @@
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Free JLPT N5–N1 Japanese books with Kanji, Vocabulary, Grammar, quizzes and Furigana. Study online on phone or PC with Nepali and English support.">
 <title>NextStep Study | Free JLPT N5–N1 Japanese Books</title>
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#081524"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="NextStep Study"><link rel="icon" href="icons/icon.svg" type="image/svg+xml">
 <style>
 :root{color-scheme:dark;--bg:#081524;--card:#13273d;--ink:#f1f7ff;--muted:#b5c6d7;--teal:#5ee9d5}
 *{box-sizing:border-box}body{margin:0;background:linear-gradient(140deg,#081524,#102e49 70%,#092239);font:18px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif;color:var(--ink);min-height:100vh}
@@ -15,6 +16,7 @@ h2{font-size:27px;margin-bottom:22px}.grid{display:grid;grid-template-columns:re
 <main><span class="pill">FREE JAPANESE STUDY COLLECTION</span><h1>Learn Japanese, <em>one step at a time.</em></h1>
 <p class="lead">Interactive JLPT study books with Japanese, Nepali and English explanations. Open a level below and start learning on your phone, tablet or computer.</p>
 
+<div class="actions" style="margin:0 0 36px"><button class="button" id="install-app" type="button">📲 Install NextStep Study</button><span id="install-help" style="align-self:center;color:var(--muted);font-size:15px" role="status">On iPhone: Share → Add to Home Screen. On desktop: use your browser Install app menu.</span></div>
 <h2 id="levels-heading">Choose your JLPT level</h2><div class="grid" aria-labelledby="levels-heading">
 <article class="card"><div class="level">JLPT N5</div><div class="caption">Beginner · 初級</div><p>Kana, vocabulary, kanji and lessons in an interactive reader.</p><div class="actions"><a class="button" href="N5/">Read N5 book →</a></div></article>
 <article class="card"><div class="level">JLPT N4</div><div class="caption">Elementary · 初中級</div><p>Interactive Japanese notebook reader with language support and lessons.</p><div class="actions"><a class="button" href="N4/">Read N4 book →</a></div></article>
@@ -22,4 +24,6 @@ h2{font-size:27px;margin-bottom:22px}.grid{display:grid;grid-template-columns:re
 <article class="card"><div class="level">JLPT N2</div><div class="caption">Upper intermediate · 中上級</div><p>Three interactive study notebooks: 400 kanji pages, 300 vocabulary pages and 300 grammar pages. Adjustable Japanese text, study activities and printable editions.</p><div class="actions"><a class="button" href="N2/">Read N2 books →</a></div></article>
 <article class="card"><div class="level">JLPT N1</div><div class="caption">Advanced · 上級</div><p>Interactive advanced study collection with 700 kanji, 1,000 vocabulary items, 123 grammar patterns, Japanese quizzes, furigana toggle, and study explanations.</p><div class="actions"><a class="button" href="N1/">Read N1 book →</a></div></article>
 </div><p class="note">Note: Study progress is stored locally in your browser where supported. PDF downloads are included for N3. N2 supports printing or saving its books as PDF from Chrome; N5/N4 PDF availability varies.</p>
-</main><footer>© 2026 NextStep Study · Independent educational materials; not an official JLPT website.</footer></body></html>
+</main><script>
+(()=>{let installPrompt;const button=document.getElementById("install-app");const help=document.getElementById("install-help");if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{help.textContent="Offline installation is not available in this browser.";}));}window.addEventListener("beforeinstallprompt",event=>{event.preventDefault();installPrompt=event;button.hidden=false;help.textContent="Ready to install on your device.";});button.addEventListener("click",async()=>{if(installPrompt){installPrompt.prompt();const result=await installPrompt.userChoice;help.textContent=result.outcome==="accepted"?"App installation started.":"You can install later from your browser menu.";installPrompt=null;}else{help.textContent=/iPhone|iPad|iPod/i.test(navigator.userAgent)?"Use Safari → Share → Add to Home Screen.":"Use your browser menu → Install app / Add to Home Screen.";}});window.addEventListener("appinstalled",()=>{button.hidden=true;help.textContent="NextStep Study installed successfully.";});})();
+</script><footer>© 2026 NextStep Study · Independent educational materials; not an official JLPT website.</footer></body></html>
