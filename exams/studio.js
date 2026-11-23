@@ -103,9 +103,9 @@ function submit(){
 async function start(){
  const level=$('studio-level').value,paper=Number($('studio-paper').value);
  if(!LEVELS.includes(level)||paper<1||paper>20)return;
- $('studio-start').disabled=true;$('studio-loader').textContent='Loading '+level+' Paper '+paper+' level-tagged content…';
+ $('studio-start').disabled=true;$('studio-loader').textContent='Checking verified Japanese questions and audio for '+level+' Paper '+paper+'…';
  try{
-  const questions=await api().load(level,paper);
+  const questions=await api().load(level,paper,{requireVerified:true});
   if(questions.length!==100)throw Error('Expected 100 questions; received '+questions.length);
   state={level,paper,questions,answers:{},flagged:{},startedAt:Date.now(),index:0,submitted:false};
   restore();started=true;
