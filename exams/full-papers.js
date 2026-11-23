@@ -44,18 +44,24 @@
  function scenario(level,num,serial,kind){
   const seed=hash(level+':'+num+':'+serial+':'+kind);
   const place=notices[level][seed%3],day=days[Math.floor(seed/3)%7],hour=hours[Math.floor(seed/7)%7];
-  const newHour=hours[(Math.floor(seed/49)+2)%7];
+  const newHour=hours[(hours.indexOf(hour)+2)%7];
   const reading=kind==='読解';
-  let passage,prompt,answer,options;
-  if(reading){
-   passage='【お知らせ】'+place+'の予定が変わりました。'+day+'の開始時間は'+hour+'です。先月までは'+newHour+'でした。ご注意ください。';
-   prompt='【文章】'+passage+'\n【質問】'+day+'の開始時間はいつですか。';
-   options=distinct([hour,newHour,...hours.filter(x=>x!==hour&&x!==newHour)]).slice(0,4);answer=options.indexOf(hour);
-  }else{
-   passage='もしもし。'+day+'の'+place+'ですが、開始は'+hour+'です。'+newHour+'ではありません。よろしくお願いします。';
-   prompt='【聴解】音声を聞いて答えてください。開始時間はいつですか。';
-   options=distinct([hour,newHour,...hours.filter(x=>x!==hour&&x!==newHour)]).slice(0,4);answer=options.indexOf(hour);
-  }
+  let passage,prompt,options;
+  const TEXT={
+   N5:['【おしらせ】'+day+'は、'+place+'へ行きます。'+hour+'に始まります。'+newHour+'ではありません。',
+    'あしたではなく、'+day+'です。'+place+'で会いましょう。'+hour+'に始まります。'+newHour+'ではありません。'],
+   N4:['【予定の変更】'+day+'の'+place+'での集まりは、'+newHour+'から'+hour+'に変わりました。遅れないでください。',
+    'もしもし。'+day+'の'+place+'の集まりは、'+newHour+'ではなく、'+hour+'からになりました。'],
+   N3:['【連絡】'+day+'に'+place+'で予定している説明会について、開始時刻を'+newHour+'から'+hour+'へ変更しました。場所は変わりません。',
+    'お問い合わせの説明会ですが、'+day+'に'+place+'で行います。開始時刻が変更され、'+newHour+'ではなく'+hour+'からです。'],
+   N2:['【重要】'+place+'における'+day+'の研修は、参加者からの要望を受け、当初予定していた'+newHour+'より開始時刻を変更し、'+hour+'に実施することになりました。',
+    'お申し込みいただいた'+day+'の研修についてお電話しました。'+place+'での開催に変更はありませんが、開始は当初の'+newHour+'から'+hour+'に変更となりました。'],
+   N1:['【実施要領の改訂】'+day+'に'+place+'で開催予定の研究報告会は、運営上の都合により、従来公表していた'+newHour+'から開始時刻を繰り上げ・繰り下げ、'+hour+'に改めました。会場の変更はありません。',
+    '先日ご案内した'+day+'の報告会について、予定変更のご連絡です。会場は'+place+'のままですが、開始時刻につきましては、当初の'+newHour+'ではなく'+hour+'となりました。ご注意ください。']
+  };
+  passage=TEXT[level][reading?0:1];
+  prompt=reading?'【文章】'+passage+'\n【質問】変更後の開始時刻として正しいものはどれですか。':'【聴解】音声を聞いて、変更後の開始時刻を選んでください。';
+  options=distinct([hour,newHour,...hours.filter(x=>x!==hour&&x!==newHour)]).slice(0,4);
   const shuffled=mix(options,level+'|'+num+'|'+serial+'|'+kind);
   return{type:kind,prompt,passage,options:shuffled,answer:shuffled.indexOf(hour),generated:false,scenario:true,listen:!reading,correctValue:hour,place,day,locale:level};
  }
