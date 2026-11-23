@@ -6,6 +6,6 @@ This folder is an offline-friendly **static HTML study book collection** designe
 - Open `index.html` to switch between the three notebooks.
 - Follow the **Print / Save PDF** option for a printable edition.
 - Adjustable font size, search, Japanese speech via browser TTS, bookmarks, notes, and local progress.
-- Study guidance appears in English and Nepali; vocabulary/grammar meanings are currently in English.
+- Study guidance and 100 grammar meanings appear in Nepali; Japanese-English model examples and vocabulary English glosses are included. Full Nepali translation for all 1,777 vocabulary entries is not included.
 
 The editorial selections are not an official or complete N2 test list; see [CREDITS.md](CREDITS.md) for sources, methods and licensing. There are 100 grammar patterns with three different study pages each.
