@@ -133,10 +133,24 @@ function applyLevelLayout(level){
    ...Array.from({length:config.reading},(_,i)=>window.NextStepExamTypes?window.NextStepExamTypes.buildReading(level,num,i):scenario(level,num,i,'読解')),
    ...Array.from({length:config.listening},(_,i)=>window.NextStepExamTypes?window.NextStepExamTypes.buildListening(level,num,i):scenario(level,num,i,'聴解'))
   ];
+  // Verified question replacements occupy EXISTING indices; no new paper IDs/cards.
+  if(num===1){
+   for(let i=0;i<5;i++){
+    const word=window.NextStepVerifiedLanguage?.word(level,num,i);
+    const grammar=window.NextStepVerifiedLanguage?.grammar(level,num,i);
+    const reading=window.NextStepVerifiedReading?.build(level,num,i);
+    if(!word||!grammar||!reading)throw Error('Verified content batch missing for '+level+' Paper 01; no demo substitution permitted.');
+    sections[i]=word;
+    sections[config.vocab+i]=grammar;
+    sections[config.vocab+config.grammar+i]=reading;
+   }
+  }
   if(sections.length!==TOTAL||sections.some(q=>new Set(q.options).size!==4||q.answer<0||q.answer>3))throw Error('Paper integrity check failed.');
   return sections;
  }
  function explanation(q,j){
+  if(q.verified){const right=j===q.answer,why=q.choiceExplanations?.[j]||q.explanation;return '<strong>'+escText(q.options[j])+(right?' ✅':' ❌')+'</strong><br>🇯🇵 '+(right?'正解。':'不正解。')+escText(why.ja)+'<br>🇬🇧 '+(right?'Correct. ':'Incorrect. ')+escText(why.en)+'<br>🇳🇵 '+(right?'सही उत्तर। ':'गलत उत्तर। ')+escText(why.ne);}
+
   if(q.sourceType){const good=j===q.answer;return '<strong>'+escText(q.options[j])+(good?' ✅':' ❌')+'</strong><br>🇯🇵 '+(good?'正解。':'不正解。')+escText(q.explanation.ja)+'<br>🇳🇵 '+(good?'सही उत्तर। ':'गलत उत्तर। ')+escText(q.explanation.ne)+'<br>🇬🇧 '+(good?'Correct. ':'Incorrect. ')+escText(q.explanation.en);}
 
   if(q.grammarSource){const good=j===q.answer,item=q.grammarTarget,option=q.grammarOptions[j];return '<strong>'+escText(option.form)+(good?' ✅':' ❌')+'</strong><br>🇯🇵 '+(good?'正解です。':'不正解です。')+'教材の原文は「'+escText(item.sentence)+'」で、文法表現は「'+escText(item.form)+'」です。<br>🇳🇵 '+(good?'सही विकल्प। ':'गलत विकल्प। ')+'मूल उदाहरणमा प्रयोग भएको व्याकरण '+escText(item.form)+' हो।<br>🇬🇧 '+(good?'Correct. ':'Incorrect. ')+'The source sentence uses '+escText(item.form)+' ('+escText(item.meaning)+').';}
@@ -174,7 +188,7 @@ function applyLevelLayout(level){
  }
  async function openPaper(num){
   if(pending)return;pending=true;paper=num;paperGrid.querySelectorAll('button').forEach(b=>b.disabled=true);test.classList.remove('hidden');document.getElementById('test-title').textContent=active+' — Paper '+String(num).padStart(2,'0')+' · Loading vocabulary…';list.replaceChildren();score.textContent='Loading verified, level-specific vocabulary...';
-  try{const [vocabulary,grammarPool]=await Promise.all([source(active),grammarSource(active)]);items=makePaper(active,num,vocabulary,grammarPool);answers=load();page=0;sectionMode='all';document.getElementById('test-title').textContent=active+' — Practice Paper '+String(num).padStart(2,'0')+' · 100 questions';render();}
+  try{const [vocabulary,grammarPool]=await Promise.all([source(active),grammarSource(active)]);items=makePaper(active,num,vocabulary,grammarPool);answers=load();page=0;sectionMode='all';const verified=items.filter(q=>q.verified).length;document.getElementById('test-title').textContent=active+' — Practice Paper '+String(num).padStart(2,'0')+' · '+verified+'/100 reviewed questions · LEGACY PRACTICE';render();}
   catch(e){test.classList.add('hidden');score.textContent='';window.alert('Cannot load paper: '+e.message+'. Please connect to internet and retry. No fake questions were substituted.');}
   finally{pending=false;choosePapers(active);}
  }
@@ -185,10 +199,13 @@ function applyLevelLayout(level){
  // Shared, validated source for the optional exam-mode UI.
  // Keeps the existing practice pages and printable questions intact.
  window.NextStepExamAPI={
-   async load(level,num){
+   async load(level,num,options={}){
     if(!LEVEL_ALLOCATION[level]||!Number.isInteger(num)||num<1||num>20)throw Error('Invalid level or paper number');
     const [vocabulary,grammarPool]=await Promise.all([source(level),grammarSource(level)]);
-    return makePaper(level,num,vocabulary,grammarPool);
+    const paperQuestions=makePaper(level,num,vocabulary,grammarPool);
+    const verified=paperQuestions.filter(q=>q.verified).length;
+    if(options.requireVerified&&verified!==paperQuestions.length)throw Error('Missing reviewed JLPT-style content: '+(paperQuestions.length-verified)+' / '+paperQuestions.length+' questions are not verified; audio assets also missing. Paper stays unavailable in real exam mode.');
+    return paperQuestions;
    },
    explain:explanation,
    speak:playJapanese,
