@@ -61,7 +61,7 @@ function applyLevelLayout(level){
  }
 }
  const paperGrid=document.getElementById('papers'),list=document.getElementById('questions'),score=document.getElementById('score'),test=document.getElementById('test');
- const note=document.createElement('p');note.className='muted';note.textContent='Original four-section JLPT-inspired practice sets. The section question counts are DIFFERENT for each level and are user-requested practice allocations, not official JLPT counts. Grammar uses distinct examples from the original level-specific grammar study data. Reading/listening scenarios still reuse common templates. Listening uses device Japanese text-to-speech (not official recorded audio). No past JLPT questions are copied; these papers are not official full-length mock tests.';paperGrid.parentElement.append(note);
+ const note=document.createElement('p');note.className='muted';note.textContent='Paper 01 has partially reviewed original Japanese questions. Incomplete questions are explicitly marked UNAVAILABLE; no repeated demo passage or synthetic listening script is shown. The 100 existing paper cards and question positions are retained, but none is yet a complete real JLPT-style mock exam with recorded listening audio.';paperGrid.parentElement.append(note);
  async function source(level){
   if(CACHE.has(level))return CACHE.get(level);
   const res=await fetch(endpoint(level),{cache:'force-cache'});if(!res.ok)throw Error('Vocabulary download failed ('+res.status+').');
@@ -123,30 +123,35 @@ function applyLevelLayout(level){
   const out=[...selected];out[2]=opt.findIndex(o=>o.correct);out[3]=opt.map(o=>o.data);
   return{type:'文法',prompt:out[1],options:out[3].map(o=>o[0]),answer:out[2],original:out,generated:false};
  }
- function makePaper(level,num,vocab,grammarPool){
-  const words=mix(vocab,level+'|vocab-source-v3');
-  const config=LEVEL_ALLOCATION[level];const chosen=Array.from({length:config.vocab},(_,i)=>words[(((num-1)*config.vocab)+i)%words.length]);
-  if(words.length<40)throw Error('Insufficient level-specific words.');
-  const sections=[
-   ...chosen.map((word,i)=>selection(word,i%2===0?'reading':'spelling',vocab,level,num,i)),
-   ...Array.from({length:config.grammar},(_,i)=>variedGrammar(level,num,i,grammarPool)),
-   ...Array.from({length:config.reading},(_,i)=>window.NextStepExamTypes?window.NextStepExamTypes.buildReading(level,num,i):scenario(level,num,i,'読解')),
-   ...Array.from({length:config.listening},(_,i)=>window.NextStepExamTypes?window.NextStepExamTypes.buildListening(level,num,i):scenario(level,num,i,'聴解'))
-  ];
-  // Verified question replacements occupy EXISTING indices; no new paper IDs/cards.
+ function makePaper(level,num){
+  // Content-first: never silently populate the 100 existing slots with
+  // algorithmically generated filler or a repeating template.
+  const config=LEVEL_ALLOCATION[level];
+  if(!config||!Number.isInteger(num)||num<1||num>20)throw Error('Invalid existing JLPT paper identifier');
+  const types=[['vocab',config.vocab,'文字・語彙'],['grammar',config.grammar,'文法'],['reading',config.reading,'読解'],['listening',config.listening,'聴解']];
+  const slots=types.flatMap(([section,n,label])=>Array.from({length:n},()=>({
+   type:label,section,pending:true,options:[],answer:null,
+   prompt:'この問題の日本語本文・選択肢・解答はまだ確認されていません。',
+   missingReason:section==='listening'?'Audio recording and reviewed transcript not supplied.':'Original reviewed examination question not supplied.'
+  })));
+  // These are individually authored questions in the existing Paper 01.
+  // Other numbered papers remain present but explicitly incomplete.
   if(num===1){
+   const sources=window.NextStepVerifiedLanguage,readings=window.NextStepVerifiedReading;
+   if(!sources||!readings)throw Error('Verified Japanese question files failed to load');
    for(let i=0;i<5;i++){
-    const word=window.NextStepVerifiedLanguage?.word(level,num,i);
-    const grammar=window.NextStepVerifiedLanguage?.grammar(level,num,i);
-    const reading=window.NextStepVerifiedReading?.build(level,num,i);
-    if(!word||!grammar||!reading)throw Error('Verified content batch missing for '+level+' Paper 01; no demo substitution permitted.');
-    sections[i]=word;
-    sections[config.vocab+i]=grammar;
-    sections[config.vocab+config.grammar+i]=reading;
+    const w=sources.word(level,num,i),g=sources.grammar(level,num,i),rd=readings.build(level,num,i);
+    if(!w||!g||!rd)throw Error('Reviewed question data missing: '+level+' Paper '+num);
+    slots[i]=w;slots[config.vocab+i]=g;slots[config.vocab+config.grammar+i]=rd;
    }
   }
-  if(sections.length!==TOTAL||sections.some(q=>new Set(q.options).size!==4||q.answer<0||q.answer>3))throw Error('Paper integrity check failed.');
-  return sections;
+  if(slots.length!==TOTAL)throw Error('Original paper slot layout changed unexpectedly');
+  for(const [index,q] of slots.entries()){
+   if(q.pending)continue;
+   if(q.options.length!==4||new Set(q.options).size!==4||!Number.isInteger(q.answer)||q.answer<0||q.answer>3)
+    throw Error('Reviewed content failed integrity check at question '+(index+1));
+  }
+  return slots;
  }
  function explanation(q,j){
   if(q.verified){const right=j===q.answer,why=q.choiceExplanations?.[j]||q.explanation;return '<strong>'+escText(q.options[j])+(right?' ✅':' ❌')+'</strong><br>🇯🇵 '+(right?'正解。':'不正解。')+escText(why.ja)+'<br>🇬🇧 '+(right?'Correct. ':'Incorrect. ')+escText(why.en)+'<br>🇳🇵 '+(right?'सही उत्तर। ':'गलत उत्तर। ')+escText(why.ne);}
@@ -187,8 +192,8 @@ function applyLevelLayout(level){
   score.textContent=count===TOTAL?'Your practice result: '+correct+'/100. This is NOT an official JLPT scaled score.':'Answered: '+count+'/100 · Correct so far: '+correct+' · Wrong so far: '+(count-correct);
  }
  async function openPaper(num){
-  if(pending)return;pending=true;paper=num;paperGrid.querySelectorAll('button').forEach(b=>b.disabled=true);test.classList.remove('hidden');document.getElementById('test-title').textContent=active+' — Paper '+String(num).padStart(2,'0')+' · Loading vocabulary…';list.replaceChildren();score.textContent='Loading verified, level-specific vocabulary...';
-  try{const [vocabulary,grammarPool]=await Promise.all([source(active),grammarSource(active)]);items=makePaper(active,num,vocabulary,grammarPool);answers=load();page=0;sectionMode='all';const verified=items.filter(q=>q.verified).length;document.getElementById('test-title').textContent=active+' — Practice Paper '+String(num).padStart(2,'0')+' · 100 questions · '+verified+'/100 reviewed · LEGACY PRACTICE';render();}
+  if(pending)return;pending=true;paper=num;paperGrid.querySelectorAll('button').forEach(b=>b.disabled=true);test.classList.remove('hidden');document.getElementById('test-title').textContent=active+' — Paper '+String(num).padStart(2,'0')+' · Checking original content…';list.replaceChildren();score.textContent='Checking reviewed Japanese content for the selected paper…';
+  try{items=makePaper(active,num);answers=load();page=0;sectionMode='all';const verified=items.filter(q=>q.verified).length;document.getElementById('test-title').textContent=active+' — Practice Paper '+String(num).padStart(2,'0')+' · 100 questions · '+verified+'/100 reviewed · LEGACY PRACTICE';render();}
   catch(e){test.classList.add('hidden');score.textContent='';window.alert('Cannot load paper: '+e.message+'. Please connect to internet and retry. No fake questions were substituted.');}
   finally{pending=false;choosePapers(active);}
  }
@@ -201,8 +206,7 @@ function applyLevelLayout(level){
  window.NextStepExamAPI={
    async load(level,num,options={}){
     if(!LEVEL_ALLOCATION[level]||!Number.isInteger(num)||num<1||num>20)throw Error('Invalid level or paper number');
-    const [vocabulary,grammarPool]=await Promise.all([source(level),grammarSource(level)]);
-    const paperQuestions=makePaper(level,num,vocabulary,grammarPool);
+    const paperQuestions=makePaper(level,num);
     const verified=paperQuestions.filter(q=>q.verified).length;
     if(options.requireVerified&&verified!==paperQuestions.length)throw Error('Missing reviewed JLPT-style content: '+(paperQuestions.length-verified)+' / '+paperQuestions.length+' questions are not verified; audio assets also missing. Paper stays unavailable in real exam mode.');
     return paperQuestions;
