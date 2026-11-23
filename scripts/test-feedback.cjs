@@ -14,11 +14,14 @@ let browser;
  page.on('pageerror',err=>errors.push(err.message));
  await page.goto('http://127.0.0.1:'+PORT+'/',{waitUntil:'domcontentloaded'});
  assert.equal(await page.locator('a[href="feedback/"]').count(),1,'Homepage feedback CTA missing');
+ assert.equal(await page.locator('#ns-feedback-dock a').count(),2,'Study-page feedback shortcuts missing');
  await page.goto('http://127.0.0.1:'+PORT+'/feedback/',{waitUntil:'domcontentloaded'});
  await page.locator('#feedback-form').waitFor();
- assert.match(await page.locator('#facebook-status').innerText(),/not connected yet/);
+ assert.match(await page.locator('#facebook-status').innerText(),/connected/);
  assert.match(await page.locator('#messenger-status').innerText(),/not configured/);
- assert.equal(await page.locator('#facebook-post').isVisible(),false);
+ assert.equal(await page.locator('#facebook-post').isVisible(),true);
+ assert.match(await page.locator('#facebook-post').getAttribute('href'),/1HTRs8SwmG/);
+ assert.equal(await page.locator('#send-private-feedback').isDisabled(),true);
  assert.equal(await page.locator('#messenger-link').isVisible(),false);
  assert.equal(await page.locator('#feedback-message').getAttribute('required'),'');
  // Invalid input must not open a fake submission.
