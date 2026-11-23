@@ -1,23 +1,65 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="JLPT N2 practice papers with 50 multiple choice questions in every Kanji, Vocabulary and Grammar chapter."><title>NextStep N2 · JLPT-style Chapter Practice Papers</title><link rel="stylesheet" href="style.css"><style>
-.testbar{max-width:1080px;margin:16px auto 0;padding:15px 18px;display:flex;gap:14px;flex-wrap:wrap;align-items:end;background:#dff1ed;border-radius:14px}
-.testbar label{display:flex;flex-direction:column;font-size:15px;font-weight:750;gap:5px}.testbar select{min-width:150px;padding:9px 12px;border:1px solid #afc5c0;border-radius:10px;background:#fff;min-height:45px}
-.quizmain{max-width:1080px;margin:15px auto;padding:20px;background:#fffef7;border-radius:16px;border:1px solid #d4e0da}
-.quizmain h1{font-size:clamp(28px,4vw,44px);line-height:1.3}.qitem{padding:22px;border:1px solid #ccdfd9;border-radius:13px;margin:20px 0;background:#fff;min-width:0}
-.qitem legend{padding:0 6px;font-size:19px;font-weight:620}.prompt-ja{padding:12px 15px;margin:12px 0;border-radius:9px;background:#f2f7f5;font-size:22px;white-space:normal;overflow-wrap:anywhere}
-.option-list{display:grid;grid-template-columns:1fr 1fr;gap:9px}.choice{display:flex;gap:12px;align-items:flex-start;padding:13px 14px;cursor:pointer;border-radius:11px;border:1px solid #bacfc9;font-size:17px;overflow-wrap:anywhere}.choice:hover{background:#f0faf8}
-.choice input{width:20px;height:20px;flex:0 0 20px;margin:3px 0}.choice.correct{background:#dff8df;border-color:#6bba75}.choice.incorrect{background:#ffe5df;border-color:#ca8174}
-.explanation{border-left:5px solid #16a493;margin-top:16px;padding:10px 17px;background:#ebfaf4;border-radius:7px;overflow-wrap:anywhere}.explanation summary{font-weight:800;cursor:pointer;padding:4px}.explanation p{font-size:17px;line-height:1.72}.explanation .ne{font-family:'Noto Sans Devanagari',sans-serif}.explanation .ja{font-family:'Noto Sans CJK JP',sans-serif}
-.scorebox{padding:20px;background:#def5ed;border:2px solid #16a493;border-radius:12px;margin:25px 0}.quiznote{background:#fff5da;padding:13px;border-radius:9px;color:#473b20}.quizactions{display:flex;gap:12px;flex-wrap:wrap;justify-content:space-between;margin:15px 0}
-@media(max-width:700px){.quizmain{margin:8px;padding:14px}.option-list{grid-template-columns:1fr}.qitem{padding:13px}.qitem legend{font-size:17px}.choice{font-size:17px}.prompt-ja{font-size:20px}}
-@media print{.testbar,.quizactions,.top,.footer,.quiznote,.choice input,#grade,#resetquiz{display:none!important}.quizmain{margin:0;padding:0;border:0}.qitem{break-inside:avoid;page-break-inside:avoid;margin:11px 0;padding:10px}.explanation{display:block!important}.explanation .hide{display:block!important}.prompt-ja{font-size:14pt}.choice{font-size:12pt;padding:6px}.option-list{grid-template-columns:1fr 1fr}}
+<!doctype html><html lang="ja"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="NextStep N2: 全て日本語の問題・選択肢、ふりがな ON/OFF、即時正誤判定、日本語・英語・ネパール語の詳しい解説。JLPT・BJT・JPT・J.TEST・NAT学習。">
+<title>NextStep N2 — 日本語の問題と即時解説</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.quiz-toolbar{max-width:1200px;margin:16px auto;padding:18px;background:#e5f5f2;border:1px solid #bedbd4;border-radius:15px;display:flex;flex-wrap:wrap;gap:14px;align-items:end}
+.quiz-toolbar label{display:flex;flex-direction:column;gap:5px;font-size:15px;font-weight:750;color:#183b47}.quiz-toolbar select{min-width:150px;padding:10px;border-radius:9px;border:1px solid #abc8c3;background:#fff;color:#163b4b;min-height:46px}
+.quiz-toolbar button{font-size:16px;font-weight:800;min-width:150px}
+.quizmain{max-width:1200px;margin:0 auto 35px;padding:clamp(16px,3vw,35px);background:#fffef9;border:1px solid #d4dfd7;border-radius:16px}
+.quizmain h1{font-size:clamp(27px,4vw,43px);line-height:1.25;margin:13px 0}
+.quiznote{border-left:5px solid #d2a339;background:#fff8df;padding:12px 18px;border-radius:9px;font-size:15px;color:#58451f}
+.exam-note{padding:11px 16px;border:1px solid #bddfd4;background:#e8f6f2;border-radius:9px;margin:12px 0 15px;font-size:15px}
+.qitem{background:white;border:1px solid #d0e2dd;border-radius:16px;padding:24px;margin:24px 0 28px;min-width:0;box-shadow:0 8px 24px #163f5822}
+.qitem legend{display:block;max-width:100%;padding:4px 8px;white-space:normal;font-weight:750;font-size:clamp(18px,2.4vw,23px)}
+.qitem legend .badge{font-size:13px;margin:0 12px 0 0}
+.prompt-ja{font-size:clamp(22px,3vw,28px);line-height:1.8;color:#132f42;background:#f0f8f5;border-radius:12px;padding:18px 22px;margin:15px 0;overflow-wrap:anywhere;white-space:pre-wrap}
+.option-list{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:15px 0 5px}
+.choice{width:100%;min-height:70px;text-align:left;display:flex;gap:12px;align-items:center;font-size:clamp(17px,2.5vw,21px);line-height:1.6;padding:13px 18px;background:#fff;border:2px solid #c3d6d3;white-space:normal;overflow-wrap:anywhere;transition:background .1s}
+.choice:hover:not(:disabled),.choice:focus-visible:not(:disabled){background:#e7f7f3;border-color:#148f85}
+.letter{width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;background:#e3f2ee;border-radius:10px;font-size:17px}
+.choice.correct,.choice.correct:disabled{background:#d8f7dc;border-color:#138341;color:#164d2e;opacity:1}
+.choice.incorrect,.choice.incorrect:disabled{background:#ffe5e0;border-color:#bd443b;color:#731d1a;opacity:1}
+.choice:disabled{opacity:.72;cursor:default}
+.reading-note{font-size:13px;color:#526a72;margin:3px 0}
+.feedback{margin-top:14px}
+.decision{padding:20px;border-radius:13px;border-left:7px solid #149f78;background:#effaf2}
+.decision.wrongnote{background:#fff0eb;border-color:#cb5645}
+.decision> b{font-size:24px;line-height:1.5}
+.answerkey{padding:12px;border:1px solid #a2cec3;background:white;border-radius:10px;margin:13px 0;font-size:clamp(19px,2.4vw,23px)}
+.multilang{display:grid;grid-template-columns:1fr;gap:2px}.multilang h4{font-size:16px;margin:12px 0 0;color:#205a5d}.multilang p{margin:3px 0 8px;line-height:1.8;overflow-wrap:anywhere}
+.whyOptions{display:grid;gap:9px}
+.optionwhy{background:#fff;border:1px solid #d7e6df;padding:12px 16px;border-radius:10px;overflow-wrap:anywhere}
+.optionwhy summary{cursor:pointer;font-size:17px}.optionwhy p{line-height:1.75;margin:8px 0}
+.extraexample{border:1px dashed #9cc8c1;border-radius:11px;background:#fff;padding:9px 15px;margin:14px 0}
+.extraexample p{font-size:19px}
+.quizactions{display:flex;gap:14px;justify-content:space-between;flex-wrap:wrap;padding:15px 0}
+.quizactions button{font-weight:800}
+.scorebox{margin:20px 0 12px;padding:22px;background:#e0f5ec;border:2px solid #4bad91;border-radius:14px}.scorebox h2{margin:0}
+.furitoggle[aria-pressed=true]{background:#0d8e87;color:white;border-color:#0d8e87}
+ruby{ruby-position:over;line-height:1.9}ruby rt{font-size:.57em;line-height:1.2;color:#5f536d;font-weight:normal}
+.ne{font-family:'Noto Sans Devanagari','Mangal',sans-serif}
+@media(max-width:720px){.quiz-toolbar{margin:10px;padding:13px}.quiz-toolbar label{flex:1;min-width:135px}.quiz-toolbar select{width:100%}.quizmain{margin:0 8px;padding:12px}.qitem{padding:15px 13px}.option-list{grid-template-columns:1fr}.choice{min-height:65px}.prompt-ja{padding:13px}.decision{padding:14px}}
+@media print{.top,.quiz-toolbar,.quizactions,.footer,.quiznote,.exam-note,.reading-note,.optionwhy[open] summary{display:none!important}.quizmain{border:0;padding:0;max-width:100%}.qitem{break-inside:avoid;page-break-inside:avoid;box-shadow:none;padding:8px;margin:10px 0}.choice{font-size:11pt;min-height:0;padding:5px}.option-list{display:grid;grid-template-columns:1fr 1fr}.prompt-ja{font-size:13pt;padding:6px}.feedback{display:block!important}.decision{padding:9px}.optionwhy{padding:6px}.optionwhy p{font-size:10pt}}
 </style></head><body>
-<header class="top"><div class="toprow"><div><a class="brand" href="index.html">NextStep <span style="color:#54e2ce">N2</span></a><div class="topsub">JLPT-style original chapter practice papers · 日本語 · नेपाली · English</div></div><a href="index.html">← Return to study books</a></div></header>
-<div class="testbar"><label>Book / 科目<select id="bookselect"><option value="kanji">漢字 · N2 Kanji</option><option value="vocab">語彙 · N2 Vocabulary</option><option value="grammar">文法 · N2 Grammar</option></select></label><label>Chapter / 課<select id="chapterselect"><option value="1">Chapter 1</option><option value="2">Chapter 2</option><option value="3">Chapter 3</option><option value="4">Chapter 4</option><option value="5">Chapter 5</option><option value="6">Chapter 6</option><option value="7">Chapter 7</option><option value="8">Chapter 8</option><option value="9">Chapter 9</option><option value="10">Chapter 10</option></select></label><p style="margin:0;font-weight:750">50 questions per chapter · 30 papers · 1,500 total questions</p></div>
-<main class="quizmain"><div class="eyebrow">NEXTSTEP JAPANESE LEARNING · N2 EXAM PREPARATION</div><h1 id="quiztitle">JLPT N2 Practice Paper</h1><p id="sub">Loading 50 questions…</p>
-<p class="quiznote">Original N2-oriented educational exercises (not an official JLPT question paper). Questions cover target items marked N2 by an independent licensed dataset. Exam questions may also require earlier-level knowledge. Answer every question, press <strong>Check 50 answers</strong>, then read the detailed Japanese/English/Nepali explanation.</p>
-<div class="flex"><span id="progress" class="badge" aria-live="polite">0 / 50 answered</span><a href="CREDITS.md">Sources and level methodology</a></div>
+<header class="top"><div class="toprow"><div><a class="brand" href="index.html">NextStep <span style="color:#54e2ce">N2</span></a><div class="topsub">日本語で問題を解く · ふりがな切替 · 三言語の解説</div></div><a href="index.html">← N2 の教科書へ</a></div></header>
+<section class="quiz-toolbar" aria-label="練習問題の設定">
+<label>試験の練習モード<select id="examselect"><option value="JLPT">JLPT N2</option><option value="BJT">BJT ビジネス日本語</option><option value="JPT">JPT 日本語練習</option><option value="JTEST">J.TEST 実用日本語</option><option value="NAT">NAT-TEST N2復習</option></select></label>
+<label>科目<select id="bookselect"><option value="kanji">漢字</option><option value="vocab">語彙</option><option value="grammar">文法</option></select></label>
+<label>課・チャプター<select id="chapterselect"><option value="1">第1課</option><option value="2">第2課</option><option value="3">第3課</option><option value="4">第4課</option><option value="5">第5課</option><option value="6">第6課</option><option value="7">第7課</option><option value="8">第8課</option><option value="9">第9課</option><option value="10">第10課</option></select></label>
+<button id="furiganatoggle" class="furitoggle" type="button" aria-pressed="false">ふりがな OFF</button>
+</section>
+<main class="quizmain">
+<span class="eyebrow">NEXTSTEP N2 JAPANESE LEARNING · PRACTICE</span>
+<h1 id="quiztitle">日本語の練習問題</h1>
+<p id="sub">各課50問。答えを選ぶと正誤と詳しい解説が出ます。</p>
+<div class="quiznote"><b>注意 / Note:</b> すべてオリジナルの学習問題であり、JLPT・BJT・JPT・J.TEST・NAT-TESTの公式過去問や公式採点ではありません。ふりがな表示は対応する語彙・例文に限られます。読み方を答える設問は正解のふりがなを先に表示しません。 / These are unofficial practice activities. Reading questions hide answer-revealing furigana.</div>
+<p class="exam-note" id="modenote">N2 模擬練習</p>
+<div class="flex"><span class="badge" id="progress" aria-live="polite">解答済み 0 / 50 · 正解 0</span><span class="small">選択するとすぐに ✓ / ✗ と 🇯🇵 🇬🇧 🇳🇵 の解説</span></div>
 <div id="summary" aria-live="polite"></div>
-<form id="quizroot" onsubmit="return false"><p>Loading questions…</p></form>
-<div class="quizactions"><button type="button" id="resetquiz">↻ Start over</button><button class="primary" type="button" id="grade">Check 50 answers &amp; explanations →</button></div>
-</main><footer class="footer">NextStep N2 · 10 chapters × 50 questions per subject · Print paper and worked explanations after grading. Answers saved locally; no student login required.</footer>
-<script src="data.js"></script><script src="grammar-data.js"></script><script src="quiz.js"></script></body></html>
+<div id="quizroot" aria-label="日本語の試験練習問題"></div>
+<div class="quizactions"><button id="resetquiz" type="button">↻ 初めからやり直す</button><button class="primary" id="endpaper" type="button">結果を表示 / Show score</button></div>
+</main>
+<footer class="footer">NextStep Study · 50問 / 課 · 日本語の問題と選択肢 · 三言語の解説 · 非公式練習教材 · <a href="CREDITS.md">出典・著作権</a></footer>
+<script src="data.js"></script><script src="grammar-data.js"></script><script src="business-data.js"></script><script src="quiz.js"></script></body></html>
