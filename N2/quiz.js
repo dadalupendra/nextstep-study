@@ -34,11 +34,15 @@ function wordWhy(w,correct,sourcePhrase){
 const allVRead=W.filter(x=>x[0]!==x[1]&&x[1]),allKanjiChar=K.map(x=>x[0]);
 function kanjiChapter(ch){
  const pool=K.slice((ch-1)*40,Math.min(ch*40,398)),out=[];
- const reads=K.flatMap(x=>[...(x[3]||[]),...(x[4]||[])]);
+ const reads=K.flatMap(x=>x[3]||[]).filter(x=>!x.includes('.')&&x.length>=2);
  pool.forEach((k,i)=>{
   const [char,ids,meaning,on,kun]=k,word=(ids||[]).map(id=>W[id]).find(w=>w&&w[0]!==w[1]);
-  const right=word?word[1]:(on?.[0]||kun?.[0]);
-  const wrongPool=word?allVRead.map(w=>({jp:w[1],rec:{word:w}})):reads.map(t=>({jp:t}));
+  const right=word?word[1]:(on?.[0]||kun?.[0]?.replace(/\./g,''));
+  const wrongPool=word?allVRead.filter(w=>w[1].length>=2).sort((x,y)=>{
+       const score=v=>Math.abs(v[1].length-right.length)*2+(v[1][0]===right[0]?0:5)+(v[1][1]===right[1]?0:2);
+       return score(x)-score(y)
+     }).slice(0,30).map(w=>({jp:w[1],rec:{word:w}})):
+     reads.filter(t=>t!==right&&t[0]===right[0]).concat(reads.filter(t=>t!==right)).slice(0,80).map(t=>({jp:t}));
   const prompt=word?'次の言葉の読み方として、最も適切なものを一つ選びなさい。':'次の漢字の読み方として、正しいものを一つ選びなさい。';
   const source=word?word[0]:char;
   out.push(make('kanji',ch,'reading',i+1,prompt,source,right,wrongPool,
@@ -71,18 +75,24 @@ function kanjiChapter(ch){
 function sameType(a,b){let pa=(a[4]||'').split(',')[0],pb=(b[4]||'').split(',')[0];return pa&&pb&&pa===pb}
 function vocabChapter(ch){
  const pool=W.slice(Math.floor((ch-1)*W.length/10),Math.floor(ch*W.length/10));
- const eligible=pool.filter(w=>w[0]!==w[1]||w[5]?.includes(w[0]));
+ const eligible=pool.filter(w=>w[0]!==w[1]);
  let out=[];
  for(let i=0;i<COUNT;i++){
    const w=eligible[Math.floor((i+.3)*eligible.length/COUNT)%eligible.length];
    const cloze=i%2===1 && w[5]&&w[5].includes(w[0]);
    if(cloze){
       const qSource=w[5].replace(w[0],'（　　）');
-      const distractors=W.filter(other=>other[0]!==w[0]&&!w[5].includes(other[0])&&sameType(w,other)).map(x=>({jp:x[0],rec:{word:x}}));
+      const distractors=W.filter(other=>other[0]!==w[0]&&!w[5].includes(other[0])&&sameType(w,other))
+      .sort((x,y)=>Math.abs(x[0].length-w[0].length)-Math.abs(y[0].length-w[0].length))
+      .concat(W.filter(other=>other[0]!==w[0]&&!w[5].includes(other[0])&&other[0].length>1))
+      .map(x=>({jp:x[0],rec:{word:x}}));
       out.push(make('vocab',ch,'context',i+1,'次の文の（　）に入る最も適切な言葉を一つ選びなさい。',qSource,w[0],distractors,wordWhy(w,w[0],true),
        {target:w[0],example:w[5],exampleFuri:w[9],answerFuri:w[1]}));
    }else{
-      const dist=allVRead.filter(x=>x[1]!==w[1]).map(x=>({jp:x[1],rec:{word:x}}));
+      const dist=allVRead.filter(x=>x[1]!==w[1]).sort((x,y)=>{
+        const score=v=>Math.abs(v[1].length-w[1].length)*2+(v[1][0]===w[1][0]?0:7)+(v[1][1]===w[1][1]?0:3);
+        return score(x)-score(y);
+      }).slice(0,80).map(x=>({jp:x[1],rec:{word:x}}));
       out.push(make('vocab',ch,'reading',i+1,'次の言葉の読み方として、正しいものを選びなさい。',w[0],w[1],dist,wordWhy(w,w[1],false),
        {target:w[0],example:w[5],exampleFuri:w[9],answerFuri:w[1]}));
    }
@@ -97,7 +107,7 @@ function jpForm(f){
 }
 function grammarWhy(g,correct){
  const [pattern,meaning,ja,en,note,ne,form]=g;
- return explanation('正解は「'+correct+'」です。文型「'+pattern+'」は「'+(note||'前後の文脈に合わせて使います。')+'」接続は「'+jpForm(form)+'」です。例文：「'+ja+'」。',
+ return explanation('正解は「'+correct+'」です。文型「'+pattern+'」を確認しましょう。接続は「'+jpForm(form)+'」です。例文：「'+ja+'」。接続と文中の意味のつながりから判断します。',
  'The tested N2 grammar is '+pattern+'. Meaning: '+meaning+'. Formation: '+form+'. Usage: '+note+'. Model: '+ja+' ('+en+').',
  'सही उत्तर「'+correct+'」 हो। N2 व्याकरण「'+pattern+'」को नेपाली अर्थ '+ne+'। जोड्ने तरिका「'+jpForm(form)+'」। जापानी उदाहरण「'+ja+'」।');
 }
