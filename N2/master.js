@@ -109,7 +109,7 @@ async function load(){
   $('statKanji').textContent=fmt(app.data.kanji.length);$('statGrammar').textContent=fmt(app.data.grammar.length);$('statVocab').textContent=fmt(app.data.vocab.length);
   $('networkBadge').textContent='● N2 data ready';$('stateBox').hidden=true;$('studyView').hidden=false;
   const target=new URLSearchParams(location.search).get('section');
-  chooseSection(['kanji','vocab','grammar'].includes(target)?target:'kanji');
+  target==='daily'?renderDaily():chooseSection(['kanji','vocab','grammar'].includes(target)?target:'kanji');
   // Deep-link from legacy Kanji books to the exact Kanji compound view.
   const requestedCharacter=new URLSearchParams(location.search).get('character');
   if(requestedCharacter){
