@@ -188,7 +188,7 @@ function applyLevelLayout(level){
  }
  async function openPaper(num){
   if(pending)return;pending=true;paper=num;paperGrid.querySelectorAll('button').forEach(b=>b.disabled=true);test.classList.remove('hidden');document.getElementById('test-title').textContent=active+' — Paper '+String(num).padStart(2,'0')+' · Loading vocabulary…';list.replaceChildren();score.textContent='Loading verified, level-specific vocabulary...';
-  try{const [vocabulary,grammarPool]=await Promise.all([source(active),grammarSource(active)]);items=makePaper(active,num,vocabulary,grammarPool);answers=load();page=0;sectionMode='all';const verified=items.filter(q=>q.verified).length;document.getElementById('test-title').textContent=active+' — Practice Paper '+String(num).padStart(2,'0')+' · '+verified+'/100 reviewed questions · LEGACY PRACTICE';render();}
+  try{const [vocabulary,grammarPool]=await Promise.all([source(active),grammarSource(active)]);items=makePaper(active,num,vocabulary,grammarPool);answers=load();page=0;sectionMode='all';const verified=items.filter(q=>q.verified).length;document.getElementById('test-title').textContent=active+' — Practice Paper '+String(num).padStart(2,'0')+' · 100 questions · '+verified+'/100 reviewed · LEGACY PRACTICE';render();}
   catch(e){test.classList.add('hidden');score.textContent='';window.alert('Cannot load paper: '+e.message+'. Please connect to internet and retry. No fake questions were substituted.');}
   finally{pending=false;choosePapers(active);}
  }
