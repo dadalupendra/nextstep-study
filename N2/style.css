@@ -11,3 +11,77 @@ button,input,select,textarea{font:inherit}button,select{cursor:pointer}button,a,
 @media(max-width:800px){.layout{grid-template-columns:1fr;padding:0 10px 20px;gap:9px}.side{position:static;display:grid;grid-template-columns:1fr 1fr;gap:8px}.side h2{grid-column:1/-1}.side .saved{margin:0}.paper{padding:22px 18px;min-height:600px}.toolbar{padding:12px 10px}.top{padding:14px}.word-table td,.word-table th{padding:8px 5px;word-break:break-word}.gridwrite span{width:62px;height:62px}.gridwrite span:first-child{font-size:43px;line-height:61px}}
 @media(max-width:500px){.side{grid-template-columns:1fr}.paper{font-size:var(--reader-size,22px)}.nav button{flex:1}.toolbar label{min-width:90px}}
 @media print{@page{size:A4;margin:12mm}body{background:white;font-size:12pt}.top,.nav,.toolbar,.side,.pager,.footer,.big-actions,.note{display:none!important}.layout{display:block;padding:0;margin:0;max-width:none}.paper{box-shadow:none;border:0;border-radius:0;min-height:0;width:100%;padding:0;font-size:12pt;page-break-after:always;break-after:page}.paper:last-child{page-break-after:auto;break-after:auto}.word-table td{padding:4px 7px}.kanji-big{font-size:92pt}.card{margin:8px 0;padding:12px}.print-page{height:260mm;overflow:hidden;page-break-after:always;break-after:page}.print-page .paper{page-break-after:auto;break-after:auto}.print-page:last-child{page-break-after:auto;break-after:auto}}
+
+
+/* Responsive N2 mobile + desktop refinements | 2026-11 */
+html{max-width:100%;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{min-width:0;max-width:100%;overflow-wrap:break-word}
+.top,.toprow,.nav,.toolbar,.layout,.side,.paper,.pager{min-width:0;max-width:100%}
+.toprow>*{min-width:0}
+.nav{overflow-x:auto;scrollbar-width:thin}
+.nav button{min-width:0;white-space:normal;line-height:1.35;overflow-wrap:anywhere}
+.toolbar{min-width:0}
+.toolbar>*{max-width:100%;overflow-wrap:anywhere}
+.toolbar button,.toolbar a{min-height:44px;touch-action:manipulation}
+.layout{grid-template-columns:minmax(0,245px) minmax(0,1fr)}
+.side{min-width:0;overflow-wrap:anywhere}
+.paper{min-width:0;overflow:visible;overflow-wrap:anywhere;word-wrap:break-word;line-height:1.8}
+.paper h1,.paper h2,.paper h3,.paper p,.paper .card,.paper .high,
+.paper .task,.paper .word-table,.paper .word-table td,.paper .word-table th,
+.paper .gloss,.paper .ja,.paper .ne,.paper .mini,.paper .flex,.paper .meaning{
+  min-width:0;max-width:100%;overflow-wrap:anywhere;word-break:break-word;
+}
+.paper h1{font-size:clamp(28px,4.3vw,52px)}
+.paper h2{font-size:clamp(22px,3vw,36px)}
+.paper .card{border-radius:14px;box-shadow:0 5px 12px rgba(15,54,70,.04)}
+.paper .word-table{width:100%;table-layout:fixed}
+.paper .word-table td:first-child,.paper .word-table th:first-child{width:38%}
+.paper .word-table td,.paper .word-table th{min-width:0;overflow-wrap:anywhere}
+.paper .word-table details{overflow-wrap:anywhere}
+.paper .word-table .reading{word-break:break-word}
+.paper .high{border-radius:7px 12px 12px 7px}
+.paper .kanji-big{font-size:clamp(72px,13vw,160px);flex:0 0 auto}
+.paper .flex{min-width:0;align-items:flex-start;flex-wrap:wrap}
+.paper .flex>div{min-width:0;flex:1 1 230px}
+.paper .gridwrite{max-width:100%;flex-wrap:wrap}
+.note{max-width:100%;min-width:0}
+@media(max-width:850px){
+ .layout{grid-template-columns:minmax(0,1fr);gap:12px;padding:0 12px 24px}
+ .side{position:static}
+ .paper{min-height:0;padding:clamp(16px,3.2vw,27px)}
+ .toolbar{padding:12px}
+ .toolbar label.grow{flex:1 1 100%;min-width:0}
+ .nav{padding:10px 12px 0}
+ .nav button{flex:1 1 150px}
+}
+@media(max-width:520px){
+ .top{padding:13px 12px}
+ .brand{font-size:23px}
+ .topsub{font-size:12px}
+ .nav{gap:7px;padding:9px 10px 0}
+ .nav button{font-size:13px;padding:10px 8px;min-height:54px;flex:1 1 104px}
+ .toolbar{padding:11px 10px;gap:8px}
+ .toolbar label{min-width:0}
+ .toolbar label.grow{flex-basis:100%}
+ .toolbar button,.toolbar a{font-size:13px;padding:9px 11px;flex:1 1 auto}
+ .layout{padding:0 10px 20px}
+ .paper{padding:17px 12px;border-radius:12px;font-size:clamp(16px,var(--reader-size,22px),28px)}
+ .paper h1{font-size:clamp(29px,8.5vw,39px)}
+ .paper h2{font-size:1.15em}
+ .paper .card{padding:13px}
+ .paper .high{padding:13px}
+ .paper .kanji-big{font-size:clamp(76px,22vw,110px)}
+ .paper .word-table td,.paper .word-table th{padding:8px 6px}
+ .paper .word-table td:first-child,.paper .word-table th:first-child{width:42%}
+ .paper .word-table .word{font-size:.96em}
+ .paper .gridwrite span{width:53px;height:53px}
+ .paper .gridwrite span:first-child{font-size:36px;line-height:52px}
+ .pager{padding:6px 12px 18px;gap:8px}
+ .pager button{font-size:14px}
+}
+@media print{
+ .paper{font-size:12pt!important}
+ .paper h1{font-size:26pt}
+ .paper h2{font-size:18pt}
+ .paper .word-table{table-layout:fixed}
+}
