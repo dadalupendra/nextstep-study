@@ -16,6 +16,11 @@ on:
       - 'scripts/build-social-preview.py'
       - 'scripts/test-social-preview.py'
       - 'scripts/test-responsive.cjs'
+      - 'scripts/legacy-responsive.css'
+      - 'scripts/legacy-responsive.js'
+      - 'scripts/n3-responsive.css'
+      - 'scripts/polish-deployed-site.py'
+      - 'scripts/test-all-readers.cjs'
   workflow_dispatch:
 
 concurrency:
@@ -55,6 +60,9 @@ jobs:
           # but keep license notices required by upstream datasets.
           rm -f public-site/N1/Download_N1_Data.ps1 public-site/N1/GET_REAL_N1_DATA.bat
 
+      - name: Apply responsive N3–N5 reader improvements without touching lesson data
+        run: python scripts/polish-deployed-site.py public-site
+
       - name: Set up Python for social cover generation
         uses: actions/setup-python@v5
         with:
@@ -74,6 +82,9 @@ jobs:
 
       - name: Verify N1 and N2 phone/tablet/desktop readability in Chromium
         run: node scripts/test-responsive.cjs public-site
+
+      - name: Verify all five books, study tables and navigation on mobile devices
+        run: node scripts/test-all-readers.cjs public-site
 
       - name: Upload static website
         uses: actions/upload-pages-artifact@v4
