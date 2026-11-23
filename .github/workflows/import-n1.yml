@@ -1,0 +1,74 @@
+name: Import NextStep N1 study website
+on:
+  push:
+    paths:
+      - '.github/workflows/import-n1.yml'
+  workflow_dispatch:
+jobs:
+  import-n1:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+      - name: Verify and unpack original N1 files
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs=require('node:fs'),path=require('node:path'),zlib=require('node:zlib'),crypto=require('node:crypto');
+          const payload=Array.from({length:7},(_,i)=>fs.readFileSync('.github/n1-transfer/part-'+String(i+1).padStart(2,'0')+'.b64','utf8').trim()).join('');
+          const sha256=s=>crypto.createHash('sha256').update(s).digest('hex');
+          const payloadHash='3c140f4fb05ede749154ca1b564d9590b187b9907e84e3bc1c1ce0e6dc12c4c2';
+          const rawHash='d32cee60d683858c3c36eca364c45f6b6a23ef96094663b6084bfe7c0b1063a8';
+          if(sha256(payload)!==payloadHash)throw Error('N1 transfer payload checksum mismatch');
+          const raw=zlib.brotliDecompressSync(Buffer.from(payload,'base64'));
+          if(sha256(raw)!==rawHash)throw Error('N1 extracted bytes checksum mismatch');
+          const divider=raw.indexOf(Buffer.from('\n\n'));
+          if(divider<0)throw Error('Missing archive manifest');
+          const manifest=raw.subarray(0,divider).toString('utf8').split('\n');
+          let cursor=divider+2;
+          const files=[];
+          for(const line of manifest){
+            const [name,sizeStr]=line.split('\t'),size=Number(sizeStr);
+            if(!/^N1\/[A-Za-z0-9._/-]+$/.test(name)||name.includes('..')||!Number.isSafeInteger(size)||size<0)throw Error('Bad manifest entry: '+line);
+            const content=raw.subarray(cursor,cursor+size);
+            if(content.length!==size)throw Error('Truncated content: '+name);
+            fs.mkdirSync(path.dirname(name),{recursive:true});
+            fs.writeFileSync(name,content);
+            cursor+=size;
+            files.push(name);
+          }
+          if(cursor!==raw.length||files.length!==11)throw Error('Archive count/length did not match');
+          console.log('Verified original N1 files:',files);
+          NODE
+      - name: Add verified N1 kanji grammar and vocabulary data
+        shell: bash
+        run: |
+          mkdir -p N1/data
+          for kind in kanji grammar vocab; do
+            curl --fail --location --retry 3 --max-time 90 "https://raw.githubusercontent.com/evanclan/OpenJLPT/main/data/json/${kind}/n1.json" -o "N1/data/${kind}.json"
+          done
+          python3 - <<'PY'
+          import json
+          for kind,minimum in [('kanji',700),('grammar',123),('vocab',1000)]:
+              with open(f'N1/data/{kind}.json',encoding='utf-8') as f: data=json.load(f)
+              if not isinstance(data,list) or len(data)<minimum:
+                  raise ValueError(f'N1 {kind} dataset missing/short: {len(data)}')
+              if not all(item.get('level')=='N1' for item in data):
+                  raise ValueError('N1 dataset includes non-N1 target entries: '+kind)
+              print(f'{kind}: {len(data)} N1-level-tagged entries')
+          PY
+      - name: Commit imported N1 and remove transfer fragments
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add N1
+          git rm -r --ignore-unmatch .github/n1-transfer
+          if git diff --cached --quiet; then
+            echo "N1 is already imported"
+          else
+            git commit -m "Import original N1 study book and N1 tagged reference data"
+            git push
+          fi
