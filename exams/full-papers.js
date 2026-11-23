@@ -1,46 +1,11 @@
-/* NextStep Study: 20 x 100 four-section JLPT-inspired practice papers for each JLPT level.
- * Original authored examples from app.js + source vocabulary from OpenJLPT (CC BY-SA 4.0).
- * Independent original reading/listening templates with browser speech synthesis; not an official recording or actual past exam.
- * Data reference: https://github.com/evanclan/OpenJLPT  */
+/* NextStep Study: existing 20 x 5 paper IDs with original-content-only loading.
+ * Preserves every paper ID and existing UI, but never substitutes synthetic demo questions.
+ * Incomplete slots remain visibly unavailable until individually authored content and audio exist. */
 "use strict";
 (() => {
- const CACHE=new Map(),GRAMMAR_CACHE=new Map(),TOTAL=100,TOPIC='nextstep-section-papers-v3';
- const kana=/^[ぁ-ゖァ-ヺー・\s]+$/u;
- const escText=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- const distinct=a=>[...new Set(a.filter(Boolean))];
- const hash=s=>{let h=2166136261;for(const ch of s){h^=ch.codePointAt(0);h=Math.imul(h,16777619)}return h>>>0};
- const mix=(list,key)=>{let a=[...list],state=hash(key);for(let i=a.length-1;i>0;i--){state^=state<<13;state^=state>>>17;state^=state<<5;let j=(state>>>0)%(i+1);[a[i],a[j]]=[a[j],a[i]];}return a;};
- const endpoint=level=>'https://cdn.jsdelivr.net/gh/evanclan/OpenJLPT@main/data/json/vocab/'+level.toLowerCase()+'.json';
- async function grammarSource(level){
- if(GRAMMAR_CACHE.has(level))return GRAMMAR_CACHE.get(level);
- const url='https://cdn.jsdelivr.net/gh/evanclan/OpenJLPT@main/data/json/grammar/'+level.toLowerCase()+'.json';
- const res=await fetch(url,{cache:'force-cache'});if(!res.ok)throw Error('Grammar data unavailable '+res.status);
- const data=await res.json(),pool=[],used=new Set();
- for(const g of data){
-  const forms=String(g.pattern||'').split('/').map(t=>t.replace(/^〜+/,'').replace(/[()（）].*/,'').trim()).filter(t=>t.length>0&&t.length<=14);
-  for(const e of g.examples||[]){
-   if(typeof e.ja!=='string')continue;
-   const form=forms.find(x=>e.ja.includes(x));if(!form)continue;
-   const id=e.ja+'|'+form;if(used.has(id))continue;used.add(id);
-   pool.push({sentence:e.ja,form,meaning:String(g.meaning||'')});
-  }
- }
- if(pool.length<25)throw Error('Not enough grammar examples: '+level);
- GRAMMAR_CACHE.set(level,pool);return pool;
-}
-function variedGrammar(level,num,serial,pool){
- const order=mix(pool,level+'|grammar-source-v3');
- const item=order[(((num-1)*25)+serial)%order.length],position=item.sentence.indexOf(item.form);
- const masked=item.sentence.slice(0,position)+'（　）'+item.sentence.slice(position+item.form.length);
- const candidates=[{form:item.form,correct:true,meaning:item.meaning}];
- const alternatives=mix(pool.filter(x=>x.form!==item.form&&!item.sentence.includes(x.form)),level+num+serial+'alts');
- for(const alt of alternatives){if(candidates.some(x=>x.form===alt.form))continue;candidates.push({form:alt.form,correct:false,meaning:alt.meaning});if(candidates.length===4)break;}
- if(candidates.length!==4)throw Error('Grammar choices could not be generated');
- const opts=mix(candidates,level+num+serial+'choices');
- return {type:'文法',prompt:'【文法】次の文の（　）には、教材の原文でどの表現が使われていますか。\n'+masked,
-  options:opts.map(x=>x.form),answer:opts.findIndex(x=>x.correct),grammarSource:true,grammarTarget:item,grammarOptions:opts,generated:false};
-}
-let page=0,paper=1,items=[],answers={},pending=false,sectionMode='all';
+ const TOTAL=100,TOPIC='nextstep-original-only-v1';
+ const escText=x=>String(x??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+ let page=0,paper=1,items=[],answers={},pending=false,sectionMode='all';
  const LEVEL_ALLOCATION={N1:{vocab:30,grammar:25,reading:30,listening:15},N2:{vocab:35,grammar:25,reading:25,listening:15},N3:{vocab:40,grammar:25,reading:20,listening:15},N4:{vocab:45,grammar:25,reading:15,listening:15},N5:{vocab:45,grammar:25,reading:15,listening:15}};
 let SECTIONS={};
 function applyLevelLayout(level){
@@ -62,67 +27,6 @@ function applyLevelLayout(level){
 }
  const paperGrid=document.getElementById('papers'),list=document.getElementById('questions'),score=document.getElementById('score'),test=document.getElementById('test');
  const note=document.createElement('p');note.className='muted';note.textContent='Paper 01 has partially reviewed original Japanese questions. Incomplete questions are explicitly marked UNAVAILABLE; no repeated demo passage or synthetic listening script is shown. The 100 existing paper cards and question positions are retained, but none is yet a complete real JLPT-style mock exam with recorded listening audio.';paperGrid.parentElement.append(note);
- async function source(level){
-  if(CACHE.has(level))return CACHE.get(level);
-  const res=await fetch(endpoint(level),{cache:'force-cache'});if(!res.ok)throw Error('Vocabulary download failed ('+res.status+').');
-  const data=await res.json();if(!Array.isArray(data))throw Error('Invalid vocabulary data.');
-  const cleaned=data.filter(w=>w&&typeof w.word==='string'&&typeof w.reading==='string'&&w.reading.trim()&&w.word.trim()&&w.word!==w.reading&&!kana.test(w.word)).map(w=>({word:w.word,reading:w.reading,meaning:Array.isArray(w.meanings)?String(w.meanings[0]||''):'',example:Array.isArray(w.examples)?String((w.examples.find(e=>e&&typeof e.ja==='string'&&e.ja.includes(w.word))||{}).ja||''):''}));
-  const dedup=new Map();for(const w of cleaned){const id=w.word;if(!dedup.has(id))dedup.set(id,w);}
-  const vocabulary=[...dedup.values()];if(vocabulary.length<94)throw Error('Not enough verified kanji-reading items for this level: '+vocabulary.length+'.');
-  CACHE.set(level,vocabulary);return vocabulary;
- }
- function selection(word,mode,all,level,paper,serial){
-  const target=mode==='reading'?word.reading:word.word;
-  const wrongs=mix(all.filter(w=>w.word!==word.word&&w.reading!==word.reading&&Math.abs(w.word.length-word.word.length)<=2),level+'|'+paper+'|'+serial+'|wrong');
-  const opts=[{text:target,word,correct:true}];
-  for(const w of wrongs){const candidate=mode==='reading'?w.reading:w.word;if(opts.some(o=>o.text===candidate))continue;opts.push({text:candidate,word:w,correct:false});if(opts.length===4)break;}
-  if(opts.length!==4)throw Error('Not enough unique distractors for '+word.word);
-  const rotated=mix(opts,level+'|'+paper+'|'+serial+'|options');
-  const context=mode==='spelling'&&word.example?' 次の文を参考にしてください。「'+word.example.replaceAll(word.word,'（　）')+'」':'';
-  const question=mode==='reading'?'「'+word.word+'」の読み方として正しいものはどれですか。':'「'+word.reading+'」の正しい漢字表記はどれですか。'+context;
-  return{type:'語彙・漢字',prompt:question,options:rotated.map(o=>o.text),answer:rotated.findIndex(o=>o.correct),source:rotated,word,mode,generated:true};
- }
-
- const notices={
-  N5:['図書館','友だち','学校'],N4:['図書館','市役所','公民館'],N3:['受付','教室','図書館'],N2:['窓口','研修室','会議室'],N1:['広報室','調査室','研究会']
- };
- const days=['月曜日','火曜日','水曜日','木曜日','金曜日','土曜日','日曜日'];
- const hours=['午前9時','午前10時','午前11時','午後1時','午後2時','午後3時','午後4時'];
- const verbs=['開きます','始まります','行われます'];
- function scenario(level,num,serial,kind){
-  const listening=kind==='聴解',seq=(num-1)*(listening?15:20)+serial;
-  const locations=[...notices[level],'駅の前','ホール'];
-  const events=['説明会','勉強会','展示会','日本語教室','相談会','発表会','交流会','研修'];
-  const day=days[Math.floor(seq/7)%7],hour=hours[seq%7];
-  const place=locations[Math.floor(seq/49)%locations.length],event=events[Math.floor(seq/245)%events.length];
-  const previousHour=hours[(seq%7+2)%7];
-  const questionKind=seq%3;
-  const word={
-   N5:'今日の予定をお知らせします。',
-   N4:'イベントの予定が変わりました。',
-   N3:'イベントの予定についてお知らせします。以前の予定と違うのでご注意ください。',
-   N2:'今回の開催予定につきまして、変更後の内容をご案内いたします。',
-   N1:'運営上の調整を踏まえ、開催概要の一部を下記のとおり改訂いたしました。'
-  }[level];
-  const plain='「'+event+'」は'+day+'、'+place+'で行います。開始は'+hour+'です。以前お知らせした'+previousHour+'ではありません。';
-  const passage=listening?'もしもし。'+word+plain+'参加する方は変更後の予定を確認してください。':'【案内】'+word+plain+'参加をご希望の方は、日時と会場をご確認ください。';
-  let options,correctValue,prompt,property;
-  if(questionKind===0){property='time';correctValue=hour;options=[hour,previousHour,...hours.filter(v=>v!==hour&&v!==previousHour)].slice(0,4);prompt='変更後の開始時間はいつですか。';}
-  else if(questionKind===1){property='day';correctValue=day;options=[day,...days.filter(v=>v!==day)].slice(0,4);prompt='いつ開催されますか。';}
-  else{property='place';correctValue=place;options=[place,...locations.filter(v=>v!==place)].slice(0,4);prompt='会場はどこですか。';}
-  const shuffled=mix(options,level+'|'+num+'|'+serial+'|'+kind+'|choices');
-  const heading=listening?'【聴解】音声を聞いて答えてください。':'【読解】次の文章を読んで答えてください。';
-  return{type:kind,prompt:heading+(listening?'':'\n'+passage)+'\n【質問】'+prompt,
-   passage,options:shuffled,answer:shuffled.indexOf(correctValue),generated:false,scenario:true,listen:listening,
-   correctValue,place,day,property,locale:level};
- }
- function grammar(level,num,serial){
-  const base=bank[level].filter(q=>q[0]==='文法');
-  const selected=base[(serial+num)%base.length];
-  const opt=mix(selected[3].map((v,i)=>({data:v,correct:i===selected[2]})),level+'|'+num+'|grammar|'+serial);
-  const out=[...selected];out[2]=opt.findIndex(o=>o.correct);out[3]=opt.map(o=>o.data);
-  return{type:'文法',prompt:out[1],options:out[3].map(o=>o[0]),answer:out[2],original:out,generated:false};
- }
  function makePaper(level,num){
   // Content-first: never silently populate the 100 existing slots with
   // algorithmically generated filler or a repeating template.
@@ -154,19 +58,12 @@ function applyLevelLayout(level){
   return slots;
  }
  function explanation(q,j){
-  if(q.verified){const right=j===q.answer,why=q.choiceExplanations?.[j]||q.explanation;return '<strong>'+escText(q.options[j])+(right?' ✅':' ❌')+'</strong><br>🇯🇵 '+(right?'正解。':'不正解。')+escText(why.ja)+'<br>🇬🇧 '+(right?'Correct. ':'Incorrect. ')+escText(why.en)+'<br>🇳🇵 '+(right?'सही उत्तर। ':'गलत उत्तर। ')+escText(why.ne);}
-
-  if(q.sourceType){const good=j===q.answer;return '<strong>'+escText(q.options[j])+(good?' ✅':' ❌')+'</strong><br>🇯🇵 '+(good?'正解。':'不正解。')+escText(q.explanation.ja)+'<br>🇳🇵 '+(good?'सही उत्तर। ':'गलत उत्तर। ')+escText(q.explanation.ne)+'<br>🇬🇧 '+(good?'Correct. ':'Incorrect. ')+escText(q.explanation.en);}
-
-  if(q.grammarSource){const good=j===q.answer,item=q.grammarTarget,option=q.grammarOptions[j];return '<strong>'+escText(option.form)+(good?' ✅':' ❌')+'</strong><br>🇯🇵 '+(good?'正解です。':'不正解です。')+'教材の原文は「'+escText(item.sentence)+'」で、文法表現は「'+escText(item.form)+'」です。<br>🇳🇵 '+(good?'सही विकल्प। ':'गलत विकल्प। ')+'मूल उदाहरणमा प्रयोग भएको व्याकरण '+escText(item.form)+' हो।<br>🇬🇧 '+(good?'Correct. ':'Incorrect. ')+'The source sentence uses '+escText(item.form)+' ('+escText(item.meaning)+').';}
-
-  if(q.scenario){const good=j===q.answer,choice=q.options[j];return '<strong>'+escText(choice)+(good?' ✅':' ❌')+'</strong><br>🇯🇵 '+(good?'正解です。':'不正解です。')+'案内の答えは「'+escText(q.correctValue)+'」です。'+(good?'':'この選択肢は案内された開始時間ではありません。')+'<br>🇳🇵 '+(good?'सही उत्तर हो।':'गलत उत्तर हो।')+' सूचनाअनुसार सही विकल्प '+escText(q.correctValue)+' हो।'+'<br>🇬🇧 '+(good?'Correct. ':'Incorrect. ')+'The announcement identifies the correct answer as '+escText(q.correctValue)+'.';}
-  if(!q.generated){const opt=q.original[3][j],good=j===q.answer;return '<strong>'+escText(opt[0])+(good?' ✅':' ❌')+'</strong><br>🇯🇵 '+escText(opt[1])+'. '+(good?escText(q.original[4]):'この設問の正答ではありません。')+'<br>🇳🇵 '+escText(opt[2])+'। '+(good?escText(q.original[5]):'यस प्रश्नमा यो विकल्प सही होइन।')+'<br>🇬🇧 '+escText(opt[3])+'. '+(good?escText(q.original[6]):'This is not the correct option here.');}
-  const item=q.source[j],right=item.correct,target=q.word;const english=target.meaning?' / Meaning: '+target.meaning:'';
-  return '<strong>'+escText(item.text)+(right?' ✅':' ❌')+'</strong><br>'+
-    '🇯🇵 '+(right?'正解です。':'不正解です。')+'「'+escText(target.word)+'」の読みは「'+escText(target.reading)+'」です。'+(right?'':'この選択肢は「'+escText(item.word.word)+'」（'+escText(item.word.reading)+'）に対応します。')+
-    '<br>🇳🇵 '+(right?'यो सही विकल्प हो। ':'यो गलत विकल्प हो। ')+'「'+escText(target.word)+'」 को पढाइ 「'+escText(target.reading)+'」 हो।'+(right?'':' यो विकल्प 「'+escText(item.word.word)+'」（'+escText(item.word.reading)+'）सँग सम्बन्धित छ।')+
-    '<br>🇬🇧 '+(right?'Correct. ':'Incorrect. ')+'The reading of '+escText(target.word)+' is '+escText(target.reading)+escText(english)+'.'+(right?'':' This option is associated with '+escText(item.word.word)+' ('+escText(item.word.reading)+').');
+  if(!q.verified||!q.choiceExplanations?.[j])return '<strong>この設問は未完成です。</strong>';
+  const right=j===q.answer,why=q.choiceExplanations[j];
+  return '<strong>'+escText(q.options[j])+(right?' ✅':' ❌')+'</strong><br>🇯🇵 '+
+   (right?'正解。':'不正解。')+escText(why.ja)+'<br>🇬🇧 '+
+   (right?'Correct. ':'Incorrect. ')+escText(why.en)+'<br>🇳🇵 '+
+   (right?'सही उत्तर। ':'गलत उत्तर। ')+escText(why.ne);
  }
  function playJapanese(script,rate){
   if(!('speechSynthesis' in window)||typeof SpeechSynthesisUtterance==='undefined'){window.alert('Japanese Text-to-Speech is not available on this device. Try Chrome, Edge or Safari with a Japanese voice installed.');return;}
