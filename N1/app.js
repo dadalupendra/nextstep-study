@@ -137,8 +137,8 @@ function cardActions(type,item,index){
 }
 function kanjiCard(item,index){
  const on=arr(item.onyomi).slice(0,5).join('、')||'—',kun=arr(item.kunyomi).slice(0,5).join('、')||'—';
- const words=extractWordsForKanji(item).map(w=>`<span lang="ja">${esc(w)}</span>`).join('');
- return `<article class="card"><div class="badge">漢字 #${index+1} • N1</div><div class="headline"><div class="bigkanji" lang="ja">${esc(item.character)}</div><div class="card-info"><h3>${esc(arr(item.meanings)[0]||'—')}</h3><div class="field"><b>音読み:</b> ${esc(on)}</div><div class="field"><b>訓読み:</b> ${esc(kun)}</div></div></div><div class="meaning"><b>English meaning:</b> ${esc(glossFor(item,'kanji'))}</div><div class="field"><b>部首 / Radical:</b> ${esc(item.radical||'—')} • <b>画数 / Strokes:</b> ${esc(item.strokes??'—')}</div><div class="field"><b>熟語 / Compounds:</b></div><div class="wordchips">${words||'<span>—</span>'}</div>${tripleDetails(item,'kanji')}${cardActions('kanji',item,index)}</article>`
+ const words=extractWordsForKanji(item).map(w=>`<button type="button" class="kanji-chip" data-kanji-open="${esc(item.character)}" data-kanji-word="${esc(w)}" lang="ja" title="Open reading, meaning and examples for ${esc(w)}">${esc(w)} ↗</button>`).join('');
+ return `<article class="card"><div class="badge">漢字 #${index+1} • N1</div><div class="headline"><button type="button" class="bigkanji kanji-main-link" data-kanji-open="${esc(item.character)}" aria-label="Open all available compound words for ${esc(item.character)}" title="熟語・関連語を見る" lang="ja">${esc(item.character)}</button><div class="card-info"><h3>${esc(arr(item.meanings)[0]||'—')}</h3><div class="field"><b>音読み:</b> ${esc(on)}</div><div class="field"><b>訓読み:</b> ${esc(kun)}</div></div></div><div class="meaning"><b>English meaning:</b> ${esc(glossFor(item,'kanji'))}</div><div class="field"><b>部首 / Radical:</b> ${esc(item.radical||'—')} • <b>画数 / Strokes:</b> ${esc(item.strokes??'—')}</div><div class="field"><b>熟語・関連語 / Click each word:</b> <span class="small">漢字 थिचेर यसबाट बनेका शब्द, पढाइ, अर्थ र उदाहरण खोल।</span></div><div class="wordchips">${words||'<span>—</span>'}</div>${tripleDetails(item,'kanji')}${cardActions('kanji',item,index)}</article>`
 }
 function grammarCard(item,index){
  const examples=arr(item.examples).slice(0,3).map(exampleHTML).join('');
@@ -376,6 +376,14 @@ function setup(){
 
  document.addEventListener('click',e=>{
   let btn=e.target.closest('button');if(!btn||!app.loaded)return;
+  if(btn.hasAttribute('data-kanji-open')){
+    const selected=app.data.kanji.find(x=>x.character===btn.dataset.kanjiOpen);
+    if(selected&&window.NextStepCompounds)window.NextStepCompounds.open({
+     item:selected,level:'N1',localVocabulary:app.data.vocab,
+     initialWord:btn.dataset.kanjiWord||''
+    });
+    return;
+   }
   if(btn.hasAttribute('data-navto')){app.chapter=Number(btn.dataset.navto);$('searchBox').value='';refreshView();window.scrollTo({top:0,behavior:'smooth'})}
   else if(btn.hasAttribute('data-quiz')){let[t,n]=btn.dataset.quiz.split(':');showQuiz(t,Number(n))}
   else if(btn.hasAttribute('data-done')){let[t,n]=btn.dataset.done.split(':');toggleDone(t,Number(n))}
