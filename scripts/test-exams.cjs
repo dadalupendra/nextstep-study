@@ -33,7 +33,7 @@ let browser;
   assert.equal(await page.locator('#papers button').count(),20);
   assert.match(await page.locator('#current-level').innerText(),new RegExp(level));
   await page.locator('#papers button').first().click();
-  await page.waitForFunction(()=>document.getElementById('test-title')?.textContent.includes('100 questions'),null,{timeout:10000});
+  await page.waitForFunction(()=>document.getElementById('test-title')?.textContent.includes('/100 original questions available'),null,{timeout:10000});
   assert.equal(await page.locator('#questions .question').count(),10);
   // Next 10 navigation must follow the last question, not appear at top.
   assert.equal(await page.locator('#questions').locator(':scope > :last-child').getAttribute('aria-label'),'Question page navigation');
@@ -70,9 +70,10 @@ let browser;
   for(let i=0;i<9;i++)await page.getByRole('button',{name:'Next 10 →'}).click();
   const section=await page.locator('#questions .question').first().locator('h3').innerText();
   assert.match(section,/聴解/);
-  assert.equal(await page.getByRole('button',{name:'🔊 再生 \/ Play audio'}).count(),10);
+  assert.equal(await page.getByRole('button',{name:'🔊 再生 \/ Play audio'}).count(),0);
+  assert.equal(await page.locator('#questions .question .option').count(),0,'No fake listening questions or controls before audio assets exist');
   assert.equal(errors.length,0,level+' page errors: '+errors.join('; '));
-  console.log('PASS',level,'20 papers; 100 questions; all sections; listening controls; explanations');
+  console.log('PASS',level,'20 preserved paper cards; 100 positions; verified authored questions; no fake audio in pending listening');
   await page.close();
  }
  console.log('PASS: five-level JLPT practice center smoke tests');
