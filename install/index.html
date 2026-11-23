@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Install NextStep Study | Android · iPhone · Windows</title>
+<meta name="description" content="Install NextStep Study on Android, iPhone, iPad and Windows to read your JLPT N5–N1 study books from your home screen.">
+<meta name="theme-color" content="#081524"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="NextStep Study">
+<link rel="manifest" href="../manifest.webmanifest"><link rel="apple-touch-icon" href="../icons/icon-180.png"><link rel="icon" type="image/png" sizes="192x192" href="../icons/icon-192.png">
+<style>
+:root{color-scheme:dark;--bg:#081524;--box:#112b44;--ink:#f2f9ff;--muted:#c4d5e3;--cyan:#5ee9d5}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#164569,#081524 65%);color:var(--ink);font:17px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif}
+header,main,footer{max-width:1050px;margin:auto;padding:22px}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+a{color:var(--cyan)}header a{text-decoration:none;font-weight:700}
+h1{font-size:clamp(33px,6vw,57px);line-height:1.12;margin:15px 0}
+h2{margin-top:0;font-size:23px}p{margin:10px 0 18px}.lead{font-size:21px;color:var(--muted);max-width:770px}
+.card{background:var(--box);border:1px solid #49718d;border-radius:20px;padding:23px;margin:14px 0}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}.badge{display:inline-block;border:1px solid #5ee9d5;border-radius:999px;padding:5px 15px;color:var(--cyan);font-size:14px;font-weight:800}
+button,.button{border:0;border-radius:12px;background:#5ee9d5;color:#06253a;min-height:48px;padding:13px 21px;text-align:center;display:inline-block;font-size:17px;font-weight:800;text-decoration:none;cursor:pointer}
+button:focus-visible,a:focus-visible{outline:3px solid #fff;outline-offset:3px}
+button:disabled{opacity:.55;cursor:not-allowed}.secondary{background:#2b506b;color:#fff;border:1px solid #6289a7}
+.instructions{padding-left:24px}.instructions li{margin:12px 0}.muted{color:var(--muted)}.small{font-size:14px}.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+#message{font-weight:700;color:#bfffee}footer{border-top:1px solid #36536a;color:var(--muted);margin-top:38px}
+@media(max-width:760px){.grid{grid-template-columns:1fr}header,main,footer{padding:19px}.card{padding:20px}}
+</style></head>
+<body><header><strong>📘 NextStep Study</strong><a href="../">← Back to all N5–N1 books</a></header>
+<main><span class="badge">FREE · INSTALL FROM BROWSER</span><h1>📲 Install NextStep Study</h1>
+<p class="lead">Add the existing JLPT N5–N1 reader and practice papers to your Android phone, iPhone/iPad or Windows PC. Your books stay on the same website—no separate account or paid store is necessary.</p>
+<div class="card"><h2>Install on this device</h2><div class="row"><button id="install" type="button">📲 Install App</button><a class="button secondary" href="../">Open Books</a></div><p id="message" role="status" aria-live="polite">Checking your browser…</p></div>
+<div class="grid">
+<section class="card" id="android"><h2>🤖 Android</h2><ol class="instructions"><li>Open this page in <strong>Chrome</strong>.</li><li>Tap <strong>Install App</strong> above when available, or open Chrome <strong>⋮</strong> menu.</li><li>Select <strong>Install app</strong> or <strong>Add to Home screen</strong> (wording varies).</li><li>Tap <strong>Install</strong>. NextStep Study opens from your home screen.</li></ol></section>
+<section class="card" id="ios"><h2>🍎 iPhone / iPad</h2><ol class="instructions"><li>Open this website in <strong>Safari</strong>.</li><li>Tap the <strong>Share</strong> button (or Safari page menu, depending on your version).</li><li>Choose <strong>Add to Home Screen</strong>.</li><li>Choose <strong>Add</strong>. Open the icon on the home screen.</li></ol><p class="small muted">iOS does not offer the same automatic browser install prompt as Android Chrome.</p></section>
+<section class="card" id="windows"><h2>💻 Windows PC</h2><ol class="instructions"><li>Open this website in <strong>Microsoft Edge</strong> or <strong>Google Chrome</strong>.</li><li>Click <strong>Install App</strong> when the prompt is available.</li><li>Or in Edge, open <strong>⋯ → Apps → Install this site as an app</strong>; in Chrome, use <strong>⋮ → Cast, save and share → Install page as app</strong> (menu varies by version).</li><li>Confirm. Launch NextStep Study from the Windows Start menu.</li></ol></section>
+</div>
+<section class="card"><h2>📚 Reading offline</h2><p>Previously visited pages and loaded study materials may be available without internet after the site has been installed and cached. Before going offline, open the books and papers you need while online. Large books, first-time exam datasets, external media, and some features still require internet; your device can remove stored caches.</p></section>
+<section class="card"><h2>Open any JLPT book</h2><div class="row"><a class="button secondary" href="../N5/">N5</a><a class="button secondary" href="../N4/">N4</a><a class="button secondary" href="../N3/">N3</a><a class="button secondary" href="../N2/">N2</a><a class="button secondary" href="../N1/">N1</a><a class="button" href="../exams/">📝 Practice Papers</a></div></section>
+</main><footer>NextStep Study · Browser-installable PWA for iOS, Android and Windows. This page is not an APK, EXE or App Store download.</footer>
+<script>
+(() => {
+ let pending=null;const button=document.getElementById('install'),message=document.getElementById('message');
+ const ios=/iPad|iPhone|iPod/.test(navigator.userAgent)||(/Macintosh/.test(navigator.userAgent)&&navigator.maxTouchPoints>1);
+ const android=/Android/.test(navigator.userAgent);
+ const standalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+ function guide(){if(standalone){button.hidden=true;message.textContent='✅ Installed — NextStep Study is running as an app.';return;}
+ if(ios){message.textContent='On iPhone/iPad: Safari → Share → Add to Home Screen.';}
+ else if(android){message.textContent='On Android: Chrome ⋮ → Install app or Add to Home screen.';}
+ else{message.textContent='On Windows: Edge or Chrome menu → Install this site as an app.';}}
+ window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();pending=event;button.hidden=false;message.textContent='✅ This browser supports installing NextStep Study. Tap Install App.';});
+ button.addEventListener('click',async()=>{if(pending){const prompt=pending;pending=null;await prompt.prompt();const choice=await prompt.userChoice;message.textContent=choice.outcome==='accepted'?'✅ Installation accepted. Find NextStep Study on your device.':'Installation cancelled; you can try again from the browser menu.';}else guide();});
+ window.addEventListener('appinstalled',()=>{button.hidden=true;message.textContent='✅ NextStep Study installed successfully.';});
+ if('serviceWorker' in navigator){navigator.serviceWorker.register('../sw.js').catch(()=>{});}
+ guide();
+})();
+</script></body></html>
