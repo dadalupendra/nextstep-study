@@ -1,0 +1,83 @@
+
+/* N3 Shadow DOM responsive study reader: preserves 500 existing study pages */
+:host{
+  display:block;width:100%;max-width:100%;min-width:0;
+  overflow-wrap:anywhere;-webkit-text-size-adjust:100%;text-size-adjust:100%
+}
+#app,.layout,.sidebar,.workspace,.paper,nav.cards,section.toolbar,.pager,
+.paper .entry-head,.paper .example,.paper .meaning,.paper .model,.paper .formula,
+.paper .tri,.paper .index,.paper .notes,.paper .revision{
+  min-width:0;max-width:100%;overflow-wrap:anywhere
+}
+#app{width:100%}
+header{border-bottom:1px solid rgba(255,255,255,.10)}
+header h1{overflow-wrap:anywhere;letter-spacing:-.02em}
+nav.cards button{min-width:0;max-width:100%;overflow-wrap:anywhere;min-height:72px}
+nav.cards small,nav.cards b{overflow-wrap:anywhere;min-width:0}
+nav.cards img{max-width:100%;height:auto;align-self:center}
+section.toolbar{gap:10px}
+section.toolbar label{min-height:44px;min-width:0;flex-wrap:wrap}
+section.toolbar button,section.toolbar select{min-height:44px;touch-action:manipulation}
+.layout{grid-template-columns:minmax(0,240px) minmax(0,1fr)}
+.paper{
+  max-width:100%;overflow-wrap:anywhere;word-wrap:break-word;
+  line-break:loose;box-shadow:0 9px 28px rgba(24,55,83,.11);
+  border-radius:14px
+}
+.paper p,.paper div,.paper h1,.paper h2,.paper h3,.paper .ja,.paper .ne,
+.paper .en,.paper li,.paper td,.paper th,.paper .meaning,.paper .formula{
+  min-width:0;max-width:100%;overflow-wrap:anywhere;
+  white-space:normal;word-break:normal;line-break:loose
+}
+.paper ruby,.paper rt{white-space:normal}
+.paper table{max-width:100%;border-collapse:collapse}
+.paper td,.paper th{overflow-wrap:anywhere;word-break:break-word}
+.paper img,.paper svg,.paper video{max-width:100%;height:auto}
+.paper .big-ja{font-size:clamp(52px,12vw,90px)}
+.paper .entry-head{flex-wrap:wrap;gap:12px}
+.chapters button,.pager button,.revision button.choice,.tools button{min-height:44px}
+:focus-visible{outline:3px solid #df952f;outline-offset:2px}
+@media(max-width:900px){
+  .layout{grid-template-columns:minmax(0,1fr);gap:13px;padding:14px}
+  .chapters{max-height:180px}
+  .sidebar{padding-bottom:12px;border-bottom:1px solid var(--line)}
+  nav.cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:13px}
+  nav.cards button{display:grid;grid-template-columns:48px minmax(0,1fr);gap:9px;padding:10px}
+  nav.cards img{float:none;margin:0;width:48px;aspect-ratio:210/297}
+  .paper{min-height:0;padding:18px}
+}
+@media(max-width:520px){
+  header{padding:17px 13px}
+  header h1{font-size:clamp(22px,7vw,29px)}
+  header p{font-size:13px;line-height:1.6}
+  nav.cards{grid-template-columns:minmax(0,1fr);gap:8px;padding:10px 12px}
+  nav.cards button{grid-template-columns:53px minmax(0,1fr);gap:12px;display:grid;
+                   align-items:center;min-height:71px;padding:8px 12px}
+  nav.cards img{width:53px;height:65px;object-fit:cover;float:none;margin:0}
+  nav.cards b{font-size:14px}
+  nav.cards small{font-size:12px}
+  section.toolbar{padding:11px 12px;gap:8px}
+  section.toolbar label{font-size:12px;flex:1 1 112px}
+  section.toolbar select{max-width:100%}
+  .layout{padding:11px 10px}
+  .chapters{max-height:146px}
+  .paper{padding:16px 11px;font-size:clamp(15px,var(--size,18px),25px)}
+  .paper .big-ja{font-size:clamp(50px,18vw,72px)}
+  .paper .index,.paper .answer-columns,.paper .check-columns{columns:1}
+  .paper table{display:block;max-width:100%;overflow-x:auto;scrollbar-width:thin;
+               -webkit-overflow-scrolling:touch;table-layout:auto}
+  .paper tbody,.paper thead{display:table-header-group}
+  .paper tr{display:table-row}
+  .paper td,.paper th{font-size:13px;padding:6px;min-width:64px}
+  .pager{gap:8px;justify-content:center}
+  .pager select{min-height:44px}
+  .tools{gap:8px}
+  .tools button{flex:1 1 130px}
+  .notes,.revision{padding:12px}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+@media print{
+  .paper{box-shadow:none;max-width:none}
+  .paper table{display:table;overflow:visible}
+  nav.cards{display:none}
+}
