@@ -6,6 +6,12 @@ const {spawn}=require('node:child_process');
 const fs=require('node:fs');
 const path=require('node:path');
 const ROOT=path.resolve(process.argv[2]||'public-site');
+const {execFileSync}=require('node:child_process');
+const auditOutput=execFileSync(process.execPath,['scripts/validate-exam-content.cjs',ROOT],{
+ encoding:'utf8',env:{...process.env,NEXTSTEP_AUDIT_REPORT:path.join(ROOT,'exams','content-audit.json')}
+});
+console.log('JLPT 100-paper content audit (partial state):\n'+auditOutput);
+
 const CHROME=process.env.CHROME_PATH||['/usr/bin/google-chrome','/usr/bin/google-chrome-stable','/usr/bin/chromium','/usr/bin/chromium-browser'].find(p=>fs.existsSync(p));
 if(!CHROME)throw Error('Chromium not available');
 const PORT=8778;
