@@ -66,10 +66,17 @@ N1:[
 ['彼の努力が並大抵でなかったことは、結果を見れば想像（　）。','にかたくない',['ずにはいられない','こそあれ','を禁じ得ない'],'「想像にかたくない」は容易に想像できることを表します。','想像にかたくない means not difficult to imagine.','想像にかたくない ले सहजै कल्पना गर्न सकिन्छ भन्ने अर्थ दिन्छ।'],
 ['長年の研究が実を結び、研究者の喜びは（　）。','ひとしおだった',['いかんだった','まみれだった','だらけだった'],'「喜びもひとしお」は喜びが一層深いことを表します。','ひとしお describes a particularly deep feeling.','ひとしお ले खुशी विशेष रूपमा गहिरो भएको जनाउँछ।'],
 ['その報告書は、専門家でさえ理解し（　）内容だった。','がたい',['かねない','つつある','まみれの'],'「〜がたい」は心理的・意味的に困難であることを表します。','がたい means difficult to do, often conceptually.','がたい ले बुझ्न/गर्न अत्यन्त कठिन हुनु जनाउँछ।'],
-['調査結果の変更を（　）された。','余儀なく',['禁じ','問わず','待たず'],'「〜を余儀なくされる」は避けられず何かをさせられることです。','余儀なくされる means being compelled by circumstances.','余儀なくされる ले परिस्थितिले बाध्य पार्नु जनाउँछ।'],
+['調査方法の変更を（　）された。','余儀なく',['禁じ','問わず','待たず'],'「〜を余儀なくされる」は避けられず何かをさせられることです。','余儀なくされる means being compelled by circumstances.','余儀なくされる ले परिस्थितिले बाध्य पार्नु जनाउँछ।'],
 ['政策の効果は、地域の事情（　）異なる。','いかんによって',['といわず','とあって','ずくめで'],'「〜いかんによって」は事情・条件次第という意味です。','いかんによって means depending on circumstances.','いかんによって ले परिस्थितिअनुसार फरक पर्ने जनाउँछ।']
 ]
 };
+function reorder(level,index,opts,reasons){
+ const chosen=(index+parseInt(level.slice(1),10))%4;
+ const options=[...opts],explanations=[...reasons];
+ [options[0],options[chosen]]=[options[chosen],options[0]];
+ [explanations[0],explanations[chosen]]=[explanations[chosen],explanations[0]];
+ return{options,answer:chosen,explanations};
+}
 function word(level,paper,index){
  if(paper!==1||index<0||index>=5||!V[level])return null;
  const [kanji,reading,meaning,nepali,sentence,wrong]=V[level][index];
@@ -77,7 +84,8 @@ function word(level,paper,index){
  const itemExplanations=options.map((opt,i)=>i===0?
  {ja:'「'+kanji+'」の読みは「'+reading+'」です。例文：「'+sentence+'」',en:kanji+' is read '+reading+' and means '+meaning+'. Example: '+sentence,ne:kanji+' को सही पढाइ '+reading+' हो। अर्थ: '+nepali+'।'}:
  {ja:'「'+opt+'」は「'+kanji+'」の読みではありません。正しくは「'+reading+'」です。',en:opt+' is not the reading of '+kanji+'. The correct reading is '+reading+'.',ne:opt+' यस शब्दको सही पढाइ होइन। सही पढाइ '+reading+' हो।'});
- return{type:'語彙・漢字',subtype:'漢字読み',prompt:'次の言葉の読み方として最もよいものを一つ選びなさい。\n「'+kanji+'」',options,answer:0,verified:true,authoredBatch:'language-01',choiceExplanations:itemExplanations,
+ const choice=reorder(level,index,options,itemExplanations);
+ return{type:'語彙・漢字',subtype:'漢字読み',prompt:'次の言葉の読み方として最もよいものを一つ選びなさい。\n「'+kanji+'」',options:choice.options,answer:choice.answer,verified:true,authoredBatch:'language-01',choiceExplanations:choice.explanations,
   explanation:{ja:'正しい読みは「'+reading+'」です。'+sentence,en:'The correct reading is '+reading+'. '+meaning+'.',ne:'सही पढाइ '+reading+' हो। अर्थ: '+nepali+'।'}};
 }
 function grammar(level,paper,index){
@@ -87,8 +95,9 @@ function grammar(level,paper,index){
  ja:'この文の（　）には「'+opt+'」ではなく「'+correct+'」が必要です。'+ja,
  en:'The expression '+opt+' does not fit this sentence. '+en,
  ne:opt+' यस वाक्यमा मिल्दैन। '+ne});
+ const choice=reorder(level,index,options,reasons);
  return{type:'文法',subtype:'文の文法１',prompt:'次の文の（　）に入れるのに最もよいものを一つ選びなさい。\n'+sentence,
- options,answer:0,verified:true,authoredBatch:'language-01',choiceExplanations:reasons,
+ options:choice.options,answer:choice.answer,verified:true,authoredBatch:'language-01',choiceExplanations:choice.explanations,
  explanation:{ja,en,ne}};
 }
 global.NextStepVerifiedLanguage={word,grammar,vocabEntries:V,grammarEntries:G};
