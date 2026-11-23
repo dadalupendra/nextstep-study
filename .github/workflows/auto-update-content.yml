@@ -1,0 +1,48 @@
+name: Automatically update JLPT N1 and N2 study data
+
+on:
+  schedule:
+    # Every morning around 09:23 JST (00:23 UTC); GitHub may delay scheduled runs.
+    - cron: '23 0 * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/auto-update-content.yml'
+      - 'scripts/update-content.cjs'
+
+concurrency:
+  group: nextstep-educational-source-sync
+  cancel-in-progress: false
+
+jobs:
+  safe-update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout NextStep Study
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Check trusted educational source for N1 and N2 changes
+        run: node scripts/update-content.cjs
+
+      - name: Validate Japanese reading books and all 50-question practice papers
+        run: node scripts/test-n2.cjs
+
+      - name: Commit meaningful reviewed-structure updates only
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add -- N1/data/kanji.json N1/data/grammar.json N1/data/vocab.json N2/data.js N2/grammar-data.js
+          if git diff --cached --quiet; then
+            echo "No changes at the educational data source; no commit or deployment needed."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Auto-update verified N1 and N2 learning data from OpenJLPT"
+          git push origin main
+          echo "Verified educational data changed. GitHub Pages auto-publishing runs on this commit."
