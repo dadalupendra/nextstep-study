@@ -56,7 +56,7 @@ function kanjiPage(page,printing){
  const focus=examples[0];
  return '<div class="eyebrow">N2-TAGGED KANJI / CHAPTER '+(Math.floor((page-1)/40)+1)+' · Page '+page+' / 400</div>'+
  '<h1>漢字ノート <span class="badge">N2 level-tagged character '+page+' / 398</span></h1>'+
- '<div class="flex"><span class="kanji-big ja" lang="ja">'+esc(char)+'</span><div><h2>'+en((meanings||[]).join(' · '))+'</h2>'+
+ '<div class="flex"><a class="kanji-big ja" lang="ja" href="master.html?section=kanji&character='+encodeURIComponent(char)+'" style="color:inherit;text-decoration:underline;text-decoration-color:#54e2ce;text-underline-offset:7px" title="クリックして熟語・関連語を開く" aria-label="'+esc(char)+'の熟語と関連語を開く">'+esc(char)+'</a><div><h2>'+en((meanings||[]).join(' · '))+'</h2>'+
  '<p class="ja">音読み '+esc((onyomi||[]).join('・')||'—')+'</p><p class="ja">訓読み '+esc((kunyomi||[]).join('・')||'—')+'</p>'+
  '<p class="mini">Stroke count: '+esc(strokes||'—')+' · Radical: <span class="ja">'+esc(radical||'—')+'</span></p>'+
  ne("यो N2 स्तरमा वर्गीकृत कान्जी हो। अर्थ, पढाइ र लेख्ने क्रम सम्झनुहोस्।")+
