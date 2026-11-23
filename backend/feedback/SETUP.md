@@ -73,3 +73,13 @@ Official references:
 - Supabase Edge Functions: https://supabase.com/docs/guides/functions
 - Turnstile server-side check: https://developers.cloudflare.com/turnstile/get-started/server-side-validation/
 - Meta Page Webhooks: https://developers.facebook.com/docs/graph-api/webhooks/getting-started/webhooks-for-pages/
+
+## Optional Meta Page comment/message webhook relay (not active)
+
+The file `backend/feedback/meta-page-webhook.worker.js` is an optional **Cloudflare Worker** callback. It is not deployed or registered with Meta.
+
+To activate it later, you must own/manage a Facebook **Page** (a personal-profile share link is not sufficient) and have a Meta Developer App with the applicable Page permissions and Page subscription approval. Deploy the Worker to a private Cloudflare account on a public HTTPS Worker URL. Store the following as **Worker secrets** (not repository content): `META_WEBHOOK_VERIFY_TOKEN`, `META_APP_SECRET`, `META_PAGE_ID`, `RESEND_API_KEY`, `FEEDBACK_ADMIN_EMAIL`, and `FEEDBACK_FROM_EMAIL`. Configure the Worker URL and verification token as the Page webhook callback in your Meta app, and subscribe only to approved `feed` and `messages` events as permitted.
+
+The handler verifies the GET subscription challenge and validates each POST using `X-Hub-Signature-256` and the Meta app secret before sending a count-only email alert. It does not retrieve message bodies, track post viewers, or automatically message visitors. Meta can redeliver webhook events; a production deployment should add deduplication if duplicate notification emails matter. Verify actual Meta events and delivery before calling this active.
+
+References: https://developers.facebook.com/docs/graph-api/webhooks/getting-started/webhooks-for-pages/ and https://developers.facebook.com/docs/graph-api/webhooks/reference/page/.
