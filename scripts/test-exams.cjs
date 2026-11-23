@@ -43,7 +43,9 @@ let browser;
   assert.equal(await page.locator('#questions .question').first().locator('.explain p').count(),4);
   assert.equal(await page.locator('#questions').getByRole('button',{name:'Next 10 →'}).count(),1);
   await page.locator('#questions').getByRole('button',{name:'Next 10 →'}).click();
-  assert.equal(await page.locator('#questions .question').count(),5);
+  assert.equal(await page.locator('#questions .question').count(),10);
+  await page.locator('#questions').getByRole('button',{name:'Next 10 →'}).click();
+  assert.equal(await page.locator('#questions .question').count(),10);
   assert.equal(await page.locator('#questions').getByRole('button',{name:'Next 10 →'}).isDisabled(),true);
   for(const key of ['vocab','grammar','reading']){
     await page.locator('#exam-sections button[data-section="'+key+'"]').click();
