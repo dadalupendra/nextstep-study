@@ -1,27 +1,59 @@
 "use strict";
-// Shared JLPT level controls and time information only.
-// Old demo sample bank intentionally removed: content is loaded from
-// the individually authored existing-paper data in full-papers.js.
 const times={N1:["言語知識・読解 110分","聴解 55分"],N2:["言語知識・読解 105分","聴解 50分"],N3:["文字・語彙 30分","文法・読解 70分","聴解 40分"],N4:["文字・語彙 25分","文法・読解 55分","聴解 35分"],N5:["文字・語彙 20分","文法・読解 40分","聴解 30分"]};
-const timesBox=document.getElementById('times'),levelsBox=document.getElementById('levels'),testBox=document.getElementById('test');
-const requestedLevel=new URLSearchParams(location.search).get('level');
-let active=requestedLevel&&times[requestedLevel.toUpperCase()]?requestedLevel.toUpperCase():'N5';
+// Original starter questions. Every question contains four JP options with JP/NP/EN interpretations.
+// A full-length paper requires additional independently edited reading passages and listening audio.
+const bank={
+N5:[
+["漢字","「学校」の読み方はどれですか。",0,[["がっこう","学校の正しい読み方","विद्यालय","school"],["がくせい","学生の読み方","विद्यार्थी","student"],["がっこ","語末のうが足りない読み方","अपूर्ण उच्चारण","incomplete reading"],["がこう","促音っがない読み方","सानो っ छुटेको उच्चारण","reading missing small っ"]],"「学校」は「がっこう」と読みます。","学校 को पढाइ がっこう हो।","学校 is pronounced がっこう."],
+["漢字","「毎日」の読み方はどれですか。",1,[["まいげつ","毎月の読み方","हरेक महिना","every month"],["まいにち","毎日の正しい読み方","हरेक दिन","every day"],["まいとし","毎年の読み方","हरेक वर्ष","every year"],["まいじ","標準的な読み方ではない","सही पढाइ होइन","not the standard reading"]],"「毎日」は「まいにち」です。","毎日 को अर्थ हरेक दिन हो र पढाइ まいにち हो।","毎日 means every day and reads まいにち."],
+["語彙","私は朝ご飯を（　）。",2,[["よみます","本などを読む","पढ्नु","read"],["ききます","音を聞く","सुन्नु","listen"],["たべます","食事をする","खानु","eat"],["かきます","文字を書く","लेख्नु","write"]],"「朝ご飯を食べます」が自然です。","बिहानको खाना खानु = 朝ご飯を食べます।","You eat breakfast, so たべます fits."],
+["文法","私は毎日、日本語（　）勉強します。",0,[["を","動作の対象を表す助詞","कर्म जनाउने particle","object marker"],["に","時点・目的地などを示す","समय/गन्तव्य जनाउने","time/destination marker"],["で","動作の場所・手段を示す","स्थान/माध्यम जनाउने","location/means marker"],["へ","方向を示す","दिशा जनाउने","direction marker"]],"「日本語を勉強する」の対象には「を」を使います。","अध्ययन गर्ने विषय 日本語 भएकाले を प्रयोग हुन्छ।","を marks Japanese as the object of studying."],
+["文法","きのうは雨が（　）。",3,[["ふります","非過去形","वर्तमान/भविष्य","non-past"],["ふる","普通形の非過去","साधारण वर्तमान","plain non-past"],["ふって","て形","て रूप","te-form"],["ふりました","丁寧な過去形","विनम्र भूतकाल","polite past"]],"「きのう」は過去なので「ふりました」です。","हिजो भएको काम भएकाले भूतकाल ふりました सही हो।","Yesterday requires the past polite form ふりました."],
+["読解","【文章】田中さんは土曜日に図書館へ行きます。日曜日は家で休みます。\n【質問】田中さんはいつ図書館へ行きますか。",1,[["月曜日","週の初めの日","सोमबार","Monday"],["土曜日","土曜日","शनिबार","Saturday"],["日曜日","日曜日","आइतबार","Sunday"],["金曜日","金曜日","शुक्रबार","Friday"]],"文章に「土曜日に図書館へ行きます」と書いてあります。","अनुच्छेदमा शनिबार पुस्तकालय जाने भनिएको छ।","The passage explicitly says Saturday."]
+],
+N4:[
+["漢字","「約束」の読み方はどれですか。",2,[["よくそく","誤った読み方","गलत उच्चारण","incorrect reading"],["やくす","語を途中で切った形","अपूर्ण शब्द","incomplete word"],["やくそく","正しい読み方","वाचा/प्रतिज्ञा","promise"],["やっそく","標準的でない読み方","मानक होइन","nonstandard reading"]],"約束は「やくそく」と読みます。","約束 = वाचा; やくそく भनेर पढिन्छ।","約束 reads やくそく."],
+["漢字","「特別」の読み方はどれですか。",0,[["とくべつ","特別の正しい読み方","विशेष","special"],["とくべち","誤った読み方","गलत उच्चारण","incorrect reading"],["とっべつ","誤った促音","गलत っ","incorrect gemination"],["どくべつ","語頭が違う読み方","सुरुको ध्वनि फरक","wrong first sound"]],"特別は「とくべつ」と読みます。","特別 को अर्थ विशेष, पढाइ とくべつ हो।","特別 means special, pronounced とくべつ."],
+["語彙","電車に（　）ので、遅れました。",3,[["まにあった","時間に遅れなかった","समयमै पुगेको","made it in time"],["ついた","目的地に到着した","पुगेको","arrived"],["のった","乗車した","चढेको","boarded"],["のりおくれた","乗る予定の電車を逃した","रेल छुटेको","missed the train"]],"電車に乗り遅れると遅刻する原因になります。","रेल छुटेकाले ढिला भयो भन्ने अर्थमा のりおくれた सही हो।","Missing the train explains being late."],
+["文法","私は日本へ行ったことが（　）。",1,[["います","人・動物の存在を示す","जीवको अस्तित्व","animate existence"],["あります","経験の有無を示す","अनुभव भएको","experience exists"],["できます","能力を表す","सक्नु","ability"],["します","動作を表す","गर्नु","do"]],"「Vたことがある」は経験を表します。","Vたことがある ले पहिले गरेको अनुभव जनाउँछ।","Vたことがある expresses experience."],
+["文法","暑いので、窓を開けて（　）か。",0,[["もいいです","許可を尋ねる「てもいい」","अनुमति माग्ने","asks permission"],["はいけません","禁止を表す「てはいけない」","निषेध","prohibition"],["しまいます","完了・残念の意味","समाप्ति/पछुतो","completion/regret"],["おきます","準備・放置の意味","पहिले गरेर राख्नु","preparation"]],"「開けてもいいですか」は許可を尋ねる形です。","झ्याल खोल्न हुन्छ? भनेर अनुमति माग्दा てもいいですか प्रयोग हुन्छ।","てもいいですか asks permission."],
+["読解","【文章】明日の会議は午後3時からです。場所は2階の会議室です。\n【質問】会議はどこでありますか。",2,[["1階","建物の1階","पहिलो तला","first floor"],["3階","建物の3階","तेस्रो तला","third floor"],["2階の会議室","2階にある会議室","दोस्रो तलाको बैठक कोठा","second-floor meeting room"],["駅前","駅の近く","स्टेशन अगाडि","in front of station"]],"文章に「2階の会議室」とあります。","अनुच्छेदमा दोस्रो तलाको बैठक कोठा भनिएको छ।","The passage specifies the second-floor meeting room."]
+],
+N3:[
+["漢字","「環境」の読み方はどれですか。",0,[["かんきょう","正しい読み方","वातावरण","environment"],["かんけい","関係の読み方","सम्बन्ध","relationship"],["けんきょう","誤った読み方","गलत उच्चारण","incorrect reading"],["かんじょう","感情などの読み方","भावना","emotion"]],"環境は「かんきょう」と読みます。","環境 को अर्थ वातावरण र पढाइ かんきょう हो।","環境 reads かんきょう."],
+["漢字","「判断」の読み方はどれですか。",3,[["はんたん","濁点がない読み方","दाकुतेन छुटेको","missing voicing mark"],["ひょうだん","誤った読み方","गलत उच्चारण","incorrect reading"],["はんてい","判定の読み方","निर्णय/निर्धारण","judgement (判定)"],["はんだん","正しい読み方","निर्णय","judgement"]],"判断は「はんだん」と読みます。","判断 = निर्णय, はんだん भनेर पढिन्छ।","判断 is pronounced はんだん."],
+["語彙","先生の説明はとても（　）でした。",1,[["ふくざつ","複雑で簡単ではない","जटिल","complicated"],["わかりやすい","理解しやすい","बुझ्न सजिलो","easy to understand"],["あぶない","危険である","खतरनाक","dangerous"],["きびしい","厳しい・甘くない","कडा","strict"]],"説明を評価する文で「わかりやすい」が自然です。","शिक्षकको व्याख्या बुझ्न सजिलो थियो भन्ने सन्दर्भ हो।","わかりやすい naturally praises a clear explanation."],
+["文法","雨が降っている（　）、試合は予定どおり行われた。",2,[["ために","理由・目的を示す","कारण/उद्देश्य","because/in order to"],["ので","理由を示す","किनभने","because"],["にもかかわらず","逆接を示す","तैपनि","despite"],["おかげで","よい結果の原因を示す","सकारात्मक कारण","thanks to"]],"雨なのに試合が行われたという逆接には「にもかかわらず」を使います。","पानी परे पनि खेल भयो भन्ने विपरीत अर्थका लागि にもかかわらず सही हो।","にもかかわらず expresses despite the rain."],
+["文法","この本は読む（　）があります。",0,[["価値","「読む価値がある」で意味がある","पढ्न लायक मूल्य","worth reading"],["目的","「読む目的」は目的を指す","उद्देश्य","purpose"],["理由","「読む理由」は理由を指す","कारण","reason"],["予定","「読む予定」は計画を指す","योजना","plan"]],"「動詞辞書形＋価値がある」はする意味があるという表現です。","読む価値がある = पढ्न लायक छ।","読む価値がある means worth reading."],
+["読解","【文章】市の図書館は来週から日曜日も開館します。ただし、日曜日の閉館時間は午後5時です。\n【質問】来週から何が変わりますか。",1,[["毎日午後9時まで開く","21時に閉まる","राति ९ सम्म खुल्ने","open until 9 p.m."],["日曜日も開館する","日曜日にも営業する","आइतबार पनि खुल्ने","open on Sundays too"],["日曜日は休みになる","日曜日に閉まる","आइतबार बन्द","closed on Sundays"],["本を貸さなくなる","貸出をやめる","पुस्तक उधारो नदिने","stop lending books"]],"「日曜日も開館します」と明記されています。","अब आइतबार पनि खुल्छ भनिएको छ।","It will start opening on Sundays."]
+],
+N2:[
+["漢字","「慎重」の読み方はどれですか。",1,[["しんよう","信用の読み方","विश्वास","trust"],["しんちょう","正しい読み方","सावधान/होसियार","careful"],["しんじゅう","心中などの読み方","अर्को शब्दको पढाइ","reading of another word"],["しんじょう","心情の読み方","मनोभाव","feelings"]],"慎重は「しんちょう」と読みます。","慎重 को अर्थ सावधान र पढाइ しんちょう हो।","慎重 is pronounced しんちょう."],
+["漢字","「妥当」の読み方はどれですか。",0,[["だとう","正しい読み方","उचित","appropriate"],["たとう","語頭が清音になっている","सुरुको ध्वनि गलत","incorrect initial voicing"],["だどう","語末が違う","अन्तिम ध्वनि गलत","incorrect ending"],["だと","語末を省略した形","अपूर्ण पढाइ","incomplete reading"]],"妥当は「だとう」と読みます。","妥当 = उचित; だとう भनेर पढिन्छ।","妥当 reads だとう."],
+["語彙","計画の内容をもう一度（　）する必要がある。",3,[["妨害","邪魔をすること","अवरोध","obstruction"],["混乱","秩序が失われること","अव्यवस्था","confusion"],["消費","資源などを使うこと","उपभोग","consumption"],["検討","十分に考えて調べること","पुनर्विचार/जाँच","careful examination"]],"計画の内容を考え直す意味で「検討する」が適切です。","योजना फेरि राम्रोसँग जाँच्ने भएकाले 検討 सही हो।","検討する means to review or examine a plan."],
+["文法","彼は忙しい（　）、毎日欠かさず運動している。",2,[["せいで","悪い結果の原因","नकारात्मक कारण","because of (negative)"],["ために","理由や目的を示す","कारण/उद्देश्य","because/in order to"],["にもかかわらず","反対の状況を示す","भए तापनि","despite"],["ついでに","別の行動の機会を利用","साथसाथै","while at it"]],"忙しいのに運動を続ける対比を表すには「にもかかわらず」です。","व्यस्त भए तापनि अभ्यास जारी राखेको अर्थ हो।","Despite being busy, he exercises daily."],
+["文法","新しい制度について、説明会を開く（　）です。",1,[["はず","当然そうだと考える推測","हुनुपर्ने अनुमान","expectation"],["予定","計画を示す","योजना","plan"],["だけ","限定を示す","मात्र","only"],["ばかり","限定や直後を示す","मात्र/भर्खर","only/just"]],"「開く予定です」は今後の計画を表します。","説明会 खोल्ने योजना छ भन्ने अर्थमा 予定 सही हो।","予定です states a scheduled plan."],
+["読解","【文章】商品の返品は購入後14日以内に限ります。ただし、使用済みの商品や領収書のない商品は対象外です。\n【質問】返品できるのはどれですか。",0,[["購入から7日で未使用、領収書あり","条件を満たす","७ दिन, प्रयोग नगरेको, रसिद भएको","7 days, unused, with receipt"],["購入から20日で未使用、領収書あり","期限を超えている","२० दिन, म्याद सकिएको","20 days, past deadline"],["購入から2日で使用済み、領収書あり","使用済みで対象外","प्रयोग भइसकेको","used item"],["購入から3日で未使用、領収書なし","領収書がない","रसिद नभएको","no receipt"]],"14日以内・未使用・領収書ありの三条件を満たすのは選択肢1です。","१४ दिनभित्र, प्रयोग नगरेको र रसिद भएको वस्तु मात्र फिर्ता हुन्छ।","Only option 1 meets all three return conditions."]
+],
+N1:[
+["漢字","「懸念」の読み方はどれですか。",2,[["けね","最後の音が足りない","अन्तिम ध्वनि छुटेको","incomplete reading"],["かんねん","観念の読み方","धारणा","notion"],["けねん","正しい読み方","चिन्ता/आशंका","concern"],["けんねん","標準の読み方ではない","मानक होइन","nonstandard reading"]],"懸念は「けねん」と読みます。","懸念 = चिन्ता/आशंका; けねん भनेर पढिन्छ।","懸念 is read けねん."],
+["漢字","「顕著」の読み方はどれですか。",0,[["けんちょ","正しい読み方","स्पष्ट रूपमा देखिने","remarkable/conspicuous"],["げんちょ","語頭の濁点が不要","गलत सुरुवाती ध्वनि","wrong initial voicing"],["けんしょ","二文字目の音が違う","दोस्रो ध्वनि गलत","wrong second reading"],["けんじょ","標準的でない読み方","मानक होइन","nonstandard reading"]],"顕著は「けんちょ」と読みます。","顕著 = उल्लेखनीय, पढाइ けんちょ हो।","顕著 reads けんちょ."],
+["語彙","彼の発言は議論の（　）を突いていた。",1,[["周辺","中心ではない部分","वरिपरि","periphery"],["核心","物事の中心となる点","मुख्य सार","core"],["余白","何も書かれていない部分","खाली ठाउँ","margin/blank space"],["外観","外から見える様子","बाहिरी रूप","appearance"]],"「核心を突く」は最も重要な点を捉える慣用表現です。","核心を突く = समस्याको मुख्य कुरा ठ्याक्कै समात्नु।","核心を突く means to get to the heart of the matter."],
+["文法","説明を聞いた（　）、疑問がますます増えた。",3,[["からして","それ自体を根拠に判断","त्यही आधारबाट","judging from"],["がてら","ある行為のついでに","गर्दै गर्दा","while taking the opportunity"],["かたわら","他の活動と並行して","सँगसँगै","alongside"],["ものの","譲歩・逆接を示す","भए तापनि","although"]],"「聞いたものの、疑問が増えた」は期待に反する結果を表します。","स्पष्टीकरण सुने पनि झन् प्रश्न बढे भन्ने विपरीत परिणाम हो।","ものの links an action to an unexpected contrasting outcome."],
+["文法","十分な準備をしたからといって、成功する（　）。",0,[["とは限らない","必ずそうなるとは言えない","अनिवार्य होइन","not necessarily"],["にほかならない","まさしくそれである","अरू केही होइन","nothing other than"],["にたえない","感情や価値に堪えない","सहन नसकिने","cannot bear"],["にすぎない","ただそれだけである","मात्र हो","merely"]],"「からといって〜とは限らない」は一般化を否定する文型です。","तयारी गरेकै कारण सफलता निश्चित हुँदैन भन्ने अर्थ हो।","からといって〜とは限らない rejects an automatic conclusion."],
+["読解","【文章】新制度の導入は業務の効率化に寄与すると期待される。しかし、現場の理解を得ずに運用を急げば、かえって混乱を招きかねない。\n【質問】筆者の考えに最も近いものはどれか。",2,[["制度の導入を全面的に中止すべきだ","導入の中止を主張","पूर्ण रूपमा रोक्नुपर्छ","stop implementation entirely"],["効率化さえできれば、説明は不要だ","説明を軽視している","स्पष्टीकरण चाहिँदैन","explanation is unnecessary"],["現場に説明し理解を得ながら導入すべきだ","慎重な導入を勧める","सम्झाएर सहमति लिँदै लागू गर्नुपर्छ","implement with staff understanding"],["混乱は起こらないため、早く導入すべきだ","リスクを否定している","जोखिम हुँदैन","there is no risk"]],"筆者は効果を認めつつ、現場の理解なしに急ぐ危険性を指摘しています。","लेखकले फाइदा स्वीकारे पनि कर्मचारीलाई नबुझाई हतार गर्दा समस्या हुने बताउँछ।","The author supports implementation but warns against rushing without staff understanding."]
+]
+};
+const timesBox=document.getElementById('times'),levelsBox=document.getElementById('levels'),papersBox=document.getElementById('papers'),testBox=document.getElementById('test'),questionsBox=document.getElementById('questions'),scoreBox=document.getElementById('score');
+let active='N5',answers={};
 if(timesBox)timesBox.innerHTML=Object.entries(times).map(([level,sections])=>'<p><strong>'+level+':</strong> '+sections.join(' · ')+'</p>').join('');
-for(const level of ['N5','N4','N3','N2','N1']){
- const b=document.createElement('button');b.textContent=level;b.type='button';
- b.addEventListener('click',()=>choose(level));
- levelsBox.append(b);
-}
-function choose(level){
- if(!times[level])return;
- active=level;
- testBox.classList.add('hidden');
- document.getElementById('current-level').textContent='JLPT '+level+' · 20 Existing Practice Papers';
- const subtitle=document.getElementById('current-description');
- if(subtitle)subtitle.textContent='Level '+level+' · 20 existing paper cards · 100 reserved slots each. Only individually authored Japanese content is displayed; missing content is unavailable.';
- for(const button of levelsBox.querySelectorAll('button'))button.setAttribute('aria-pressed',String(button.textContent===level));
- const url=new URL(location.href);url.searchParams.set('level',level);
- history.replaceState(null,'',url);
-}
+for(const level of ['N5','N4','N3','N2','N1']){const b=document.createElement('button');b.textContent=level;b.type='button';b.addEventListener('click',()=>choose(level));levelsBox.append(b);}
+function choose(level){if(!bank[level])return;active=level;answers={};testBox.classList.add('hidden');papersBox.replaceChildren();const title=document.getElementById('current-level');if(title)title.textContent='JLPT '+level+' · 20 Practice Papers';const subtitle=document.getElementById('current-description');if(subtitle)subtitle.textContent='JLPT '+level+' अभ्यास — Paper 01–20 · प्रत्येक Paper मा 100 प्रश्न · Level '+level+' मात्र';Array.from(levelsBox.children).forEach(x=>x.setAttribute('aria-pressed',String(x.textContent===level)));const u=new URL(location.href);u.searchParams.set('level',level);history.replaceState(null,'',u);}
+function start(){answers={};testBox.classList.remove('hidden');document.getElementById('test-title').textContent=active+' · Paper 01 · Short practice sample ('+bank[active].length+' questions)';render();testBox.scrollIntoView({behavior:'smooth',block:'start'});}
+function showOptionExplanation(option,idx,correct,why){const right=idx===correct;return '<p><strong>'+String(idx+1)+'. '+escapeHtml(option[0])+(right?' ✅':' ❌')+'</strong><br>🇯🇵 '+escapeHtml(option[1])+(right?'。'+escapeHtml(why[0]):'。この設問の正答ではありません。')+'<br>🇳🇵 '+escapeHtml(option[2])+(right?'। '+escapeHtml(why[1]):'। यस प्रश्नको सही विकल्प होइन।')+'<br>🇬🇧 '+escapeHtml(option[3])+(right?'. '+escapeHtml(why[2]):'. Not the correct option in this question.')+'</p>';}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function render(){questionsBox.replaceChildren();bank[active].forEach((q,i)=>{const wrap=document.createElement('article');wrap.className='question';const title=document.createElement('h3');title.textContent='問題 '+(i+1)+' · '+q[0];wrap.append(title);const prompt=document.createElement('p');prompt.style.whiteSpace='pre-wrap';prompt.textContent=q[1];wrap.append(prompt);q[3].forEach((opt,j)=>{const b=document.createElement('button');b.className='option'+(answers[i]===j?(j===q[2]?' correct':' wrong'):'')+(answers[i]!==undefined&&j===q[2]?' correct':'');b.type='button';b.textContent=(j+1)+'. '+opt[0];b.disabled=answers[i]!==undefined;b.addEventListener('click',()=>{answers[i]=j;render();});wrap.append(b);});if(answers[i]!==undefined){const d=document.createElement('div');d.className='explain';d.innerHTML='<strong>解説 · Explanation · व्याख्या</strong>'+q[3].map((option,j)=>showOptionExplanation(option,j,q[2],q.slice(4))).join('');wrap.append(d);}questionsBox.append(wrap);});const answered=Object.keys(answers).length;const right=bank[active].filter((q,i)=>answers[i]===q[2]).length;document.getElementById('progress').textContent='Answered: '+answered+'/'+bank[active].length;scoreBox.textContent=answered===bank[active].length?'Practice score: '+right+'/'+bank[active].length+' (unofficial; not scaled JLPT points)':'Answer every question to see your practice score.';localStorage.setItem('nextstep-exam-sample-'+active,JSON.stringify({answered,right,total:bank[active].length,updated:new Date().toISOString()}));}
 document.getElementById('print').addEventListener('click',()=>window.print());
-choose(active);
+document.getElementById('reset').addEventListener('click',()=>{answers={};render();});
+const requestedLevel=new URLSearchParams(location.search).get('level');
+choose(requestedLevel&&bank[requestedLevel.toUpperCase()]?requestedLevel.toUpperCase():'N5');

@@ -7,18 +7,16 @@ const ROOT=path.resolve(process.argv[2]||'.'),STRICT=process.argv.includes('--st
 const LEVELS=['N5','N4','N3','N2','N1'],PAPERS=20,TOTAL=100;
 const COUNTS={N5:[45,25,15,15],N4:[45,25,15,15],N3:[40,25,20,15],N2:[35,25,25,15],N1:[30,25,30,15]};
 const context={window:{}};
-for(const f of ['verified-language-01.js','verified-language-02.js','verified-reading-01.js','verified-reading-02.js','listening-scripts-01.js','listening-scripts-01b.js']){
+for(const f of ['verified-language-01.js','verified-reading-01.js']){
  const full=path.join(ROOT,'exams',f);
  if(!fs.existsSync(full))throw Error('Missing authored content file '+full);
  vm.runInNewContext(fs.readFileSync(full,'utf8'),context,{filename:f});
 }
-const language=context.window.NextStepVerifiedLanguage,language02=context.window.NextStepVerifiedLanguage02,reading=context.window.NextStepVerifiedReading,reading02=context.window.NextStepVerifiedReading02;
-if(!language||!language02||!reading||!reading02)throw Error('Authored content APIs are missing');
-const scriptA=context.window.NextStepListeningScripts01,scriptB=context.window.NextStepListeningScripts01B;
-if(!scriptA||!scriptB)throw Error('Original Japanese Listening transcript banks are missing');
+const language=context.window.NextStepVerifiedLanguage,reading=context.window.NextStepVerifiedReading;
+if(!language||!reading)throw Error('Authored content APIs are missing');
 const errors=[],duplicatePrompts=new Map(),duplicatePassages=new Map();
 const summary={totalExistingPaperCards:100,totalRequiredQuestionSlots:10000,verifiedQuestions:0,
- verifiedPapers:0,unverifiedQuestionSlots:0,incompletePapers:[],audioAssets:0,pictureAssets:0,missingAudioAssets:0,authoredListeningScriptsWithoutRecordings:0,
+ verifiedPapers:0,unverifiedQuestionSlots:0,incompletePapers:[],audioAssets:0,pictureAssets:0,missingAudioAssets:0,
  duplicates:0,invalidQuestionCount:0,recordsByLevel:{},format:'NextStep Existing Paper 01–20 Content Audit',complete:false};
 function problem(level,paper,index,kind,reason){errors.push({level,paper,question:index+1,kind,reason});summary.invalidQuestionCount++;}
 function localAsset(filename,kind,level,paper,i){
@@ -36,10 +34,10 @@ for(const level of LEVELS){
   let verified=0;
   for(let i=0;i<TOTAL;i++){
    let q=null,kind;
-   if(i<vc){kind='vocabulary';q=paper===2?language02.word(level,paper,i):language.word(level,paper,i);}
-   else if(i<vc+gc){kind='grammar';q=paper===2?language02.grammar(level,paper,i-vc):language.grammar(level,paper,i-vc);}
-   else if(i<vc+gc+rc){kind='reading';q=paper===2?reading02.build(level,paper,i-vc-gc):reading.build(level,paper,i-vc-gc);}
-   else{kind='listening';const scripted=scriptA.build(level,paper,i-vc-gc-rc)||scriptB.build(level,paper,i-vc-gc-rc);if(scripted&&scripted.passage&&scripted.speechMode==='browser-tts'&&!scripted.recordedAudio)summary.authoredListeningScriptsWithoutRecordings++;/* Only count listening as fully verified when a local recorded audio file exists; these scripts do not have one. */}
+   if(i<vc){kind='vocabulary';q=language.word(level,paper,i);}
+   else if(i<vc+gc){kind='grammar';q=language.grammar(level,paper,i-vc);}
+   else if(i<vc+gc+rc){kind='reading';q=reading.build(level,paper,i-vc-gc);}
+   else{kind='listening';/* No verified original recorded audio files yet. */}
    if(!q){summary.unverifiedQuestionSlots++;if(kind==='listening'){summary.missingAudioAssets++;levelStats.missingAudio++;}continue;}
    const valid=typeof q.prompt==='string'&&q.prompt.trim().length>=12&&Array.isArray(q.options)&&q.options.length===4&&
      q.options.every(x=>typeof x==='string'&&x.trim().length>0)&&
@@ -77,7 +75,7 @@ summary.complete=summary.verifiedPapers===100&&summary.verifiedQuestions===10000
 if(!summary.complete)console.log('INCOMPLETE CONTENT: Do not advertise 100 complete JLPT mock exams.');
 console.log(JSON.stringify({totalExistingPaperCards:summary.totalExistingPaperCards,verifiedQuestions:summary.verifiedQuestions,
  verifiedPapers:summary.verifiedPapers,incompletePapers:summary.incompletePapers.length,
- missingSlots:summary.unverifiedQuestionSlots,recordedListeningFiles:summary.audioAssets,authoredListeningScriptsWithoutRecordings:summary.authoredListeningScriptsWithoutRecordings,
+ missingSlots:summary.unverifiedQuestionSlots,recordedListeningFiles:summary.audioAssets,
  listeningPictureFiles:summary.pictureAssets,questionErrors:errors.length,duplicateQuestions:summary.duplicates,byLevel:summary.recordsByLevel},null,2));
 if(errors.length)console.error('VALIDATION ERRORS',JSON.stringify(errors.slice(0,30),null,2));
 const dest=process.env.NEXTSTEP_AUDIT_REPORT;
