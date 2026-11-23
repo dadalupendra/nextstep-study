@@ -27,6 +27,7 @@ on:
       - 'scripts/n3-responsive.css'
       - 'scripts/polish-deployed-site.py'
       - 'scripts/test-all-readers.cjs'
+      - 'scripts/test-exams.cjs'
   workflow_dispatch:
 
 concurrency:
@@ -102,6 +103,9 @@ jobs:
 
       - name: Install browser testing dependency
         run: npm install --no-save --ignore-scripts --no-audit --no-fund playwright-core@1.56.1
+
+      - name: Smoke test N5–N1 JLPT exam practice sections and controls
+        run: node scripts/test-exams.cjs public-site
 
       - name: Verify N1 and N2 phone/tablet/desktop readability in Chromium
         run: node scripts/test-responsive.cjs public-site
