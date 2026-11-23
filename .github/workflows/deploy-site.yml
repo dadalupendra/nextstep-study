@@ -89,6 +89,10 @@ jobs:
           node --check daily-reminder.js
           node --check community-config.js
           node --check feedback/feedback.js
+          node --check feedback/feedback-upgrade.js
+          node --check feedback/feedback-buttons.js
+          node --check feedback/admin/admin.js
+          python3 -m py_compile scripts/inject-feedback-buttons.py
           test -s feedback/index.html
           test -s feedback/feedback.css
           test -s daily-reminder.css
