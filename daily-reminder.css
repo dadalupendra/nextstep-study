@@ -1,0 +1,25 @@
+
+/* NextStep Study opt-in Daily Challenge reminder panel */
+#daily-reminder-root{margin:17px 0 27px}
+.ns-reminder-panel{background:linear-gradient(125deg,#113447,#0c283b);border:1px solid #4ac9b9;border-radius:18px;padding:clamp(16px,2.5vw,24px);color:#f3ffff;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(275px,1fr);align-items:start;gap:22px;box-shadow:0 12px 25px #00111a42}
+.ns-reminder-panel *{box-sizing:border-box}
+.ns-reminder-tag{color:#8efde9;font-size:12px;font-weight:800;letter-spacing:.07em}
+.ns-reminder-panel h3{font-size:clamp(20px,2.5vw,25px);font-weight:850;margin:8px 0 12px;color:#f1fffc;line-height:1.3}
+.ns-reminder-copy p,.ns-reminder-settings p{font-size:14px;line-height:1.55;color:#d4e8f2;margin:9px 0 12px}
+.ns-reminder-copy .ns-reminder-lead{font-size:16px}
+.ns-reminder-copy .ns-reminder-date{color:#7cf4d9;font-weight:750}
+.ns-reminder-link{display:inline-block;border-radius:11px;background:#57dfcb;color:#0b293d!important;min-height:44px;text-decoration:none;padding:12px 15px;font-size:15px;font-weight:850;line-height:1.3}
+.ns-reminder-link:hover,.ns-reminder-link:focus-visible{background:#a7fff0}
+.ns-reminder-settings{background:#09263aab;border-radius:12px;border:1px solid #365d73;padding:15px}
+.ns-reminder-controls{display:flex;flex-wrap:wrap;gap:11px;margin-bottom:12px}
+.ns-reminder-controls label{display:grid;gap:5px;flex:1;min-width:115px;font-size:13px;color:#a5e9e2;font-weight:750}
+.ns-reminder-controls select,.ns-reminder-controls input{min-width:0;width:100%;height:44px;background:#ecf9fa;color:#112f3b;border:1px solid #6da5ab;border-radius:9px;padding:9px 12px;font-size:15px}
+.ns-reminder-actions{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.ns-reminder-actions button{background:#1f5160;border:1px solid #6b9caa;color:#f7ffff;border-radius:9px;padding:10px 12px;font-size:13px;font-weight:750;min-height:44px;cursor:pointer}
+.ns-reminder-actions button:first-child{background:#40cbb7;border-color:#40cbb7;color:#062936}
+.ns-reminder-actions button:hover{filter:brightness(1.15)}
+.ns-reminder-panel .ns-reminder-status{color:#b8ffe7;font-weight:700;font-size:13px;min-height:30px;line-height:1.5}
+.ns-reminder-panel .ns-reminder-note{color:#b7cfdb;font-size:12px;line-height:1.55;margin-bottom:0}
+.ns-reminder-panel :focus-visible{outline:3px solid #94ffeb;outline-offset:3px}
+@media(max-width:810px){.ns-reminder-panel{grid-template-columns:minmax(0,1fr)}.ns-reminder-settings{padding:12px}.ns-reminder-actions button{flex:1}}
+@media(max-width:480px){.ns-reminder-controls{display:grid;grid-template-columns:1fr 1fr}.ns-reminder-actions{display:grid;grid-template-columns:1fr 1fr}.ns-reminder-actions button:first-child{grid-column:1/-1}.ns-reminder-panel{padding:15px}}
