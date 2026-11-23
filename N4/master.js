@@ -278,9 +278,24 @@ function renderGrammarCards(page=0){
 function dailySelection(){let day=nowTokyo(),seed=day.split('-').join('')*1,selection=[];
  for(const type of ['kanji','vocab']){let data=app.data[type];if(!data.length)continue;let shuffled=randOrder(Array.from({length:data.length},(_,i)=>i),seed+(type==='kanji'?1:9876));shuffled.slice(0,5).forEach(index=>selection.push({type,index,item:data[index],id:day+':'+type+':'+index}))}return selection
 }
-function renderDaily(){app.section='daily';document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.section==='daily'));refreshNav();$('chapterSummary').textContent='東京時間：'+nowTokyo();$('bottomNav').innerHTML='';
+function renderDailyFlashcards(){app.section='daily';document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.section==='daily'));refreshNav();$('chapterSummary').textContent='東京時間：'+nowTokyo();$('bottomNav').innerHTML='';
  let tasks=dailySelection(),day=nowTokyo(),doneCount=tasks.filter(x=>app.dailyProgress[x.id]).length;
  $('itemsView').innerHTML=`<div class="quiz-shell"><h2>📅 今日のチャレンジ / Daily Challenge / दैनिक चुनौती</h2><p class="notice">${esc(day)}（Japan Time） • 漢字 5枚 + 語彙 5枚 · 完了 ${doneCount}/${tasks.length} · Save to this browser. रोज नयाँ कार्ड आउँछ।</p><div class="daily-grid">${tasks.map(x=>{let title=x.type==='kanji'?x.item.character:x.item.word,reading=x.type==='kanji'?[...arr(x.item.onyomi),...arr(x.item.kunyomi)].join('・'):x.item.reading,show=app.dailyReveal[x.id];return `<article class="daily-flash"><div class="badge">${x.type==='kanji'?'漢字':'語彙'} • N4</div><div class="daily-main" lang="ja">${esc(title)}</div>${show?`<div class="daily-answer"><p>読み方：${esc(reading||'—')}</p><p><b>English:</b> ${esc(glossFor(x.item,x.type))}</p><p><b>नेपाली:</b> ${x.type==='kanji'?'ओनयोमि / कुनयोमि':'शब्दको पढाइ'}: ${esc(reading||'—')}। <a target="_blank" rel="noopener" href="${esc(trLink(glossFor(x.item,x.type),'ne'))}">अर्थ अनुवाद ↗</a></p><p><b>日本語:</b> ${esc(x.type==='kanji'?`「${title}」の音読み・訓読みと意味を復習してください。`:`「${title}」は「${reading}」と読みます。`)}</p></div>`:`<p>答えを考えてからカードをめくりましょう。</p>`}<div class="controlrow"><button type="button" class="btn" data-daily-reveal="${esc(x.id)}">${show?'隠す / Hide':'👁 答えを見る / Reveal'}</button><button type="button" class="btn ${app.dailyProgress[x.id]?'daily-complete':''}" data-daily-done="${esc(x.id)}">${app.dailyProgress[x.id]?'✅ 完了 / Done':'✓ 覚えた / Learned'}</button></div></article>`}).join('')}</div><div class="notice">${doneCount===tasks.length&&tasks.length?'🎉 今日のチャレンジ完了！ भोलि फेरि नयाँ कार्ड आउँछन्।':'10枚のカードを確認して、学習できたら「覚えた」を押してください。'}</div></div>`;
+}
+
+
+function renderDaily(){
+ // Preserve all existing 10 flashcards and their original progress controls.
+ renderDailyFlashcards();
+ const oldFlashcards=$('itemsView').innerHTML;
+ if(!window.NextStepDaily100){
+  $('itemsView').innerHTML='<div class="notice">⚠ Daily 100 script could not be loaded. The original flashcards remain available below.</div>'+oldFlashcards;
+  return;
+ }
+ window.NextStepDaily100.mount({
+  level:'N4',day:nowTokyo(),data:app.data,makeQuestion,feedbackHTML,
+  container:$('itemsView'),legacyHTML:oldFlashcards,speak:japaneseSpeak
+ });
 }
 
 function renderGuide(){
