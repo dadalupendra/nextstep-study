@@ -15,6 +15,7 @@ on:
       - 'scripts/test-n2.cjs'
       - 'scripts/build-social-preview.py'
       - 'scripts/test-social-preview.py'
+      - 'scripts/test-responsive.cjs'
   workflow_dispatch:
 
 concurrency:
@@ -67,6 +68,12 @@ jobs:
 
       - name: Validate Facebook, WhatsApp and X preview images
         run: python scripts/test-social-preview.py public-site
+
+      - name: Install browser testing dependency
+        run: npm install --no-save --ignore-scripts --no-audit --no-fund playwright-core@1.56.1
+
+      - name: Verify N1 and N2 phone/tablet/desktop readability in Chromium
+        run: node scripts/test-responsive.cjs public-site
 
       - name: Upload static website
         uses: actions/upload-pages-artifact@v4
