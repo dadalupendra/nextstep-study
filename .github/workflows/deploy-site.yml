@@ -29,6 +29,7 @@ on:
       - 'scripts/test-all-readers.cjs'
       - 'scripts/test-exams.cjs'
       - 'scripts/test-master-books.cjs'
+      - 'scripts/fetch-n3-vocab.py'
   workflow_dispatch:
 
 concurrency:
@@ -91,6 +92,9 @@ jobs:
           # Exclude maintenance/batch/source-attribution documents from the deployed navigation,
           # but keep license notices required by upstream datasets.
           rm -f public-site/N1/Download_N1_Data.ps1 public-site/N1/GET_REAL_N1_DATA.bat
+
+      - name: Package verified N3 vocabulary for offline-friendly book reading
+        run: python3 scripts/fetch-n3-vocab.py public-site/N3/data/vocab.json
 
       - name: Apply responsive N3–N5 reader improvements without touching lesson data
         run: python scripts/polish-deployed-site.py public-site
