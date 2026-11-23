@@ -29,6 +29,7 @@ on:
       - 'scripts/polish-deployed-site.py'
       - 'scripts/test-all-readers.cjs'
       - 'scripts/test-exams.cjs'
+      - 'scripts/test-exam-studio.cjs'
       - 'scripts/test-master-books.cjs'
       - 'scripts/test-kanji-compounds.cjs'
       - 'scripts/fetch-n3-vocab.py'
@@ -74,6 +75,8 @@ jobs:
           node --check exams/section-content.js
           node --check exams/app.js
           node --check exams/full-papers.js
+          node --check exams/studio.js
+          test -s exams/studio.css
 
       - name: Create a reader-only publishing folder
         run: |
@@ -131,6 +134,9 @@ jobs:
 
       - name: Test clickable Kanji and compound words on N1–N5 readers
         run: node scripts/test-kanji-compounds.cjs public-site
+
+      - name: Test timed one-question exam studio and answer review on every JLPT level
+        run: node scripts/test-exam-studio.cjs public-site
 
       - name: Smoke test N5–N1 JLPT exam practice sections and controls
         run: node scripts/test-exams.cjs public-site
