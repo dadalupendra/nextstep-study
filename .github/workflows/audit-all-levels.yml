@@ -1,0 +1,20 @@
+name: Audit NextStep N5–N1 for mobile and desktop
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/audit-all-levels.cjs'
+      - '.github/workflows/audit-all-levels.yml'
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Playwright test runtime
+        run: npm install --no-save --ignore-scripts --no-audit --no-fund playwright-core@1.56.1
+      - name: Audit five readers, main menu and N2 questions at phone/tablet/PC widths
+        run: node scripts/audit-all-levels.cjs .
