@@ -1,43 +1,33 @@
-# NextStep JLPT N2 — study collection
+# Source, JLPT-level methodology and QA notes
 
-Three original, browser-based, printable study notebooks:
+## Source and reuse rights
+This educational material is independently created by NextStep Study using N2-tagged excerpts from:
+- [OpenJLPT](https://github.com/evanclan/OpenJLPT) (evanclan), licensed under **Creative Commons Attribution–ShareAlike 4.0 International (CC BY-SA 4.0)**.
+- Exact original source files: [N2 Kanji JSON](https://github.com/evanclan/OpenJLPT/blob/main/data/json/kanji/n2.json), [N2 Vocabulary JSON](https://github.com/evanclan/OpenJLPT/blob/main/data/json/vocab/n2.json), [N2 Grammar JSON](https://github.com/evanclan/OpenJLPT/blob/main/data/json/grammar/n2.json).
+- [OpenJLPT NOTICE](https://github.com/evanclan/OpenJLPT/blob/main/NOTICE.md), for its full source attributions (Jonathan Waller's JLPT lists, EDRDG/JMdict, KANJIDIC2, Tatoeba, and editorial metadata).
+- [OpenJLPT LICENSE](https://github.com/evanclan/OpenJLPT/blob/main/LICENSE).
 
-| Notebook | Pages | Content model |
-|---|---:|---|
-| Kanji | 400 | 400 distinct kanji characters occurring in the N2-oriented word collection. Each page lists real vocabulary examples, readings of whole words, English glosses, writing grids, and recall activities. |
-| Vocabulary | 300 | 1,777 Japanese words/expressions distributed across 300 distinct pages (generally 5–6 entries per page), with Japanese forms, readings, English glosses, and recall practice. |
-| Grammar | 300 | 100 selected patterns, **three different learning pages per pattern**: explanation, comprehension, and writing practice, with original Japanese model sentences and English interpretations. |
+The kanji readings, source word meanings, most source example sentences and source grammar text are adapted from this dataset. Added Nepali grammar summaries, layout, extra tasks and four-choice question assembly are project contributions. Retain source attribution and meet applicable CC BY-SA conditions when redistributing the derived dataset.
 
-**Important distinction:** 300 grammar pages do **not** mean 300 different grammar points. The grammar section presents 100 points in three stages. The selection is not an exhaustive or official N2 syllabus. The 400 kanji were selected by frequency from words in an N2-oriented third-party list, so they include foundation-review characters.
+## N2-only study target methodology
+All target study entries were selected where **level = "N2"** in the source's explicit tag:
+- **398** N2 kanji characters, with 2 additional revision pages to complete the **400-page kanji reader**.
+- **1,778** N2 vocabulary entries across **300 pages**.
+- **123** N2 grammar patterns across **300 pages** (two detail/practice pages each; remaining pages are chapter review).
 
-## Japanese / Nepali / English
-- Japanese reading examples and bilingual Japanese–English language data.
-- Nepali instructions for study activities and navigation support.
-- Full per-item Nepali dictionary translations, stroke animations, and professionally recorded audio are **not** included.
-- On devices with Japanese text-to-speech, tap the speaker button to hear sample words/sentences.
-- Adjustable text size; English and Nepali study-guidance toggles; search, page navigation, local notes and bookmarks.
-- Data and content are served as static files. No WordPress PHP or API key is needed.
+**No target entries tagged N5, N4 or N3 were added from source datasets.** Nevertheless, every genuine N2 example necessarily contains prerequisite simpler particles, words and kanji, which are not the learning target.
 
-## Sources, license, and acknowledgments
-**Word data:** Jonathan Waller's educational JLPT vocabulary material (CC BY), with kanji spelling alignment and JMdict-linked dictionary glosses via stephenmk's `yomitan-jlpt-vocab` project:
-https://github.com/stephenmk/yomitan-jlpt-vocab
-Original list: https://raw.githubusercontent.com/stephenmk/yomitan-jlpt-vocab/main/original_data/n2.csv
-Attribution README: https://github.com/stephenmk/yomitan-jlpt-vocab/blob/main/README.md
+These are community-curated level tags, **not officially guaranteed exhaustive N2 boundaries**. The JLPT organizing body stopped publishing item-specific lists for the revised test:
+[JLPT Official FAQ](https://www.jlpt.jp/e/faq/index.html).
+For authentic exam formats use [official sample questions/practice workbooks](https://www.jlpt.jp/e/samples/sampleindex.html).
 
-**Dictionary:** JMdict project by the Electronic Dictionary Research and Development Group (EDRDG), led by Jim Breen; license CC BY-SA 4.0:
-https://www.edrdg.org/edrdg/licence.html
-https://www.edrdg.org/wiki/JMdict-EDICT_Dictionary_Project.html
+## Chapter quiz question methodology
+`quiz.js` assembles 50 four-choice problems for each of 10 chapters for Kanji, Vocabulary, and Grammar (1,500 per level book collection). Kanji includes readings and meaning recall; vocabulary includes readings, English gloss and sentence context; grammar includes meaning, formation, usage and contextual recognition. Each displayed item includes a source-supported worked explanation in English, an instructional explanation in Nepali, and a Japanese reference note. No claim is made that these match every official exam question type.
 
-The editorial writing activities, layout, grammar model sentences and code in this specific N2 collection were prepared for NextStep Study. Editorial text is not an official JLPT resource. Any redistributed derivative dataset needs to retain source attribution and comply with applicable share-alike license conditions.
-
-**Official JLPT:** JLPT organizers do not publish a comprehensive official list of kanji, vocabulary, and grammar:
-https://www.jlpt.jp/e/faq/index.html
-
-## Online use
-Open `N2/index.html` or the GitHub Pages route `/nextstep-study/N2/`. Keep `data.js`, `grammar-data.js`, `reader.js`, and `style.css` beside `index.html`.
-
-## Save as PDF
-Inside the reader choose a book → **Print / Save PDF**. The print view offers all pages or a smaller page range. In Chrome print destination choose **Save as PDF**. Actual PDF page count can vary with browser print settings; the interactive books themselves always contain exactly 400 + 300 + 300 numbered study pages. For very large sections print in 20–50 page ranges if the browser cannot print all at once.
-
-## Privacy
-Personal notes, progress, and bookmarks are stored in this device/browser using localStorage. They do not sync between devices, and clearing browser storage will delete them.
+Automated QA verified:
+- exactly 50 questions for every book/chapter pair;
+- 1,500 unique question IDs;
+- four distinct options and one marked answer per item;
+- English, Nepali, Japanese explanation fields present;
+- all 398 kanji, 1,778 vocabulary and 123 grammar pattern sources explicitly tagged N2.
+Automated checks do **not** constitute professional human proofreading of every answer and explanation. Teachers should spot-check educational nuances, especially close distractors. The practice papers are not original JLPT past exams.
