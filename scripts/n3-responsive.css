@@ -66,7 +66,8 @@ section.toolbar button,section.toolbar select{min-height:44px;touch-action:manip
   .paper .index,.paper .answer-columns,.paper .check-columns{columns:1}
   .paper table{display:block;max-width:100%;overflow-x:auto;scrollbar-width:thin;
                -webkit-overflow-scrolling:touch;table-layout:auto}
-  .paper tbody,.paper thead{display:table-header-group}
+  .paper tbody{display:table-row-group}
+  .paper thead{display:table-header-group}
   .paper tr{display:table-row}
   .paper td,.paper th{font-size:13px;padding:6px;min-width:64px}
   .pager{gap:8px;justify-content:center}
