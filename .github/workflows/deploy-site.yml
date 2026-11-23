@@ -8,6 +8,8 @@ on:
       - 'manifest.webmanifest'
       - 'sw.js'
       - 'icons/**'
+      - 'install/**'
+      - 'scripts/build-app-icons.py'
       - 'exams/**'
       - '.nojekyll'
       - 'N1/**'
@@ -62,6 +64,7 @@ jobs:
           cp manifest.webmanifest sw.js public-site/
           mkdir -p public-site/icons
           cp icons/icon.svg public-site/icons/
+          cp -R install public-site/
           cp -R exams public-site/
           cp .nojekyll public-site/
           for level in N1 N2 N3 N4 N5; do
@@ -83,6 +86,13 @@ jobs:
 
       - name: Install deterministic image rendering dependency
         run: python -m pip install --disable-pip-version-check Pillow==11.3.0
+
+      - name: Generate installable PWA icons for Windows, Android and iOS
+        run: |
+          python scripts/build-app-icons.py
+          cp icons/icon-180.png icons/icon-192.png icons/icon-512.png public-site/icons/
+          test -s public-site/icons/icon-192.png
+          test -s public-site/icons/icon-512.png
 
       - name: Render six social sharing cover images and inject OG tags
         run: python scripts/build-social-preview.py public-site
