@@ -1,0 +1,32 @@
+NEXTSTEP N1 • UPDATE 2026-11-23
+
+日本語：
+- 練習問題の問題文・4選択肢・正解は日本語。各レッスン50問の自作練習。
+- 選択直後に正誤判定。4つ全部の選択肢に日本語・英語・ネパール語の解説。
+- 辞書が英語で提供する意味の日本語・ネパール語翻訳にはインターネットが必要です。
+- 語彙は品詞（名詞・代名詞・動詞・形容詞など）で分類。資料にない品詞は未分類。
+- ふりがな表示切り替え。元データに付いている箇所だけルビを付けます。
+- 毎日の復習：漢字カード5枚＋語彙カード5枚（日本標準時の暦日）。進捗は使用中ブラウザに保存。
+- 章ごとの練習問題・全選択肢の解説付きPDF印刷に対応。
+
+नेपाली:
+- Question, four options र correct answer जापानीमा छन्।
+- Option छान्नेबित्तिकै सही/गलत; 4 विकल्पको Japanese/English/Nepali व्याख्या।
+- प्रत्येक कार्डमा 3 भाषाको structured explanation; actual glossary translation online मा मात्र।
+- Vocabulary: Noun, Pronoun, Verb, Adjective आदि POS filter छुट्टै।
+- Furigana ON/OFF (स्रोतको reading भएकै ठाउँमा) र Daily Challenge (5 Kanji + 5 Vocabulary)।
+- Chapter PDF: browser Print -> Save as PDF।
+
+IMPORTANT:
+- ZIP मा OpenJLPT का 700+123+1000 N1 entries पहिलेबाट छैनन्। GitHub Pages मा पहिलो पटक
+  इन्टरनेटबाट लोड हुन्छन्। Self-hosted / robust offline data चाहियो भने
+  N1/GET_REAL_N1_DATA.bat Windows मा चलाएर data/*.json files समेत Upload गर।
+- 123 original N1 grammar patterns, 500 generated practice-card opportunities;
+  500 unique official grammar points होइन।
+- Japanese and Nepali dictionary meanings are machine translated on request,
+  and online services may be unavailable or inaccurate. There are no human-reviewed
+  Nepali translations of every source entry in this package.
+- Practice questions are generated from study entries and NOT official JLPT exams.
+- This version replaces the old N1 folder. Do not create N1/N1 nesting.
+
+DATA: https://github.com/evanclan/OpenJLPT (CC BY-SA 4.0)

@@ -1,0 +1,28 @@
+NEXTSTEP N1 • SOURCES AND LICENSING
+
+OpenJLPT dataset
+  https://github.com/evanclan/OpenJLPT
+  License: Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
+  This application retrieves the kanji, vocabulary and grammar N1 JSON datasets
+  from the public OpenJLPT repository and uses selected, attributed study data.
+  Full license: https://creativecommons.org/licenses/by-sa/4.0/
+  OpenJLPT notices: https://github.com/evanclan/OpenJLPT/blob/main/NOTICE.md
+
+Original upstream dictionary and examples credited by OpenJLPT:
+  JMdict and KANJIDIC2 © Electronic Dictionary Research and Development Group.
+  Jonathan Waller JLPT community classification lists.
+  Tatoeba example sentences and their individual contributors, attribution
+  per OpenJLPT NOTICE file and dataset fields.
+
+Machine translation:
+  Optional online MyMemory API, or Google Translate on external pages.
+  Quality/availability not guaranteed. Do not publish automated translations
+  as authoritative grammatical explanations without review.
+
+The JLPT organizers do not publish an exhaustive official N1 kanji,
+word or grammar list for the current test. These are third-party study lists.
+Questions in this project are newly generated exercises, NOT copies of
+copyrighted official JLPT exam papers.
+
+All HTML / CSS / JavaScript unique to this NextStep frontend was created
+for this learner's study use. Preserve upstream dataset attribution when sharing.

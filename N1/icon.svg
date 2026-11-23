@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="NextStep N1 icon">
+  <defs><linearGradient id="g" x2="1" y2="1"><stop stop-color="#40dceb"/><stop offset="1" stop-color="#3479fc"/></linearGradient></defs>
+  <rect width="128" height="128" rx="25" fill="#07192b"/>
+  <rect x="13" y="13" width="102" height="102" rx="20" fill="url(#g)"/>
+  <text x="64" y="77" text-anchor="middle" font-family="Arial, sans-serif" font-weight="800" font-size="49" fill="#092139">N1</text>
+</svg>

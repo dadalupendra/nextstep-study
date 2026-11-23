@@ -1,0 +1,13 @@
+{
+  "name": "NextStep N1 • Japanese Study Collection",
+  "short_name": "NextStep N1",
+  "description": "Advanced JLPT N1 kanji, grammar, vocabulary and original quizzes",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#07192b",
+  "theme_color": "#07192b",
+  "icons": [
+    {"src":"./icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+  ]
+}
