@@ -242,7 +242,8 @@ const el=id=>document.getElementById(id),qargs=new URLSearchParams(location.sear
 let exam=EXAMS.includes(qargs.get('exam'))?qargs.get('exam'):'JLPT',
   book=BOOKS.includes(qargs.get('book'))?qargs.get('book'):'kanji',
   chap=Math.min(10,Math.max(1,parseInt(qargs.get('chapter'),10)||1)),
-  showFuri=localStorage.getItem('nextstep-n2-furigana')==='yes',list=[],chosen={},finished=false;
+  showFuri=false,list=[],chosen={},finished=false;
+try{showFuri=localStorage.getItem('nextstep-n2-furigana')==='yes'}catch(e){}
 const examLabels={JLPT:'JLPT N2',BJT:'BJT ビジネス日本語',JPT:'JPT 日本語練習',JTEST:'J.TEST 実用日本語',NAT:'NAT-TEST N2レベル復習'};
 const sourceText=(q,review)=>{
   if(review&&q.example){
