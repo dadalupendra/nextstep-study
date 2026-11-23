@@ -4,17 +4,46 @@
  * Data reference: https://github.com/evanclan/OpenJLPT  */
 "use strict";
 (() => {
- const CACHE=new Map(),TOTAL=100,TOPIC='nextstep-section-papers-v2';
+ const CACHE=new Map(),GRAMMAR_CACHE=new Map(),TOTAL=100,TOPIC='nextstep-section-papers-v3';
  const kana=/^[ぁ-ゖァ-ヺー・\s]+$/u;
  const escText=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const distinct=a=>[...new Set(a.filter(Boolean))];
  const hash=s=>{let h=2166136261;for(const ch of s){h^=ch.codePointAt(0);h=Math.imul(h,16777619)}return h>>>0};
  const mix=(list,key)=>{let a=[...list],state=hash(key);for(let i=a.length-1;i>0;i--){state^=state<<13;state^=state>>>17;state^=state<<5;let j=(state>>>0)%(i+1);[a[i],a[j]]=[a[j],a[i]];}return a;};
  const endpoint=level=>'https://cdn.jsdelivr.net/gh/evanclan/OpenJLPT@main/data/json/vocab/'+level.toLowerCase()+'.json';
- let page=0,paper=1,items=[],answers={},pending=false,sectionMode='all';
+ async function grammarSource(level){
+ if(GRAMMAR_CACHE.has(level))return GRAMMAR_CACHE.get(level);
+ const url='https://cdn.jsdelivr.net/gh/evanclan/OpenJLPT@main/data/json/grammar/'+level.toLowerCase()+'.json';
+ const res=await fetch(url,{cache:'force-cache'});if(!res.ok)throw Error('Grammar data unavailable '+res.status);
+ const data=await res.json(),pool=[],used=new Set();
+ for(const g of data){
+  const forms=String(g.pattern||'').split('/').map(t=>t.replace(/^〜+/,'').replace(/[()（）].*/,'').trim()).filter(t=>t.length>0&&t.length<=14);
+  for(const e of g.examples||[]){
+   if(typeof e.ja!=='string')continue;
+   const form=forms.find(x=>e.ja.includes(x));if(!form)continue;
+   const id=e.ja+'|'+form;if(used.has(id))continue;used.add(id);
+   pool.push({sentence:e.ja,form,meaning:String(g.meaning||'')});
+  }
+ }
+ if(pool.length<25)throw Error('Not enough grammar examples: '+level);
+ GRAMMAR_CACHE.set(level,pool);return pool;
+}
+function variedGrammar(level,num,serial,pool){
+ const order=mix(pool,level+'|grammar-source-v3');
+ const item=order[(((num-1)*25)+serial)%order.length],position=item.sentence.indexOf(item.form);
+ const masked=item.sentence.slice(0,position)+'（　）'+item.sentence.slice(position+item.form.length);
+ const candidates=[{form:item.form,correct:true,meaning:item.meaning}];
+ const alternatives=mix(pool.filter(x=>x.form!==item.form&&!item.sentence.includes(x.form)),level+num+serial+'alts');
+ for(const alt of alternatives){if(candidates.some(x=>x.form===alt.form))continue;candidates.push({form:alt.form,correct:false,meaning:alt.meaning});if(candidates.length===4)break;}
+ if(candidates.length!==4)throw Error('Grammar choices could not be generated');
+ const opts=mix(candidates,level+num+serial+'choices');
+ return {type:'文法',prompt:'【文法】次の文の（　）には、教材の原文でどの表現が使われていますか。\n'+masked,
+  options:opts.map(x=>x.form),answer:opts.findIndex(x=>x.correct),grammarSource:true,grammarTarget:item,grammarOptions:opts,generated:false};
+}
+let page=0,paper=1,items=[],answers={},pending=false,sectionMode='all';
  const SECTIONS={all:{name:'All Sections',start:0,end:100},vocab:{name:'Kanji / Vocabulary · 文字・語彙',start:0,end:40},grammar:{name:'Grammar · 文法',start:40,end:65},reading:{name:'Reading · 読解',start:65,end:85},listening:{name:'Listening · 聴解',start:85,end:100}};
  const paperGrid=document.getElementById('papers'),list=document.getElementById('questions'),score=document.getElementById('score'),test=document.getElementById('test');
- const note=document.createElement('p');note.className='muted';note.textContent='Original JLPT-inspired sections: 40 Kanji/Vocabulary, 25 Grammar, 20 Reading, 15 Listening per 100-question practice paper. Grammar question types and reading/listening scenarios reuse authored templates across papers. Listening uses device Japanese text-to-speech (not official recorded audio). No past JLPT questions are copied; these papers are not official full-length mock tests.';paperGrid.parentElement.append(note);
+ const note=document.createElement('p');note.className='muted';note.textContent='Original JLPT-inspired sections: 40 Kanji/Vocabulary, 25 Grammar, 20 Reading, 15 Listening per 100-question practice paper. Grammar uses distinct examples from the original level-specific grammar study data. Reading/listening scenarios still reuse common templates. Listening uses device Japanese text-to-speech (not official recorded audio). No past JLPT questions are copied; these papers are not official full-length mock tests.';paperGrid.parentElement.append(note);
  async function source(level){
   if(CACHE.has(level))return CACHE.get(level);
   const res=await fetch(endpoint(level),{cache:'force-cache'});if(!res.ok)throw Error('Vocabulary download failed ('+res.status+').');
@@ -73,12 +102,13 @@
   const out=[...selected];out[2]=opt.findIndex(o=>o.correct);out[3]=opt.map(o=>o.data);
   return{type:'文法',prompt:out[1],options:out[3].map(o=>o[0]),answer:out[2],original:out,generated:false};
  }
- function makePaper(level,num,vocab){
-  const words=mix(vocab,level+'|paper-'+num+'|vocab');
+ function makePaper(level,num,vocab,grammarPool){
+  const words=mix(vocab,level+'|vocab-source-v3');
+  const chosen=Array.from({length:40},(_,i)=>words[(((num-1)*40)+i)%words.length]);
   if(words.length<40)throw Error('Insufficient level-specific words.');
   const sections=[
-   ...words.slice(0,40).map((word,i)=>selection(word,i%2===0?'reading':'spelling',vocab,level,num,i)),
-   ...Array.from({length:25},(_,i)=>grammar(level,num,i)),
+   ...chosen.map((word,i)=>selection(word,i%2===0?'reading':'spelling',vocab,level,num,i)),
+   ...Array.from({length:25},(_,i)=>variedGrammar(level,num,i,grammarPool)),
    ...Array.from({length:20},(_,i)=>scenario(level,num,i,'読解')),
    ...Array.from({length:15},(_,i)=>scenario(level,num,i,'聴解'))
   ];
@@ -86,6 +116,8 @@
   return sections;
  }
  function explanation(q,j){
+  if(q.grammarSource){const good=j===q.answer,item=q.grammarTarget,option=q.grammarOptions[j];return '<strong>'+escText(option.form)+(good?' ✅':' ❌')+'</strong><br>🇯🇵 '+(good?'正解です。':'不正解です。')+'教材の原文は「'+escText(item.sentence)+'」で、文法表現は「'+escText(item.form)+'」です。<br>🇳🇵 '+(good?'सही विकल्प। ':'गलत विकल्प। ')+'मूल उदाहरणमा प्रयोग भएको व्याकरण '+escText(item.form)+' हो।<br>🇬🇧 '+(good?'Correct. ':'Incorrect. ')+'The source sentence uses '+escText(item.form)+' ('+escText(item.meaning)+').';}
+
   if(q.scenario){const good=j===q.answer,choice=q.options[j];return '<strong>'+escText(choice)+(good?' ✅':' ❌')+'</strong><br>🇯🇵 '+(good?'正解です。':'不正解です。')+'案内では「'+escText(q.day)+'の開始は'+escText(q.correctValue)+'」です。'+(good?'':'この選択肢は案内された開始時間ではありません。')+'<br>🇳🇵 '+(good?'सही उत्तर हो।':'गलत उत्तर हो।')+' सूचनाअनुसार '+escText(q.day)+' सुरु हुने समय '+escText(q.correctValue)+' हो।'+'<br>🇬🇧 '+(good?'Correct. ':'Incorrect. ')+'The announcement says the start time on '+escText(q.day)+' is '+escText(q.correctValue)+'.';}
   if(!q.generated){const opt=q.original[3][j],good=j===q.answer;return '<strong>'+escText(opt[0])+(good?' ✅':' ❌')+'</strong><br>🇯🇵 '+escText(opt[1])+'. '+(good?escText(q.original[4]):'この設問の正答ではありません。')+'<br>🇳🇵 '+escText(opt[2])+'। '+(good?escText(q.original[5]):'यस प्रश्नमा यो विकल्प सही होइन।')+'<br>🇬🇧 '+escText(opt[3])+'. '+(good?escText(q.original[6]):'This is not the correct option here.');}
   const item=q.source[j],right=item.correct,target=q.word;const english=target.meaning?' / Meaning: '+target.meaning:'';
@@ -113,7 +145,7 @@
  }
  async function openPaper(num){
   if(pending)return;pending=true;paper=num;paperGrid.querySelectorAll('button').forEach(b=>b.disabled=true);test.classList.remove('hidden');document.getElementById('test-title').textContent=active+' — Paper '+String(num).padStart(2,'0')+' · Loading vocabulary…';list.replaceChildren();score.textContent='Loading verified, level-specific vocabulary...';
-  try{items=makePaper(active,num,await source(active));answers=load();page=0;sectionMode='all';document.getElementById('test-title').textContent=active+' — Practice Paper '+String(num).padStart(2,'0')+' · 100 questions';render();}
+  try{const [vocabulary,grammarPool]=await Promise.all([source(active),grammarSource(active)]);items=makePaper(active,num,vocabulary,grammarPool);answers=load();page=0;sectionMode='all';document.getElementById('test-title').textContent=active+' — Practice Paper '+String(num).padStart(2,'0')+' · 100 questions';render();}
   catch(e){test.classList.add('hidden');score.textContent='';window.alert('Cannot load paper: '+e.message+'. Please connect to internet and retry. No fake questions were substituted.');}
   finally{pending=false;choosePapers(active);}
  }
