@@ -1,10 +1,10 @@
-/* NextStep Study: 20 x 100 generated vocabulary-focused practice papers for each JLPT level.
+/* NextStep Study: 20 x 100 four-section JLPT-inspired practice papers for each JLPT level.
  * Original authored examples from app.js + source vocabulary from OpenJLPT (CC BY-SA 4.0).
- * Practice structure is NOT a reproduction of JLPT full test: no audio or complete reading sections.
+ * Independent original reading/listening templates with browser speech synthesis; not an official recording or actual past exam.
  * Data reference: https://github.com/evanclan/OpenJLPT  */
 "use strict";
 (() => {
- const CACHE=new Map(),TOTAL=100,TOPIC='nextstep-vocab-papers-v1';
+ const CACHE=new Map(),TOTAL=100,TOPIC='nextstep-section-papers-v2';
  const kana=/^[ぁ-ゖァ-ヺー・\s]+$/u;
  const escText=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const distinct=a=>[...new Set(a.filter(Boolean))];
@@ -13,7 +13,7 @@
  const endpoint=level=>'https://cdn.jsdelivr.net/gh/evanclan/OpenJLPT@main/data/json/vocab/'+level.toLowerCase()+'.json';
  let page=0,paper=1,items=[],answers={},pending=false;
  const paperGrid=document.getElementById('papers'),list=document.getElementById('questions'),score=document.getElementById('score'),test=document.getElementById('test');
- const note=document.createElement('p');note.className='muted';note.textContent='Original, automatically assembled 100-item kanji/word-reading practice sets. The 20 papers use overlapping vocabulary. They are NOT full official-format JLPT tests: listening audio and realistic reading passages are not included. Nepali explanations explain the reading rule, while English dictionary meanings come from OpenJLPT.';paperGrid.parentElement.append(note);
+ const note=document.createElement('p');note.className='muted';note.textContent='Original JLPT-inspired sections: 40 Kanji/Vocabulary, 25 Grammar, 20 Reading, 15 Listening per 100-question practice paper. Grammar question types and reading/listening scenarios reuse authored templates across papers. Listening uses device Japanese text-to-speech (not official recorded audio). No past JLPT questions are copied; these papers are not official full-length mock tests.';paperGrid.parentElement.append(note);
  async function source(level){
   if(CACHE.has(level))return CACHE.get(level);
   const res=await fetch(endpoint(level),{cache:'force-cache'});if(!res.ok)throw Error('Vocabulary download failed ('+res.status+').');
@@ -34,19 +34,52 @@
   const question=mode==='reading'?'「'+word.word+'」の読み方として正しいものはどれですか。':'「'+word.reading+'」の正しい漢字表記はどれですか。'+context;
   return{type:'語彙・漢字',prompt:question,options:rotated.map(o=>o.text),answer:rotated.findIndex(o=>o.correct),source:rotated,word,mode,generated:true};
  }
+
+ const notices={
+  N5:['図書館','友だち','学校'],N4:['図書館','市役所','公民館'],N3:['受付','教室','図書館'],N2:['窓口','研修室','会議室'],N1:['広報室','調査室','研究会']
+ };
+ const days=['月曜日','火曜日','水曜日','木曜日','金曜日','土曜日','日曜日'];
+ const hours=['午前9時','午前10時','午前11時','午後1時','午後2時','午後3時','午後4時'];
+ const verbs=['開きます','始まります','行われます'];
+ function scenario(level,num,serial,kind){
+  const seed=hash(level+':'+num+':'+serial+':'+kind);
+  const place=notices[level][seed%3],day=days[Math.floor(seed/3)%7],hour=hours[Math.floor(seed/7)%7];
+  const newHour=hours[(Math.floor(seed/49)+2)%7];
+  const reading=kind==='読解';
+  let passage,prompt,answer,options;
+  if(reading){
+   passage='【お知らせ】'+place+'の予定が変わりました。'+day+'の開始時間は'+hour+'です。先月までは'+newHour+'でした。ご注意ください。';
+   prompt='【文章】'+passage+'\n【質問】'+day+'の開始時間はいつですか。';
+   options=distinct([hour,newHour,...hours.filter(x=>x!==hour&&x!==newHour)]).slice(0,4);answer=options.indexOf(hour);
+  }else{
+   passage='もしもし。'+day+'の'+place+'ですが、開始は'+hour+'です。'+newHour+'ではありません。よろしくお願いします。';
+   prompt='【聴解】音声を聞いて答えてください。開始時間はいつですか。';
+   options=distinct([hour,newHour,...hours.filter(x=>x!==hour&&x!==newHour)]).slice(0,4);answer=options.indexOf(hour);
+  }
+  const shuffled=mix(options,level+'|'+num+'|'+serial+'|'+kind);
+  return{type:kind,prompt,passage,options:shuffled,answer:shuffled.indexOf(hour),generated:false,scenario:true,listen:!reading,correctValue:hour,place,day,locale:level};
+ }
+ function grammar(level,num,serial){
+  const base=bank[level].filter(q=>q[0]==='文法');
+  const selected=base[(serial+num)%base.length];
+  const opt=mix(selected[3].map((v,i)=>({data:v,correct:i===selected[2]})),level+'|'+num+'|grammar|'+serial);
+  const out=[...selected];out[2]=opt.findIndex(o=>o.correct);out[3]=opt.map(o=>o.data);
+  return{type:'文法',prompt:out[1],options:out[3].map(o=>o[0]),answer:out[2],original:out,generated:false};
+ }
  function makePaper(level,num,vocab){
-  const seed=level+'|paper-'+num;
-  const words=mix(vocab,seed+'|vocab');
-  const needed=TOTAL-bank[level].length;
-  const selected=words.slice(0,needed);
-  if(selected.length<needed)throw Error('Insufficient level-specific vocabulary.');
-  const generated=selected.map((word,i)=>selection(word,i%2===0?'reading':'spelling',vocab,level,num,i));
-  const original=bank[level].map((q,i)=>({type:q[0],prompt:q[1],options:q[3].map(o=>o[0]),answer:q[2],original:q,generated:false,index:i}));
-  const result=mix([...generated,...original],seed+'|paper-order');
-  if(result.length!==TOTAL||result.some(q=>new Set(q.options).size!==4||q.answer<0||q.answer>3))throw Error('Paper integrity check failed.');
-  return result;
+  const words=mix(vocab,level+'|paper-'+num+'|vocab');
+  if(words.length<40)throw Error('Insufficient level-specific words.');
+  const sections=[
+   ...words.slice(0,40).map((word,i)=>selection(word,i%2===0?'reading':'spelling',vocab,level,num,i)),
+   ...Array.from({length:25},(_,i)=>grammar(level,num,i)),
+   ...Array.from({length:20},(_,i)=>scenario(level,num,i,'読解')),
+   ...Array.from({length:15},(_,i)=>scenario(level,num,i,'聴解'))
+  ];
+  if(sections.length!==TOTAL||sections.some(q=>new Set(q.options).size!==4||q.answer<0||q.answer>3))throw Error('Paper integrity check failed.');
+  return sections;
  }
  function explanation(q,j){
+  if(q.scenario){const good=j===q.answer,choice=q.options[j];return '<strong>'+escText(choice)+(good?' ✅':' ❌')+'</strong><br>🇯🇵 '+(good?'正解です。':'不正解です。')+'案内では「'+escText(q.day)+'の開始は'+escText(q.correctValue)+'」です。'+(good?'':'この選択肢は案内された開始時間ではありません。')+'<br>🇳🇵 '+(good?'सही उत्तर हो।':'गलत उत्तर हो।')+' सूचनाअनुसार '+escText(q.day)+' सुरु हुने समय '+escText(q.correctValue)+' हो।'+'<br>🇬🇧 '+(good?'Correct. ':'Incorrect. ')+'The announcement says the start time on '+escText(q.day)+' is '+escText(q.correctValue)+'.';}
   if(!q.generated){const opt=q.original[3][j],good=j===q.answer;return '<strong>'+escText(opt[0])+(good?' ✅':' ❌')+'</strong><br>🇯🇵 '+escText(opt[1])+'. '+(good?escText(q.original[4]):'この設問の正答ではありません。')+'<br>🇳🇵 '+escText(opt[2])+'। '+(good?escText(q.original[5]):'यस प्रश्नमा यो विकल्प सही होइन।')+'<br>🇬🇧 '+escText(opt[3])+'. '+(good?escText(q.original[6]):'This is not the correct option here.');}
   const item=q.source[j],right=item.correct,target=q.word;const english=target.meaning?' / Meaning: '+target.meaning:'';
   return '<strong>'+escText(item.text)+(right?' ✅':' ❌')+'</strong><br>'+
@@ -54,12 +87,16 @@
     '<br>🇳🇵 '+(right?'यो सही विकल्प हो। ':'यो गलत विकल्प हो। ')+'「'+escText(target.word)+'」 को पढाइ 「'+escText(target.reading)+'」 हो।'+(right?'':' यो विकल्प 「'+escText(item.word.word)+'」（'+escText(item.word.reading)+'）सँग सम्बन्धित छ।')+
     '<br>🇬🇧 '+(right?'Correct. ':'Incorrect. ')+'The reading of '+escText(target.word)+' is '+escText(target.reading)+escText(english)+'.'+(right?'':' This option is associated with '+escText(item.word.word)+' ('+escText(item.word.reading)+').');
  }
+ function playJapanese(script,rate){
+  if(!('speechSynthesis' in window)||typeof SpeechSynthesisUtterance==='undefined'){window.alert('Japanese Text-to-Speech is not available on this device. Try Chrome, Edge or Safari with a Japanese voice installed.');return;}
+  try{speechSynthesis.cancel();const utterance=new SpeechSynthesisUtterance(script);utterance.lang='ja-JP';utterance.rate=rate;const voices=speechSynthesis.getVoices();const japanese=voices.find(v=>v.lang.toLowerCase().startsWith('ja'));if(japanese)utterance.voice=japanese;speechSynthesis.speak(utterance);}catch(e){window.alert('Unable to play Japanese audio: '+e.message);}
+ }
  function save(){try{localStorage.setItem(TOPIC+'-'+active+'-'+paper,JSON.stringify(answers));}catch{}}
  function load(){try{const a=JSON.parse(localStorage.getItem(TOPIC+'-'+active+'-'+paper)||'{}');return a&&typeof a==='object'?a:{};}catch{return {};}}
  function render(){
   list.replaceChildren();const start=page*10;const end=Math.min(start+10,items.length);
-  const top=document.createElement('div');top.className='panel grid no-print';top.innerHTML='<span class="tag">Questions '+(start+1)+'–'+end+' / '+TOTAL+'</span>';const prev=document.createElement('button');prev.textContent='← Previous 10';prev.disabled=page===0;prev.onclick=()=>{page--;render();};const next=document.createElement('button');next.textContent='Next 10 →';next.disabled=end===TOTAL;next.onclick=()=>{page++;render();};top.append(prev,next);list.append(top);
-  for(let i=start;i<end;i++){const q=items[i];const wrap=document.createElement('article');wrap.className='question';const h=document.createElement('h3');h.textContent='問題 '+(i+1)+' · '+q.type;wrap.append(h);const p=document.createElement('p');p.textContent=q.prompt;p.style.whiteSpace='pre-wrap';wrap.append(p);for(let j=0;j<4;j++){const b=document.createElement('button');b.className='option'+(answers[i]!==undefined&&j===q.answer?' correct':'')+(answers[i]===j&&j!==q.answer?' wrong':'');b.textContent=(j+1)+'. '+q.options[j];b.disabled=answers[i]!==undefined;b.addEventListener('click',()=>{answers[i]=j;save();render();});wrap.append(b);}
+  const top=document.createElement('div');top.className='panel grid no-print';top.innerHTML='<span class="tag">'+active+' · Paper '+String(paper).padStart(2,'0')+' · Questions '+(start+1)+'–'+end+' / '+TOTAL+'</span><span>文字・語彙 1–40 · 文法 41–65 · 読解 66–85 · 聴解 86–100</span>';const prev=document.createElement('button');prev.textContent='← Previous 10';prev.disabled=page===0;prev.onclick=()=>{page--;render();};const next=document.createElement('button');next.textContent='Next 10 →';next.disabled=end===TOTAL;next.onclick=()=>{page++;render();};top.append(prev,next);list.append(top);
+  for(let i=start;i<end;i++){const q=items[i];const wrap=document.createElement('article');wrap.className='question';const h=document.createElement('h3');h.textContent='問題 '+(i+1)+' · '+q.type;wrap.append(h);const p=document.createElement('p');p.textContent=q.prompt;p.style.whiteSpace='pre-wrap';wrap.append(p);if(q.listen){const box=document.createElement('div');box.className='grid no-print';const listen=document.createElement('button');listen.textContent='🔊 再生 / Play audio';listen.type='button';listen.addEventListener('click',()=>playJapanese(q.passage,1));const slow=document.createElement('button');slow.type='button';slow.textContent='🐢 Slow audio';slow.addEventListener('click',()=>playJapanese(q.passage,0.75));box.append(listen,slow);wrap.append(box);if(answers[i]!==undefined){const transcript=document.createElement('p');transcript.textContent='Script: '+q.passage;wrap.append(transcript);}}for(let j=0;j<4;j++){const b=document.createElement('button');b.className='option'+(answers[i]!==undefined&&j===q.answer?' correct':'')+(answers[i]===j&&j!==q.answer?' wrong':'');b.textContent=(j+1)+'. '+q.options[j];b.disabled=answers[i]!==undefined;b.addEventListener('click',()=>{answers[i]=j;save();render();});wrap.append(b);}
    if(answers[i]!==undefined){const exp=document.createElement('div');exp.className='explain';const heading=document.createElement('strong');heading.textContent='解説 — 全４選択肢 / चारै विकल्प / all four choices';exp.append(heading);for(let j=0;j<4;j++){const div=document.createElement('p');div.innerHTML=explanation(q,j);exp.append(div);}wrap.append(exp);}list.append(wrap);}
   const count=Object.keys(answers).length,correct=items.reduce((n,q,i)=>n+(answers[i]===q.answer?1:0),0);document.getElementById('progress').textContent='Answered: '+count+'/'+TOTAL+' · Page '+(page+1)+'/10';
   score.textContent=count===TOTAL?'Your practice result: '+correct+'/100. This is NOT an official JLPT scaled score.':'Answered: '+count+'/100 · Correct so far: '+correct+' · Wrong so far: '+(count-correct);
