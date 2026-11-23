@@ -21,7 +21,7 @@ let browser;
   const errors=[];page.on('pageerror',e=>errors.push(e.message));
   await page.route('**/data/json/vocab/*.json',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(fixture)}));
   await page.route('**/data/json/grammar/*.json',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(grammarFixture)}));
-  await page.goto('http://127.0.0.1:'+PORT+'/exams/?level='+level,{waitUntil:'domcontentloaded'});
+  await page.goto('http://127.0.0.1:'+PORT+'/exams/?level='+level+'&view=classic',{waitUntil:'domcontentloaded'});
   assert.equal(await page.locator('#levels button').count(),5);
   await page.locator('#levels button').filter({hasText:level}).click();
   assert.equal(await page.locator('#papers button').count(),20);
