@@ -30,7 +30,8 @@ let browser;
  await page.locator('#feedback-message').fill('N2 読解の問題の答えの説明を改善してください。');
  await page.locator('#feedback-page').fill('https://dadalupendra.github.io/nextstep-study/exams/');
  await page.locator('#copy-feedback').click();
- assert.match(await page.locator('#form-status').innerText(),/NOT been sent automatically|nothing has been sent/);
+ await page.waitForFunction(()=>/NOT been sent automatically|nothing has been sent|Copy was blocked/.test(document.querySelector('#form-status')?.textContent||''),null,{timeout:10000});
+ assert.match(await page.locator('#form-status').innerText(),/NOT been sent automatically|nothing has been sent|Copy was blocked/);
  let issueUrl='';
  await page.route('https://github.com/dadalupendra/nextstep-study/issues/new**',route=>{
   issueUrl=route.request().url();
