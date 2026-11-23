@@ -96,7 +96,7 @@ function buildListening(level,paper,index){
   speech='女：すみません。'+theme+'の開始は'+time+'に変わりましたが、よろしいですか。';
  }else if(subtype==='統合理解'){
   query='男の人は、どの予定をメモすればよいですか。';
-  answer=day+'・'+time;options=[day+'・'+oldTime,'日曜日・'+time,'月曜日・'+oldTime];
+  answer=day+'・'+time;const alternateDay=day==='月曜日'?'火曜日':'月曜日';options=[day+'・'+oldTime,alternateDay+'・'+time,alternateDay+'・'+oldTime];
   speech='男：先ほどのご案内を確認したいのですが、'+theme+'は'+day+'ですよね。\n女：はい、会場は'+place+'です。時間だけ、以前の'+oldTime+'から'+time+'に変わりました。\n男：それでは、新しい時間を書いておきます。';
  }
  const choices=shuffle([answer,...options.slice(0,3)],'listen:'+level+':'+paper+':'+index);
