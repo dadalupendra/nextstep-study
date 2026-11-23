@@ -68,18 +68,18 @@ function vocabPage(page,printing){
 function grammarPage(page,printing){
  const ix=Math.floor((page-1)/3),phase=(page-1)%3;
  const x=grammar[ix];if(!x)return '<h2>No grammar data for this page</h2>';
- const [pattern,meaning,sentence,translation,note]=x;
+ const [pattern,meaning,sentence,translation,note,meaningNepali]=x;
  const title=["Learn the pattern · 文型","Usage & comprehension · 読解","Practice & production · 練習"][phase];
  let part='';
  if(phase===0){
    part='<div class="high"><h2>Meaning / 意味</h2><p class="gloss">'+en(meaning)+'</p>'+
-   ne("यो व्याकरणको अर्थ र प्रयोग उदाहरणबाट सिक्नुहोस्।")+'</div>'+
+   ne(meaningNepali)+'<br>'+ne("यो व्याकरणको अर्थ र प्रयोग उदाहरणबाट सिक्नुहोस्।")+'</div>'+
    '<h2>Example / 例文</h2><div class="card"><h3 class="ja" lang="ja">'+esc(sentence)+'</h3>'+
    '<p class="gloss">'+en(translation)+'</p>'+(!printing?sayButton(sentence):'')+'</div>'+
    '<h2>Usage note / 使い方</h2><p>'+en(note)+'</p><div class="task"><b>Learning tip</b><p>Identify where <strong>'+esc(pattern)+'</strong> occurs in the sentence. Explain the relationship between the two ideas.</p>'+ne("उदाहरणमा यो व्याकरणले दुई भाग कसरी जोडेको छ ध्यान दिनुहोस्।")+'</div>';
  }else if(phase===1){
    part='<h2>Observe the structure / 文の構造</h2><div class="card"><p class="ja" lang="ja">'+esc(sentence)+'</p><p class="gloss">'+en(translation)+'</p>'+
-    '<p><b>Key pattern:</b> <span class="ja">'+esc(pattern)+'</span></p><p><b>Usage:</b> '+en(note)+'</p></div>'+
+    '<p><b>Key pattern:</b> <span class="ja">'+esc(pattern)+'</span></p><p><b>Usage:</b> '+en(note)+'</p><p>'+ne(meaningNepali)+'</p></div>'+
     '<div class="task"><h3>Comprehension questions</h3><p>1. Which two ideas or events does this pattern link?</p><p>2. Is the tone neutral, formal, emphatic, or negative? Explain using the example.</p><p>3. What changes in meaning if you remove the target pattern?</p></div>'+
     '<p class="high">'+ne("उदाहरण पढेर कारण, विरोध वा सर्त कुन सम्बन्ध छ भनेर पहिचान गर्नुहोस्।")+'</p>';
  }else{
@@ -89,7 +89,7 @@ function grammarPage(page,printing){
     '<div class="task"><p>① Write about a school or workplace situation with <b>'+esc(pattern)+'</b>.</p><p>② Write about a social or everyday situation with the same pattern.</p><p>③ Check that your word order and grammatical connection match the model.</p></div>'+
     '<div class="card"><b>Model to review / 参考文</b><p class="ja" lang="ja">'+esc(sentence)+'</p>'+
     '<p class="gloss">'+en(translation)+'</p>'+
-    '<p class="mini">Meaning: '+en(meaning)+'</p></div>';
+    '<p class="mini">Meaning: '+en(meaning)+'</p><p>'+ne(meaningNepali)+'</p></div>';
  }
  return '<div class="eyebrow">NEXTSTEP STUDY / GRAMMAR NOTEBOOK · Page '+page+' / 300 · Pattern '+(ix+1)+'/100 · Part '+(phase+1)+'/3</div>'+
  '<h1 class="ja" lang="ja">'+esc(pattern)+'</h1><div class="badge">'+esc(title)+'</div><div class="gap"></div>'+
