@@ -180,8 +180,36 @@ function applyLevelLayout(level){
  }
  function choosePapers(level){
    applyLevelLayout(level);
-   paperGrid.replaceChildren();for(let i=1;i<=20;i++){let b=document.createElement('button');b.type='button';b.className='paper';b.textContent=level+' — Paper '+String(i).padStart(2,'0')+' · 100 Q';b.setAttribute('aria-label','JLPT '+level+' Practice Paper '+i+', 100 questions');b.addEventListener('click',()=>openPaper(i));paperGrid.append(b);}
+   paperGrid.replaceChildren();
+   for(let i=1;i<=20;i++){
+    const button=document.createElement('button');button.type='button';button.className='paper studio-paper-card';
+    button.dataset.paper=String(i);button.dataset.level=level;
+    button.setAttribute('aria-label','Start '+level+' Practice Paper '+String(i).padStart(2,'0')+' in single-question exam view');
+    const title=document.createElement('strong');title.textContent=level+' · Paper '+String(i).padStart(2,'0');
+    const details=document.createElement('span');details.className='studio-paper-count';details.textContent='100 practice questions · ⏱ Timed';
+    const action=document.createElement('span');action.className='studio-paper-action';action.textContent='Start exam →';
+    const progress=document.createElement('small');progress.className='studio-paper-progress';
+    try{
+     const saved=JSON.parse(localStorage.getItem('ns-studio-'+level+'-'+i)||'null');
+     if(saved?.answers){const n=Object.values(saved.answers).filter(v=>Number.isInteger(v)&&v>=0&&v<4).length;
+      if(n)progress.textContent=(saved.submitted?'Reviewed':'Resume')+' · '+n+'/100 answered';}
+    }catch(e){}
+    button.append(title,details,action,progress);
+    button.addEventListener('click',()=>{
+     const url=new URL(location.href);
+     if(url.searchParams.get('view')==='classic'||!window.NextStepExamStudio)openPaper(i);
+     else window.NextStepExamStudio.open(level,i);
+    });
+    paperGrid.append(button);
+   }
  }
+ // Keep the original 10-question interface accessible without duplicating cards.
+ window.NextStepClassicExam={async open(level,num){
+  if(!LEVEL_ALLOCATION[level]||!Number.isInteger(num)||num<1||num>20)throw Error('Invalid paper');
+  if(active!==level){choose(level);choosePapers(level);}
+  await openPaper(num);
+  document.getElementById('test').scrollIntoView({behavior:'smooth',block:'start'});
+ }};
  // Shared, validated source for the optional exam-mode UI.
  // Keeps the existing practice pages and printable questions intact.
  window.NextStepExamAPI={
