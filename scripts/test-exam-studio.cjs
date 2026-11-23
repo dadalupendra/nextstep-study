@@ -1,0 +1,47 @@
+'use strict';
+const assert=require('node:assert/strict');
+const {chromium}=require('playwright-core');
+const fs=require('node:fs'),path=require('node:path');
+const {spawn}=require('node:child_process');
+const ROOT=path.resolve(process.argv[2]||'public-site');
+const CHROME=process.env.CHROME_PATH||['/usr/bin/google-chrome','/usr/bin/google-chrome-stable','/usr/bin/chromium','/usr/bin/chromium-browser'].find(f=>fs.existsSync(f));
+if(!CHROME)throw Error('Chromium is required for studio UI tests');
+const PORT=8793,server=spawn('python3',['-m','http.server',String(PORT),'--bind','127.0.0.1','--directory',ROOT],{stdio:'ignore'});
+const vocabulary=Array.from({length:180},(_,i)=>({word:'単語'+i,reading:'たんご'+i,meanings:['word '+i],level:'N5',examples:[{ja:'単語'+i+'を読みます。'}]}));
+const grammar=Array.from({length:100},(_,i)=>({pattern:'〜例文'+i,meaning:'example '+i,examples:[{ja:'この例文'+i+'は勉強のためです。'}]}));
+let browser;
+(async()=>{
+ await new Promise(ok=>setTimeout(ok,800));
+ browser=await chromium.launch({headless:true,executablePath:CHROME,args:['--no-sandbox','--disable-dev-shm-usage']});
+ for(const level of ['N5','N4','N3','N2','N1']){
+  const page=await browser.newPage({viewport:{width:1240,height:880}});
+  const errors=[];page.on('pageerror',e=>errors.push(e.message));
+  await page.route('**/data/json/vocab/*.json',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(vocabulary)}));
+  await page.route('**/data/json/grammar/*.json',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(grammar)}));
+  await page.goto('http://127.0.0.1:'+PORT+'/exams/?level='+level,{waitUntil:'domcontentloaded'});
+  assert.equal(await page.locator('#studio-level').inputValue(),level);
+  await page.locator('#studio-start').click();
+  await page.locator('#studio-test:not([hidden])').waitFor({timeout:14000});
+  assert.equal(await page.locator('#studio-answers .studio-number').count(),100);
+  assert.equal(await page.locator('#studio-question .studio-choice').count(),4);
+  assert.equal(await page.locator('#studio-question .studio-explanation').count(),0);
+  await page.locator('#studio-question .studio-choice').first().click();
+  assert.equal(await page.locator('#studio-progress').innerText(),'Answered 1/100');
+  await page.locator('#studio-next').click();
+  assert.equal(await page.locator('#studio-current').innerText(),'問題 2 / 100');
+  await page.locator('#studio-sections [data-section="listening"]').click();
+  assert.match(await page.locator('#studio-kind').innerText(),/聴解/);
+  assert.equal(await page.getByRole('button',{name:/Play Japanese/}).count(),1);
+  assert.equal(await page.locator('#studio-question').getByText(/女：/).count(),0,'transcript must remain hidden before submitting');
+  await page.locator('#studio-answers .studio-number').nth(0).click();
+  page.once('dialog',dialog=>dialog.accept());
+  await page.locator('#studio-submit').click();
+  assert.equal(await page.locator('#studio-results:not([hidden])').count(),1);
+  assert.equal(await page.locator('#studio-question .studio-explain-option').count(),4);
+  await page.locator('#studio-sections [data-section="listening"]').click();
+  assert.equal(await page.locator('#studio-question').getByText(/Listening Script/).count(),1);
+  assert.equal(errors.length,0,level+' JS errors: '+errors.join('; '));
+  console.log('PASS '+level+' studio answer sheet + timer + review + transcript');
+  await page.close();
+ }
+})().catch(e=>{console.error('STUDIO TEST FAILED:',e);process.exitCode=1}).finally(async()=>{if(browser)await browser.close();server.kill()});
