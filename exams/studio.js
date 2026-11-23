@@ -15,7 +15,13 @@ function save(){if(!state)return;try{localStorage.setItem('ns-studio-'+state.lev
 function restore(){try{const s=JSON.parse(localStorage.getItem('ns-studio-'+state.level+'-'+state.paper)||'null');if(!s||typeof s!=='object')return;state.answers=s.answers||{};state.index=Number.isInteger(s.index)?Math.max(0,Math.min(99,s.index)):0;state.startedAt=Number(s.startedAt)||Date.now();state.flagged=s.flagged||{};state.submitted=Boolean(s.submitted);}catch(e){}}
 function count(){return Object.keys(state.answers).filter(k=>Number.isInteger(state.answers[k])&&state.answers[k]>=0&&state.answers[k]<4).length;}
 function time(){if(!state)return;const seconds=Math.max(0,Math.round(minutes[state.level]*60-(Date.now()-state.startedAt)/1000)),m=String(Math.floor(seconds/60)).padStart(2,'0'),s=String(seconds%60).padStart(2,'0');$('studio-timer').textContent='⏱ '+m+':'+s;if(seconds===0)$('studio-timer').setAttribute('title','Suggested practice time elapsed. You may still finish.');}
-function position(i){state.index=Math.max(0,Math.min(state.questions.length-1,i));save();render();}
+function position(i){
+ if(!state)return;
+ state.index=Math.max(0,Math.min(state.questions.length-1,i));
+ save();render();
+ // Only navigation scrolls to the new question, not choosing an answer.
+ requestAnimationFrame(()=>{const el=$('studio-question');if(el)el.scrollIntoView({behavior:'instant',block:'start'});});
+}
 function sectionButton(qtype,label,count){const b=document.createElement('button');b.type='button';b.className='studio-section';b.dataset.section=qtype;b.textContent=label+' · '+count;b.addEventListener('click',()=>{const i=state.questions.findIndex(q=>typeOf(q)===qtype);if(i>=0)position(i);});return b;}
 function renderSheet(){
  const buttons=$('studio-answers');buttons.replaceChildren();
@@ -100,17 +106,26 @@ function submit(){
  if(missing&&!window.confirm('There are '+missing+' unanswered questions. Submit anyway?'))return;
  state.submitted=true;save();render();summary();
 }
-async function start(){
- const level=$('studio-level').value,paper=Number($('studio-paper').value);
+async function start(levelArg,paperArg){
+ const level=typeof levelArg==='string'?levelArg:$('studio-level').value;
+ const paper=Number.isInteger(paperArg)?paperArg:Number($('studio-paper').value);
  if(!LEVELS.includes(level)||paper<1||paper>20)return;
- $('studio-start').disabled=true;$('studio-loader').textContent='Checking verified Japanese questions and audio for '+level+' Paper '+paper+'…';
+ $('studio-level').value=level;$('studio-paper').value=String(paper);
+ $('studio-start').disabled=true;
+ $('studio-test').hidden=true;$('studio-results').hidden=true;
+ started=false;clearInterval(timerId);timerId=null;
+ const url=new URL(location.href);url.searchParams.set('level',level);url.searchParams.set('paper',paper);url.searchParams.set('view','exam');
+ history.replaceState(null,'',url);
+ $('studio-loader').textContent='Loading '+level+' Paper '+String(paper).padStart(2,'0')+' …';
+ $('exam-studio').scrollIntoView({behavior:'smooth',block:'start'});
  try{
   const questions=await api().load(level,paper,{requireVerified:true});
   if(questions.length!==100)throw Error('Expected 100 questions; received '+questions.length);
   state={level,paper,questions,answers:{},flagged:{},startedAt:Date.now(),index:0,submitted:false};
+  const paperLabel=$('studio-paper-label');if(paperLabel)paperLabel.textContent=level+' · Paper '+String(paper).padStart(2,'0')+' · '+questions.length+' questions';
   restore();started=true;
   $('studio-test').hidden=false;$('studio-results').hidden=true;
-  $('studio-loader').textContent='Ready · 100 practice questions. Listening uses system Japanese voice.';
+  $('studio-loader').textContent='📗 '+level+' Paper '+String(paper).padStart(2,'0')+' — Practice content, not official JLPT questions. Audio is browser Japanese TTS, not recorded exam audio.';
   const sections=$('studio-sections');sections.replaceChildren();
   for(const [type,title] of Object.entries(labels))sections.append(sectionButton(type,title,questions.filter(q=>typeOf(q)===type).length));
   render();if(state.submitted)summary();
@@ -121,21 +136,46 @@ async function start(){
 }
 function setup(){
  if(!$('studio-start'))return;
+ window.NextStepExamStudio={
+  open(level,paper){return start(level,paper);},
+  getState(){return state?{level:state.level,paper:state.paper,question:state.index+1,answered:count(),submitted:state.submitted}:null;}
+ };
  const query=new URLSearchParams(location.search);
  const level=(query.get('level')||'N5').toUpperCase();
  $('studio-level').value=LEVELS.includes(level)?level:'N5';
+ const desiredPaper=Number(query.get('paper'));
+ if(Number.isInteger(desiredPaper)&&desiredPaper>=1&&desiredPaper<=20)$('studio-paper').value=String(desiredPaper);
  $('studio-start').addEventListener('click',start);
  $('studio-prev').addEventListener('click',()=>position(state.index-1));
  $('studio-next').addEventListener('click',()=>position(state.index+1));
  $('studio-flag').addEventListener('click',()=>{if(state.flagged[state.index])delete state.flagged[state.index];else state.flagged[state.index]=true;save();render();});
  $('studio-submit').addEventListener('click',submit);
  $('studio-return').addEventListener('click',summary);
+ const exit=$('studio-exit');
+ if(exit)exit.addEventListener('click',()=>{
+  if('speechSynthesis' in window)speechSynthesis.cancel();
+  clearInterval(timerId);timerId=null;started=false;
+  $('studio-test').hidden=true;$('studio-results').hidden=true;
+  const url=new URL(location.href);url.searchParams.delete('paper');url.searchParams.delete('view');history.replaceState(null,'',url);
+  document.getElementById('paper-collection').scrollIntoView({behavior:'smooth',block:'start'});
+ });
+ const classic=$('studio-classic');
+ if(classic)classic.addEventListener('click',async()=>{
+  if(!state||!window.NextStepClassicExam)return;
+  clearInterval(timerId);timerId=null;started=false;$('studio-test').hidden=true;
+  const url=new URL(location.href);url.searchParams.set('view','classic');history.replaceState(null,'',url);
+  await window.NextStepClassicExam.open(state.level,state.paper);
+ });
  $('studio-level').addEventListener('change',()=>{const url=new URL(location.href);url.searchParams.set('level',$('studio-level').value);history.replaceState(null,'',url);});
  document.addEventListener('keydown',e=>{if(!started||!state||e.altKey||e.ctrlKey||e.metaKey||/INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName||''))return;
   if(['1','2','3','4'].includes(e.key)&&!state.submitted){const b=$('studio-question').querySelectorAll('.studio-choice')[Number(e.key)-1];if(b){e.preventDefault();b.click();}}
   else if(e.key==='ArrowRight'){e.preventDefault();position(state.index+1);}
   else if(e.key==='ArrowLeft'){e.preventDefault();position(state.index-1);}
  });
+ if(query.get('view')==='exam'&&Number.isInteger(desiredPaper)&&desiredPaper>=1&&desiredPaper<=20){
+  // Deep links to an existing paper open the same exam view; no duplicate paper IDs.
+  setTimeout(()=>start(),0);
+ }
 }
 setup();
 })();
