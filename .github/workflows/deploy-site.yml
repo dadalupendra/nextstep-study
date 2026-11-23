@@ -6,6 +6,8 @@ on:
     paths:
       - 'index.html'
       - 'kanji-compounds.js'
+      - 'daily-100.js'
+      - 'scripts/test-daily-100.cjs'
       - 'manifest.webmanifest'
       - 'sw.js'
       - 'icons/**'
@@ -76,13 +78,14 @@ jobs:
           node --check exams/app.js
           node --check exams/full-papers.js
           node --check exams/studio.js
+          node --check daily-100.js
           test -s exams/studio.css
 
       - name: Create a reader-only publishing folder
         run: |
           set -eu
           mkdir -p public-site
-          cp index.html kanji-compounds.js public-site/
+          cp index.html kanji-compounds.js daily-100.js public-site/
           node --check kanji-compounds.js
           cp manifest.webmanifest sw.js public-site/
           mkdir -p public-site/icons
@@ -131,6 +134,9 @@ jobs:
 
       - name: Check independent N5–N2 kanji vocabulary master books on mobile
         run: node scripts/test-master-books.cjs public-site
+
+      - name: Verify 100 unique daily questions for N1–N5 where sources are available
+        run: node scripts/test-daily-100.cjs public-site
 
       - name: Test clickable Kanji and compound words on N1–N5 readers
         run: node scripts/test-kanji-compounds.cjs public-site
