@@ -18,8 +18,8 @@
   if(CACHE.has(level))return CACHE.get(level);
   const res=await fetch(endpoint(level),{cache:'force-cache'});if(!res.ok)throw Error('Vocabulary download failed ('+res.status+').');
   const data=await res.json();if(!Array.isArray(data))throw Error('Invalid vocabulary data.');
-  const cleaned=data.filter(w=>w&&typeof w.word==='string'&&typeof w.reading==='string'&&w.reading.trim()&&w.word.trim()&&w.word!==w.reading&&!kana.test(w.word)).map(w=>({word:w.word,reading:w.reading,meaning:Array.isArray(w.meanings)?String(w.meanings[0]||''):''}));
-  const dedup=new Map();for(const w of cleaned){const id=w.word+'|'+w.reading;if(!dedup.has(id))dedup.set(id,w);}
+  const cleaned=data.filter(w=>w&&typeof w.word==='string'&&typeof w.reading==='string'&&w.reading.trim()&&w.word.trim()&&w.word!==w.reading&&!kana.test(w.word)).map(w=>({word:w.word,reading:w.reading,meaning:Array.isArray(w.meanings)?String(w.meanings[0]||''):'',example:Array.isArray(w.examples)?String((w.examples.find(e=>e&&typeof e.ja==='string'&&e.ja.includes(w.word))||{}).ja||''):''}));
+  const dedup=new Map();for(const w of cleaned){const id=w.word;if(!dedup.has(id))dedup.set(id,w);}
   const vocabulary=[...dedup.values()];if(vocabulary.length<94)throw Error('Not enough verified kanji-reading items for this level: '+vocabulary.length+'.');
   CACHE.set(level,vocabulary);return vocabulary;
  }
@@ -30,7 +30,8 @@
   for(const w of wrongs){const candidate=mode==='reading'?w.reading:w.word;if(opts.some(o=>o.text===candidate))continue;opts.push({text:candidate,word:w,correct:false});if(opts.length===4)break;}
   if(opts.length!==4)throw Error('Not enough unique distractors for '+word.word);
   const rotated=mix(opts,level+'|'+paper+'|'+serial+'|options');
-  const question=mode==='reading'?'「'+word.word+'」の読み方として正しいものはどれですか。':'「'+word.reading+'」を漢字で書くとき、正しいものはどれですか。';
+  const context=mode==='spelling'&&word.example?' 次の文を参考にしてください。「'+word.example.replaceAll(word.word,'（　）')+'」':'';
+  const question=mode==='reading'?'「'+word.word+'」の読み方として正しいものはどれですか。':'「'+word.reading+'」の正しい漢字表記はどれですか。'+context;
   return{type:'語彙・漢字',prompt:question,options:rotated.map(o=>o.text),answer:rotated.findIndex(o=>o.correct),source:rotated,word,mode,generated:true};
  }
  function makePaper(level,num,vocab){
