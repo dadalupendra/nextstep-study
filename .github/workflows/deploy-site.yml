@@ -5,6 +5,9 @@ on:
     branches: [main]
     paths:
       - 'index.html'
+      - 'manifest.webmanifest'
+      - 'sw.js'
+      - 'icons/**'
       - '.nojekyll'
       - 'N1/**'
       - 'N2/**'
@@ -50,6 +53,9 @@ jobs:
           set -eu
           mkdir -p public-site
           cp index.html public-site/
+          cp manifest.webmanifest sw.js public-site/
+          mkdir -p public-site/icons
+          cp icons/icon.svg public-site/icons/
           cp .nojekyll public-site/
           for level in N1 N2 N3 N4 N5; do
             cp -R "$level" public-site/
