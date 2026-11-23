@@ -182,6 +182,18 @@ function applyLevelLayout(level){
    applyLevelLayout(level);
    paperGrid.replaceChildren();for(let i=1;i<=20;i++){let b=document.createElement('button');b.type='button';b.className='paper';b.textContent=level+' — Paper '+String(i).padStart(2,'0')+' · 100 Q';b.setAttribute('aria-label','JLPT '+level+' Practice Paper '+i+', 100 questions');b.addEventListener('click',()=>openPaper(i));paperGrid.append(b);}
  }
+ // Shared, validated source for the optional exam-mode UI.
+ // Keeps the existing practice pages and printable questions intact.
+ window.NextStepExamAPI={
+   async load(level,num){
+    if(!LEVEL_ALLOCATION[level]||!Number.isInteger(num)||num<1||num>20)throw Error('Invalid level or paper number');
+    const [vocabulary,grammarPool]=await Promise.all([source(level),grammarSource(level)]);
+    return makePaper(level,num,vocabulary,grammarPool);
+   },
+   explain:explanation,
+   speak:playJapanese,
+   allocation:LEVEL_ALLOCATION
+ };
  const sectionButtons=Array.from(document.querySelectorAll('#exam-sections button'));
  sectionButtons.forEach(b=>b.addEventListener('click',()=>{
   if(!items.length)return;
