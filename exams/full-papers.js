@@ -62,7 +62,7 @@ function applyLevelLayout(level){
    const listening=window.NextStepListeningScripts01;
    if(!listening)throw Error('Original Japanese Listening scripts failed to load');
    for(let i=0;i<config.listening;i++){
-    const authored=listening.build(level,num,i);
+    const authored=listening.build(level,num,i)||window.NextStepListeningScripts01B?.build(level,num,i);
     if(authored)slots[config.vocab+config.grammar+config.reading+i]=authored;
    }
   }
