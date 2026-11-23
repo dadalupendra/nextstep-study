@@ -30,7 +30,7 @@ let browser;
   assert.match(await page.locator('#questions .question').first().locator('h3').innerText(),/語彙|漢字/);
   await page.locator('#questions .question').first().locator('button.option').first().click();
   assert.equal(await page.locator('#questions .question').first().locator('.explain p').count(),4);
-  for(let i=0;i<9;i++)await page.getByRole('button',{name:'Next 10 →'}).click();
+  for(let i=0;i<9;i++){await page.getByRole('button',{name:'Next 10 →'}).click();if(i===3)assert.match(await page.locator('#questions .question').first().locator('h3').innerText(),/文法/);if(i===6)assert.match(await page.locator('#questions .question').first().locator('h3').innerText(),/読解/);}
   const section=await page.locator('#questions .question').first().locator('h3').innerText();
   assert.match(section,/聴解/);
   assert.equal(await page.getByRole('button',{name:'🔊 再生 \/ Play audio'}).count(),10);
