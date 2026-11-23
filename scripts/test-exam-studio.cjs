@@ -20,6 +20,15 @@ let browser;
   await page.route('**/data/json/grammar/*.json',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(grammar)}));
   await page.goto('http://127.0.0.1:'+PORT+'/exams/?level='+level,{waitUntil:'domcontentloaded'});
   assert.equal(await page.locator('#studio-level').inputValue(),level);
+  // Real Exam Mode MUST block incomplete papers rather than silently use generated filler.
+  await page.locator('#studio-start').click();
+  await page.waitForFunction(()=>document.querySelector('#studio-loader')?.textContent.includes('Missing reviewed JLPT-style content'),null,{timeout:14000});
+  assert.equal(await page.locator('#studio-test:not([hidden])').count(),0);
+  // Exercise the unchanged UI separately with explicitly test-only fixture mode.
+  await page.evaluate(()=>{
+   const original=window.NextStepExamAPI.load;
+   window.NextStepExamAPI.load=(level,paper)=>original(level,paper,{requireVerified:false});
+  });
   await page.locator('#studio-start').click();
   await page.locator('#studio-test:not([hidden])').waitFor({timeout:14000});
   assert.equal(await page.locator('#studio-answers .studio-number').count(),100);
