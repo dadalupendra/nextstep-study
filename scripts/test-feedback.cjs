@@ -9,7 +9,7 @@ let browser;
 (async()=>{
  await new Promise(ok=>setTimeout(ok,850));
  browser=await chromium.launch({headless:true,executablePath:CHROME,args:['--no-sandbox','--disable-dev-shm-usage']});
- const context=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
+ const context=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true,serviceWorkers:'block'});
  const page=await context.newPage(),errors=[];
  page.on('pageerror',err=>errors.push(err.message));
  await page.goto('http://127.0.0.1:'+PORT+'/',{waitUntil:'domcontentloaded'});
