@@ -51,7 +51,17 @@ let browser;
    assert.equal(await page.locator('#exam-sections button[data-section="'+key+'"]').getAttribute('aria-pressed'),'true');
   }
   await page.locator('#exam-sections button[data-section="all"]').click();
-  for(let i=0;i<9;i++){await page.getByRole('button',{name:'Next 10 →'}).click();if(i===3)assert.match(await page.locator('#questions .question').first().locator('h3').innerText(),/文法/);if(i===6)assert.match(await page.locator('#questions .question').first().locator('h3').innerText(),/読解/);}
+  const sectionCounts={N1:[30,25,30,15],N2:[35,25,25,15],N3:[40,25,20,15],N4:[45,25,15,15],N5:[45,25,15,15]};
+  const [vc,gc,rc,lc]=sectionCounts[level];
+  assert.match(await page.locator('#exam-sections button[data-section="vocab"]').innerText(),new RegExp(String(vc)));
+  assert.match(await page.locator('#exam-sections button[data-section="grammar"]').innerText(),new RegExp(String(gc)));
+  assert.match(await page.locator('#exam-sections button[data-section="reading"]').innerText(),new RegExp(String(rc)));
+  assert.match(await page.locator('#exam-sections button[data-section="listening"]').innerText(),new RegExp(String(lc)));
+  await page.locator('#exam-sections button[data-section="reading"]').click();
+  const readingLabel=await page.locator('#questions .question').first().locator('.tag').innerText();
+  assert.match(readingLabel,/問題形式/);
+  await page.locator('#exam-sections button[data-section="all"]').click();
+  for(let i=0;i<9;i++)await page.getByRole('button',{name:'Next 10 →'}).click();
   const section=await page.locator('#questions .question').first().locator('h3').innerText();
   assert.match(section,/聴解/);
   assert.equal(await page.getByRole('button',{name:'🔊 再生 \/ Play audio'}).count(),10);
