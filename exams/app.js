@@ -46,7 +46,7 @@ N1:[
 };
 const timesBox=document.getElementById('times'),levelsBox=document.getElementById('levels'),papersBox=document.getElementById('papers'),testBox=document.getElementById('test'),questionsBox=document.getElementById('questions'),scoreBox=document.getElementById('score');
 let active='N5',answers={};
-timesBox.innerHTML=Object.entries(times).map(([level,sections])=>'<p><strong>'+level+':</strong> '+sections.join(' · ')+'</p>').join('');
+if(timesBox)timesBox.innerHTML=Object.entries(times).map(([level,sections])=>'<p><strong>'+level+':</strong> '+sections.join(' · ')+'</p>').join('');
 for(const level of ['N5','N4','N3','N2','N1']){const b=document.createElement('button');b.textContent=level;b.type='button';b.addEventListener('click',()=>choose(level));levelsBox.append(b);}
 function choose(level){active=level;answers={};testBox.classList.add('hidden');papersBox.replaceChildren();for(let i=1;i<=20;i++){const b=document.createElement('button');b.className='paper';b.type='button';b.disabled=i!==1;b.textContent='Paper '+String(i).padStart(2,'0')+(i===1?' · Sample':' · Planned');if(i===1)b.addEventListener('click',start);papersBox.append(b);}Array.from(levelsBox.children).forEach(x=>x.setAttribute('aria-pressed',String(x.textContent===level)));}
 function start(){answers={};testBox.classList.remove('hidden');document.getElementById('test-title').textContent=active+' · Paper 01 · Short practice sample ('+bank[active].length+' questions)';render();testBox.scrollIntoView({behavior:'smooth',block:'start'});}
