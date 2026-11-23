@@ -41,9 +41,22 @@ function variedGrammar(level,num,serial,pool){
   options:opts.map(x=>x.form),answer:opts.findIndex(x=>x.correct),grammarSource:true,grammarTarget:item,grammarOptions:opts,generated:false};
 }
 let page=0,paper=1,items=[],answers={},pending=false,sectionMode='all';
- const SECTIONS={all:{name:'All Sections',start:0,end:100},vocab:{name:'Kanji / Vocabulary · 文字・語彙',start:0,end:40},grammar:{name:'Grammar · 文法',start:40,end:65},reading:{name:'Reading · 読解',start:65,end:85},listening:{name:'Listening · 聴解',start:85,end:100}};
+ const LEVEL_ALLOCATION={N1:{vocab:30,grammar:25,reading:30,listening:15},N2:{vocab:35,grammar:25,reading:25,listening:15},N3:{vocab:40,grammar:25,reading:20,listening:15},N4:{vocab:45,grammar:25,reading:15,listening:15},N5:{vocab:45,grammar:25,reading:15,listening:15}};
+let SECTIONS={};
+function applyLevelLayout(level){
+ const config=LEVEL_ALLOCATION[level]||LEVEL_ALLOCATION.N5,labels={vocab:'Kanji / Vocabulary · 文字・語彙',grammar:'Grammar · 文法',reading:'Reading · 読解',listening:'Listening · 聴解'};
+ let offset=0;SECTIONS={all:{name:'All Sections',start:0,end:TOTAL}};
+ for(const key of ['vocab','grammar','reading','listening']){
+  SECTIONS[key]={name:labels[key],start:offset,end:offset+config[key]};offset+=config[key];
+  const btn=document.querySelector('#exam-sections [data-section="'+key+'"]');
+  if(btn)btn.textContent=({vocab:'🈶 Kanji / Vocabulary',grammar:'📝 Grammar',reading:'📖 Reading',listening:'🎧 Listening'})[key]+' · '+config[key];
+  const overview=document.querySelector('[data-overview="'+key+'"] small');
+  if(overview)overview.textContent=({vocab:'Kanji / Vocabulary',grammar:'Grammar',reading:'Reading',listening:'Listening'})[key]+' · '+config[key];
+ }
+ if(offset!==TOTAL)throw Error('Level question allocation must total 100');
+}
  const paperGrid=document.getElementById('papers'),list=document.getElementById('questions'),score=document.getElementById('score'),test=document.getElementById('test');
- const note=document.createElement('p');note.className='muted';note.textContent='Original JLPT-inspired sections: 40 Kanji/Vocabulary, 25 Grammar, 20 Reading, 15 Listening per 100-question practice paper. Grammar uses distinct examples from the original level-specific grammar study data. Reading/listening scenarios still reuse common templates. Listening uses device Japanese text-to-speech (not official recorded audio). No past JLPT questions are copied; these papers are not official full-length mock tests.';paperGrid.parentElement.append(note);
+ const note=document.createElement('p');note.className='muted';note.textContent='Original four-section JLPT-inspired practice sets. The section question counts are DIFFERENT for each level and are user-requested practice allocations, not official JLPT counts. Grammar uses distinct examples from the original level-specific grammar study data. Reading/listening scenarios still reuse common templates. Listening uses device Japanese text-to-speech (not official recorded audio). No past JLPT questions are copied; these papers are not official full-length mock tests.';paperGrid.parentElement.append(note);
  async function source(level){
   if(CACHE.has(level))return CACHE.get(level);
   const res=await fetch(endpoint(level),{cache:'force-cache'});if(!res.ok)throw Error('Vocabulary download failed ('+res.status+').');
@@ -107,13 +120,13 @@ let page=0,paper=1,items=[],answers={},pending=false,sectionMode='all';
  }
  function makePaper(level,num,vocab,grammarPool){
   const words=mix(vocab,level+'|vocab-source-v3');
-  const chosen=Array.from({length:40},(_,i)=>words[(((num-1)*40)+i)%words.length]);
+  const config=LEVEL_ALLOCATION[level];const chosen=Array.from({length:config.vocab},(_,i)=>words[(((num-1)*config.vocab)+i)%words.length]);
   if(words.length<40)throw Error('Insufficient level-specific words.');
   const sections=[
    ...chosen.map((word,i)=>selection(word,i%2===0?'reading':'spelling',vocab,level,num,i)),
-   ...Array.from({length:25},(_,i)=>variedGrammar(level,num,i,grammarPool)),
-   ...Array.from({length:20},(_,i)=>window.NextStepExamTypes?window.NextStepExamTypes.buildReading(level,num,i):scenario(level,num,i,'読解')),
-   ...Array.from({length:15},(_,i)=>window.NextStepExamTypes?window.NextStepExamTypes.buildListening(level,num,i):scenario(level,num,i,'聴解'))
+   ...Array.from({length:config.grammar},(_,i)=>variedGrammar(level,num,i,grammarPool)),
+   ...Array.from({length:config.reading},(_,i)=>window.NextStepExamTypes?window.NextStepExamTypes.buildReading(level,num,i):scenario(level,num,i,'読解')),
+   ...Array.from({length:config.listening},(_,i)=>window.NextStepExamTypes?window.NextStepExamTypes.buildListening(level,num,i):scenario(level,num,i,'聴解'))
   ];
   if(sections.length!==TOTAL||sections.some(q=>new Set(q.options).size!==4||q.answer<0||q.answer>3))throw Error('Paper integrity check failed.');
   return sections;
@@ -161,6 +174,7 @@ let page=0,paper=1,items=[],answers={},pending=false,sectionMode='all';
   finally{pending=false;choosePapers(active);}
  }
  function choosePapers(level){
+   applyLevelLayout(level);
    paperGrid.replaceChildren();for(let i=1;i<=20;i++){let b=document.createElement('button');b.type='button';b.className='paper';b.textContent=level+' — Paper '+String(i).padStart(2,'0')+' · 100 Q';b.setAttribute('aria-label','JLPT '+level+' Practice Paper '+i+', 100 questions');b.addEventListener('click',()=>openPaper(i));paperGrid.append(b);}
  }
  const sectionButtons=Array.from(document.querySelectorAll('#exam-sections button'));
