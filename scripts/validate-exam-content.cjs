@@ -7,13 +7,13 @@ const ROOT=path.resolve(process.argv[2]||'.'),STRICT=process.argv.includes('--st
 const LEVELS=['N5','N4','N3','N2','N1'],PAPERS=20,TOTAL=100;
 const COUNTS={N5:[45,25,15,15],N4:[45,25,15,15],N3:[40,25,20,15],N2:[35,25,25,15],N1:[30,25,30,15]};
 const context={window:{}};
-for(const f of ['verified-language-01.js','verified-reading-01.js','verified-reading-02.js']){
+for(const f of ['verified-language-01.js','verified-language-02.js','verified-reading-01.js','verified-reading-02.js']){
  const full=path.join(ROOT,'exams',f);
  if(!fs.existsSync(full))throw Error('Missing authored content file '+full);
  vm.runInNewContext(fs.readFileSync(full,'utf8'),context,{filename:f});
 }
-const language=context.window.NextStepVerifiedLanguage,reading=context.window.NextStepVerifiedReading,reading02=context.window.NextStepVerifiedReading02;
-if(!language||!reading||!reading02)throw Error('Authored content APIs are missing');
+const language=context.window.NextStepVerifiedLanguage,language02=context.window.NextStepVerifiedLanguage02,reading=context.window.NextStepVerifiedReading,reading02=context.window.NextStepVerifiedReading02;
+if(!language||!language02||!reading||!reading02)throw Error('Authored content APIs are missing');
 const errors=[],duplicatePrompts=new Map(),duplicatePassages=new Map();
 const summary={totalExistingPaperCards:100,totalRequiredQuestionSlots:10000,verifiedQuestions:0,
  verifiedPapers:0,unverifiedQuestionSlots:0,incompletePapers:[],audioAssets:0,pictureAssets:0,missingAudioAssets:0,
@@ -34,8 +34,8 @@ for(const level of LEVELS){
   let verified=0;
   for(let i=0;i<TOTAL;i++){
    let q=null,kind;
-   if(i<vc){kind='vocabulary';q=language.word(level,paper,i);}
-   else if(i<vc+gc){kind='grammar';q=language.grammar(level,paper,i-vc);}
+   if(i<vc){kind='vocabulary';q=paper===2?language02.word(level,paper,i):language.word(level,paper,i);}
+   else if(i<vc+gc){kind='grammar';q=paper===2?language02.grammar(level,paper,i-vc):language.grammar(level,paper,i-vc);}
    else if(i<vc+gc+rc){kind='reading';q=paper===2?reading02.build(level,paper,i-vc-gc):reading.build(level,paper,i-vc-gc);}
    else{kind='listening';/* No verified original recorded audio files yet. */}
    if(!q){summary.unverifiedQuestionSlots++;if(kind==='listening'){summary.missingAudioAssets++;levelStats.missingAudio++;}continue;}
