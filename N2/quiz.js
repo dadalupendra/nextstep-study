@@ -147,7 +147,7 @@ function grammarChapter(ch){
 function businessChapter(ch){
  if(!BUSINESS.length)throw Error('Business scenario data was not loaded');
  const base=[];
- for(let i=0;i<10;i++){
+ for(let i=0;i<20;i++){
    const sc=BUSINESS[((ch-1)*7+i)%BUSINESS.length];
    const [situation,correct,...rest]=sc,wrong=rest.slice(0,3);
    base.push(make('BJT',ch,'scenario',i+1,'次のビジネス場面で、最も適切な対応を選びなさい。',situation,correct,
@@ -157,8 +157,8 @@ function businessChapter(ch){
        'सही प्रतिक्रिया「'+correct+'」 हो। '+sc[7]+' अन्य विकल्पहरू यो कार्यस्थलको परिस्थितिका लागि नमिल्ने वा अशिष्ट छन्।'),
      {exam:'BJT',target:correct}));
  }
- const vocab=vocabChapter(ch).filter(q=>q.kind==='context').slice(0,20).map((q,i)=>({...q,id:'BJT-'+ch+'-business-vocab-'+i,exam:'BJT'}));
- const grammar=grammarChapter(ch).filter(q=>q.kind==='identify'||q.kind==='example').slice(0,20).map((q,i)=>({...q,id:'BJT-'+ch+'-business-grammar-'+i,exam:'BJT'}));
+ const vocab=vocabChapter(ch).filter(q=>q.kind==='context').slice(0,15).map((q,i)=>({...q,id:'BJT-'+ch+'-business-vocab-'+i,exam:'BJT'}));
+ const grammar=grammarChapter(ch).filter(q=>q.kind==='identify'||q.kind==='example').slice(0,15).map((q,i)=>({...q,id:'BJT-'+ch+'-business-grammar-'+i,exam:'BJT'}));
  // Not all original N2 examples are about work: they reinforce N2 grammar/vocabulary inside a business-focused review test.
  const full=[...base,...vocab,...grammar];
  if(full.length<50){
@@ -262,13 +262,13 @@ function desc(q,index){
  const corr=q.options[q.answer],status=chosen[index]===q.answer;
  const classes=status?'rightnote':'wrongnote';
  return '<div class="decision '+classes+'" role="status"><b>'+(status?'✓ 正解です！ / Correct / सही':'✗ 不正解です / Incorrect / गलत')+'</b>'+
- '<div class="answerkey"><strong>正しい答え：</strong> '+esc(corr.jp)+'</div>'+
+ '<div class="answerkey"><strong>正しい答え：</strong> '+(showFuri&&q.grammar&&q.kind==='identify'?markedWord(corr.jp,q.grammar[10],true):showFuri&&q.kind==='context'?markedWord(corr.jp,q.answerFuri,true):esc(corr.jp))+'</div>'+
  '<div class="multilang"><h4>🇯🇵 日本語の解説</h4><p lang="ja">'+esc(q.why.ja)+'</p><h4>🇬🇧 English explanation</h4><p>'+esc(q.why.en)+'</p><h4>🇳🇵 नेपाली व्याख्या</h4><p lang="ne">'+esc(q.why.ne)+'</p></div>'+
  sourceText(q,true)+
  '<h4>選択肢の比較 / All four choices / चारवटै विकल्प</h4>'+
  '<div class="whyOptions">'+q.options.map((o,j)=>{
  const d=optionExplanation(q,o,j);
- return '<details class="optionwhy" '+(j===q.answer||j===chosen[index]?'open':'')+'><summary><strong>'+LETTERS[j]+'. '+esc(o.jp)+'</strong> '+(j===q.answer?'✓ 正解':'✗ 不正解')+'</summary>'+
+ return '<details class="optionwhy" '+(j===q.answer||j===chosen[index]?'open':'')+'><summary><strong>'+LETTERS[j]+'. '+(showFuri&&q.grammar&&q.kind==='identify'?markedWord(o.jp,o.correct?q.grammar[10]:(o.rec?.grammar?.[10]||''),true):showFuri&&q.kind==='context'?markedWord(o.jp,o.correct?q.answerFuri:(o.rec?.word?.[1]||''),true):esc(o.jp))+'</strong> '+(j===q.answer?'✓ 正解':'✗ 不正解')+'</summary>'+
  '<p lang="ja">'+esc(d.ja)+'</p><p lang="en">'+esc(d.en)+'</p><p lang="ne">'+esc(d.ne)+'</p></details>';
  }).join('')+'</div></div>';
 }
@@ -283,7 +283,7 @@ function draw(){
  el('modenote').textContent=exam==='JLPT'
   ?'JLPT N2の漢字・語彙・文法を練習するオリジナル問題です。公式過去問ではありません。'
   :exam==='BJT'
-  ?'敬語・電話・メールなどのビジネス場面10問とN2日本語40問を組み合わせた独自問題です。公式BJT形式・配点ではありません。'
+  ?'敬語・電話・メールなどのビジネス場面20問とN2日本語30問を組み合わせた独自問題です。公式BJT形式・配点ではありません。'
   :'N2語彙・漢字・文法を混合した独自復習問題です。'+examLabels[exam]+'の公式出題形式とは異なる場合があります。聴解は含まれません。';
  list=makePaper(exam,book,chap);chosen={};finished=false;el('summary').innerHTML='';el('endpaper').classList.remove('hide');
  el('progress').textContent='解答済み 0 / 50 · 正解 0';
