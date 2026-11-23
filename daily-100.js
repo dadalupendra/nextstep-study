@@ -13,7 +13,7 @@ const hash=str=>{let h=2166136261>>>0;for(const ch of String(str)){h=Math.imul(h
 function shuffle(values,seed){const a=values.slice();let state=hash(seed)||1;for(let i=a.length-1;i>0;i--){state^=state<<13;state^=state>>>17;state^=state<<5;const j=(state>>>0)%(i+1);[a[i],a[j]]=[a[j],a[i]];}return a;}
 function ordinal(day){
  if(!/^\d{4}-\d\d-\d\d$/.test(day))throw Error('Unexpected Tokyo date: '+day);
- const n=Date.parse(day+'T00:00:00+09:00');if(!Number.isFinite(n))throw Error('Invalid Tokyo date');return Math.floor(n/86400000);
+ const n=Date.parse(day+'T00:00:00+09:00');if(!Number.isFinite(n))throw Error('Invalid Tokyo date');return Math.floor((n+9*3600000)/86400000);
 }
 function keyOf(type,item){return type==='kanji'?String(item.character||''):type==='grammar'?String(item.pattern||''):String(item.word||'')+'|'+String(item.reading||'');}
 function isGood(q){
@@ -76,10 +76,10 @@ function loadProgress(level,day){
 }
 function saveProgress(level,day,state){try{localStorage.setItem(storeKey(level,day),JSON.stringify({answers:state.answers,flagged:state.flagged,index:state.index}));return true;}catch(e){return false;}}
 function streak(level,day,hasToday){
- let n=hasToday?0:0,d=ordinal(day)-(hasToday?0:1);
+ let n=0,d=ordinal(day)-(hasToday?0:1);
  // Entries count toward streak once ALL 100 have answers.
  for(let i=0;i<365;i++){
-  const dt=new Date((d-i)*86400000+9*3600000).toISOString().slice(0,10);
+  const dt=new Date((d-i)*86400000).toISOString().slice(0,10);
   try{const record=JSON.parse(localStorage.getItem(storeKey(level,dt))||'null');
    if(record?.answers&&Object.keys(record.answers).length===100)n++;else break;
   }catch(e){break}
