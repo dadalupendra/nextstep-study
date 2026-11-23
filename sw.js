@@ -1,6 +1,6 @@
 /* NextStep Study PWA: cache only pages/assets a reader actually opens.
  * Avoid precaching several-megabyte book files. */
-const VERSION='nextstep-shell-v2';
+const VERSION='nextstep-shell-v3';
 const ROOT=new URL('./',self.registration.scope);
 const SHELL=[ROOT.href,new URL('index.html',ROOT).href,new URL('manifest.webmanifest',ROOT).href,new URL('icons/icon.svg',ROOT).href];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(VERSION).then(c=>c.addAll(SHELL)).then(()=>self.skipWaiting()));});
@@ -8,7 +8,7 @@ self.addEventListener('activate',event=>{event.waitUntil(Promise.all([caches.key
 self.addEventListener('fetch',event=>{
  const req=event.request;if(req.method!=='GET')return;
  // Only cache files within the installation scope.
- const isStudyData=req.url.startsWith('https://cdn.jsdelivr.net/gh/evanclan/OpenJLPT@main/data/json/vocab/');
+ const isStudyData=req.url.startsWith('https://cdn.jsdelivr.net/gh/evanclan/OpenJLPT@main/data/json/vocab/')||req.url.startsWith('https://cdn.jsdelivr.net/gh/evanclan/OpenJLPT@main/data/json/grammar/');
  if(!req.url.startsWith(ROOT.href)&&!isStudyData)return;
  event.respondWith((async()=>{
   const cache=await caches.open(VERSION);
