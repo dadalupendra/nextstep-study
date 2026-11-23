@@ -13,6 +13,8 @@ on:
       - 'N5/**'
       - '.github/workflows/deploy-site.yml'
       - 'scripts/test-n2.cjs'
+      - 'scripts/build-social-preview.py'
+      - 'scripts/test-social-preview.py'
   workflow_dispatch:
 
 concurrency:
@@ -51,6 +53,20 @@ jobs:
           # Exclude maintenance/batch/source-attribution documents from the deployed navigation,
           # but keep license notices required by upstream datasets.
           rm -f public-site/N1/Download_N1_Data.ps1 public-site/N1/GET_REAL_N1_DATA.bat
+
+      - name: Set up Python for social cover generation
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install deterministic image rendering dependency
+        run: python -m pip install --disable-pip-version-check Pillow==11.3.0
+
+      - name: Render six social sharing cover images and inject OG tags
+        run: python scripts/build-social-preview.py public-site
+
+      - name: Validate Facebook, WhatsApp and X preview images
+        run: python scripts/test-social-preview.py public-site
 
       - name: Upload static website
         uses: actions/upload-pages-artifact@v4
