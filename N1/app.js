@@ -99,7 +99,8 @@ async function load(){
   app.loaded=true;
   $('statKanji').textContent=fmt(app.data.kanji.length);$('statGrammar').textContent=fmt(app.data.grammar.length);$('statVocab').textContent=fmt(app.data.vocab.length);
   $('networkBadge').textContent='● N1 data ready';$('stateBox').hidden=true;$('studyView').hidden=false;
-  chooseSection('kanji');
+  const requested=new URLSearchParams(location.search).get('section');
+  chooseSection(['kanji','vocab','grammar'].includes(requested)?requested:'kanji');
  }catch(e){
   console.error(e);$('networkBadge').textContent='Offline: first download needed';
   $('stateBox').classList.add('error');
