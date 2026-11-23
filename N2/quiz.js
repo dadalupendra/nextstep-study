@@ -102,7 +102,7 @@ function vocabChapter(ch){
 }
 function jpForm(f){
  let s=String(f||'');
- const dict=[[/\bNoun\b/gi,'名詞'],[/\bVerb-dict\b/gi,'動詞辞書形'],[/\bVerb-stem\b/gi,'動詞ます形語幹'],[/\bVerb-ta\b/gi,'動詞た形'],[/\bVerb-te\b/gi,'動詞て形'],[/\bVerb-nai\b/gi,'動詞ない形'],[/\bVerb-plain\b/gi,'動詞普通形'],[/\bVerb\b/gi,'動詞'],[/\bAdjective-i\b/gi,'い形容詞'],[/\bAdj-i\b/gi,'い形容詞'],[/\bAdj-na\b/gi,'な形容詞'],[/\bAdjective-na\b/gi,'な形容詞'],[/\bAdjective\b/gi,'形容詞'],[/\bPast\b/gi,'過去形'],[/\bPlain\b/gi,'普通形'],[/\bDictionary form\b/gi,'辞書形'],[/\bV-dict\b/gi,'動詞辞書形'],[/\bV-ta\b/gi,'動詞た形'],[/\bV-te\b/gi,'動詞て形'],[/\bV-nai\b/gi,'動詞ない形'],[/\bN\b/g,'名詞'],[/\bV\b/g,'動詞'],[/\bA\b/g,'形容詞'],[/\bClause\b/gi,'節'],[/\bSentence\b/gi,'文']];
+ const dict=[[/\bi-Adj-ku\b/gi,'い形容詞く形'],[/\bi-Adj\b/gi,'い形容詞'],[/\bna-Adj\b/gi,'な形容詞'],[/\bQuestion word\b/gi,'疑問詞'],[/\bpotential form\b/gi,'可能形'],[/\bichidan verbs\b/gi,'一段動詞'],[/\bstem\b/gi,'語幹'],[/\bNoun\b/gi,'名詞'],[/\bVerb-dict\b/gi,'動詞辞書形'],[/\bVerb-stem\b/gi,'動詞ます形語幹'],[/\bVerb-ta\b/gi,'動詞た形'],[/\bVerb-te\b/gi,'動詞て形'],[/\bVerb-nai\b/gi,'動詞ない形'],[/\bVerb-plain\b/gi,'動詞普通形'],[/\bVerb\b/gi,'動詞'],[/\bAdjective-i\b/gi,'い形容詞'],[/\bAdj-i\b/gi,'い形容詞'],[/\bAdj-na\b/gi,'な形容詞'],[/\bAdjective-na\b/gi,'な形容詞'],[/\bAdjective\b/gi,'形容詞'],[/\bPast\b/gi,'過去形'],[/\bPlain\b/gi,'普通形'],[/\bDictionary form\b/gi,'辞書形'],[/\bV-dict\b/gi,'動詞辞書形'],[/\bV-ta\b/gi,'動詞た形'],[/\bV-te\b/gi,'動詞て形'],[/\bV-nai\b/gi,'動詞ない形'],[/\bN\b/g,'名詞'],[/\bV\b/g,'動詞'],[/\bA\b/g,'形容詞'],[/\bClause\b/gi,'節'],[/\bSentence\b/gi,'文']];
  for(const [a,b] of dict)s=s.replace(a,b);
  return s.replace(/\s\+\s/g,' ＋ ').replace(/\s\/\s/g,' ／ ');
 }
@@ -163,7 +163,12 @@ function businessChapter(ch){
  const full=[...base,...vocab,...grammar];
  if(full.length<50){
    const extra=[...vocabChapter(ch),...grammarChapter(ch)];
-   for(let i=0;full.length<50&&i<extra.length;i++)full.push({...extra[i],id:'BJT-'+ch+'-general-'+i,exam:'BJT'});
+   const used=new Set(full.map(q=>q.prompt+'|'+q.source+'|'+q.options[q.answer].jp));
+   for(let i=0;full.length<50&&i<extra.length;i++){
+     const q=extra[i],key=q.prompt+'|'+q.source+'|'+q.options[q.answer].jp;
+     if(used.has(key))continue;
+     used.add(key);full.push({...q,id:'BJT-'+ch+'-general-'+i,exam:'BJT'});
+   }
  }
  return mix(full.slice(0,50),'BJT'+ch);
 }
