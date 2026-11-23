@@ -99,6 +99,13 @@ function buildListening(level,paper,index){
   answer=day+'・'+time;const alternateDay=day==='月曜日'?'火曜日':'月曜日';options=[day+'・'+oldTime,alternateDay+'・'+time,alternateDay+'・'+oldTime];
   speech='男：先ほどのご案内を確認したいのですが、'+theme+'は'+day+'ですよね。\n女：はい、会場は'+place+'です。時間だけ、以前の'+oldTime+'から'+time+'に変わりました。\n男：それでは、新しい時間を書いておきます。';
  }
+ // JLPT listening at higher levels contains longer explanations and formal turns.
+ // Quick response and verbal-expression items deliberately remain short.
+ if(!['即時応答','発話表現'].includes(subtype)){
+  if(level==='N1')speech='【'+subtype+'】\n'+speech+'\n女：なお、変更の理由については配布資料にも記載しておりますが、準備体制を整えるために時刻を見直したものです。お手元の古い案内ではなく、今回お知らせした内容で予定を確認してください。\n男：承知しました。誤解が生じないよう、参加予定の方にも改めてご案内します。';
+  else if(level==='N2')speech='【'+subtype+'】\n'+speech+'\n女：変更前の案内を見ている方もいるので、新しい予定を確認してください。\n男：はい。参加する人にも正しい時間を伝えておきます。';
+  else if(level==='N3')speech+='\n女：前のお知らせと違いますから、気をつけてくださいね。\n男：わかりました。';
+ }
  const choices=shuffle([answer,...options.slice(0,3)],'listen:'+level+':'+paper+':'+index);
  return{type:'聴解',subtype,prompt:'【'+subtype+'】音声を聞いて、もっともよいものを選んでください。\n【質問】'+query,
   passage:speech,options:choices,answer:choices.indexOf(answer),listen:true,sourceType:'listening-structured',
