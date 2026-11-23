@@ -16,7 +16,7 @@
 <div class="layout">
 <section class="form-card" aria-labelledby="formtitle">
 <h2 id="formtitle">✍️ Write your feedback</h2>
-<p class="muted">Feedback Facebook मा टिप्पणी गर्न वा GitHub मा Issue पठाउन तयार गरिन्छ। यो साइटले आफैँ कुनै सन्देश पठाउँदैन; अन्तिम Submit तिमीले सम्बन्धित प्लेटफर्ममा गर्नुपर्छ।</p>
+<p class="muted">Facebook/GitHub मा feedback copy गरेर पठाउन सकिन्छ। निजी submission चाहिँ सुरक्षित backend configure भएपछि यही पेजबाट save गर्न सकिन्छ। Facebook मा कुनै टिप्पणी स्वतः प्रकाशित हुँदैन।</p>
 <form id="feedback-form">
 <div class="field-row"><label>Feedback type / प्रतिक्रिया
 <select name="type" id="feedback-type" required><option value="Suggestion">💡 Suggestion / सुझाव</option><option value="Bug report">🐞 Bug report / समस्या</option><option value="Question">🙋 Question / प्रश्न</option><option value="Content correction">📚 Japanese content correction</option><option value="Other">📝 Other / अन्य</option></select></label>
@@ -32,7 +32,7 @@
 <textarea id="feedback-message" name="message" rows="7" minlength="12" maxlength="1800" required placeholder="Example: N2 Reading को व्याख्या अझै स्पष्ट चाहिन्छ। प्रश्न नं. ... / Please explain which page or question has the problem."></textarea>
 <div class="field-row"><label for="feedback-name">Name (optional / ऐच्छिक)
 <input id="feedback-name" name="name" maxlength="70" placeholder="Leave blank if preferred"></label>
-<label for="feedback-page">Page or question link (optional)
+<label for="feedback-page">Page or question link (auto-filled)
 <input id="feedback-page" name="page" type="url" placeholder="https://dadalupendra.github.io/..."></label></div>
 <p class="privacy"><strong>🔒 Privacy:</strong> Facebook comments र GitHub Issues सार्वजनिक हुन सक्छन्। Password, email, phone वा अरू निजी जानकारी नराख्नुहोस्।</p>
 <div class="compose-actions"><button type="button" id="copy-feedback" class="primary">📋 Copy Feedback</button><button type="submit" id="github-feedback">🐙 Continue to GitHub Issue</button></div>
