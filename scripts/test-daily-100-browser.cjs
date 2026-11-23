@@ -22,7 +22,7 @@ let browser;
   const failures=[];page.on('pageerror',e=>failures.push(e.message));
   await page.goto('http://127.0.0.1:'+PORT+url,{waitUntil:'domcontentloaded',timeout:30000});
   await page.locator('#nextstep-daily-100 .d100-choices button').first().waitFor({timeout:45000});
-  assert.match(await page.locator('#nextstep-daily-100 h2').innerText(),new RegExp(level+' · 今日の100問チャレンジ'));
+  assert.match(await page.locator('#nextstep-daily-100 .d100-top h2').innerText(),new RegExp(level+' · 今日の100問チャレンジ'));
   assert.equal(await page.locator('#nextstep-daily-100 .d100-nums button').count(),100);
   assert.equal(await page.locator('#nextstep-daily-100 .d100-choice').count(),4);
   assert.equal(await page.locator('#nextstep-daily-100 .d100-section').count(),3);
