@@ -110,6 +110,15 @@ async function load(){
   $('networkBadge').textContent='● N2 data ready';$('stateBox').hidden=true;$('studyView').hidden=false;
   const target=new URLSearchParams(location.search).get('section');
   chooseSection(['kanji','vocab','grammar'].includes(target)?target:'kanji');
+  // Deep-link from legacy Kanji books to the exact Kanji compound view.
+  const requestedCharacter=new URLSearchParams(location.search).get('character');
+  if(requestedCharacter){
+   const kanjiItem=app.data.kanji.find(x=>x.character===requestedCharacter);
+   if(kanjiItem&&window.NextStepCompounds){
+    chooseSection('kanji');
+    window.NextStepCompounds.open({item:kanjiItem,level:'N2',localVocabulary:app.data.vocab});
+   }
+  }
  }catch(e){
   console.error(e);$('networkBadge').textContent='Offline: first download needed';
   $('stateBox').classList.add('error');
