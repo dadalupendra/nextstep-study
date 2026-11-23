@@ -8,6 +8,7 @@ on:
       - 'manifest.webmanifest'
       - 'sw.js'
       - 'icons/**'
+      - 'exams/**'
       - '.nojekyll'
       - 'N1/**'
       - 'N2/**'
@@ -56,6 +57,7 @@ jobs:
           cp manifest.webmanifest sw.js public-site/
           mkdir -p public-site/icons
           cp icons/icon.svg public-site/icons/
+          cp -R exams public-site/
           cp .nojekyll public-site/
           for level in N1 N2 N3 N4 N5; do
             cp -R "$level" public-site/
