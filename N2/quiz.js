@@ -25,7 +25,7 @@ function item(book,chapter,kind,number,prompt,source,correct,distractors,why){
 function chapterItems(book,ch){
  if(!BOOKS.includes(book)||!Number.isInteger(ch)||ch<1||ch>10)throw Error("Bad book or chapter");
  const source=book==="kanji"?K:book==="vocab"?W:GR;
- let a=[],b=Math.floor((ch-1)*source.length/10),e=Math.floor(ch*source.length/10);
+ let a=[],b=book==='kanji'?(ch-1)*40:Math.floor((ch-1)*source.length/10),e=book==='kanji'?Math.min(ch*40,source.length):Math.floor(ch*source.length/10);
  if(book==="kanji"){
    // 398 N2-tagged characters => 400 study pages (two review pages). Quiz target: N2 characters only.
    const pool=K.slice(b,e);
@@ -87,8 +87,11 @@ function chapterItems(book,ch){
      const jp=(kind===4&&ja2)?ja2:ja;
      const enExample=(kind===4&&en2)?en2:en;
      let prompt,sourceTxt,correct,distractors,type;
-     if(kind===0||kind>=4){
+     if(kind===0){
        type="grammarMeaning";prompt="What is the meaning/nuance of this N2 grammar pattern?";sourceTxt=pattern;correct=meaning;distractors=means;
+     }else if(kind>=4){
+       type="grammarContext2";prompt="Which N2 grammar pattern is illustrated by this second Japanese example?";
+       sourceTxt=ja2||ja;correct=pattern;distractors=patterns;
      }else if(kind===1){
        type="grammarForm";prompt="Which connection/formation rule is listed for this N2 pattern?";
        sourceTxt=pattern;correct=formation;distractors=forms;
@@ -145,7 +148,7 @@ function boot(){
        opt.classList.toggle("incorrect",ans===j&&ans!==q.answer);
        opt.querySelector("input").disabled=true;
      });
-     const details=box.querySelector("details");details.classList.remove("hide");details.open=ans!==q.answer;
+     const details=box.querySelector("details");details.classList.remove("hide");details.open=true;
    });
    $("grade").classList.add("hide");
    $("summary").scrollIntoView({behavior:"smooth",block:"start"});
