@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      - name: Verify all N2 study pages and quiz modes
+        run: node scripts/test-n2.cjs
       - name: Create N2-only ZIP
         run: |
           test -f N2/index.html
