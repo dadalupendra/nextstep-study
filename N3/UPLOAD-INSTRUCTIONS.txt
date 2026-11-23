@@ -1,0 +1,11 @@
+NextStep N3 — GitHub upload ready
+
+1. Extract N3_GitHub_Ready.zip.
+2. Drag the extracted N3 folder into GitHub > nextstep-study > Add file > Upload files.
+3. Click Commit changes. Do not upload N3_GitHub_Ready.zip itself.
+4. Enable GitHub Pages: Settings > Pages > Deploy from a branch > main / (root).
+5. Open https://dadalupendra.github.io/nextstep-study/N3/
+
+The original 224 kanji SVG assets have been preserved in kanji-svg-originals.zip.
+The current standalone reader uses the data embedded in index.html and its PDF files.
+If you develop new stroke-order features requiring the SVG files, unzip kanji-svg-originals.zip into the N3 folder.
