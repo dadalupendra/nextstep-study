@@ -9,6 +9,7 @@
   const base = new URL("../", location.href);
   const selectedLevel = (query.get("level") || "").toUpperCase();
   if (/^N[1-5]$/.test(selectedLevel)) $("feedback-level").value = selectedLevel;
+  $("feedback-page").value = location.href;
   const source = query.get("from");
   if (source) {
     try {
