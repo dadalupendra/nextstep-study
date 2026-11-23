@@ -25,6 +25,23 @@ def inject_meta(text,desc):
         text=text.replace("</head>",'<meta name="description" content="'+html.escape(desc,quote=True)+'">\n</head>',1)
     return text
 
+def inject_compound_link(text, level):
+    # Keep the existing handwritten books; add a visible route to the
+    # interactive Kanji -> compound word explorer in the new master reader.
+    if 'id="ns-legacy-kanji-link"' in text:
+        return text
+    link = (
+        '<a id="ns-legacy-kanji-link" href="master.html?section=kanji" '
+        'style="position:relative;z-index:5;display:inline-flex;min-height:52px;'
+        'align-items:center;max-width:100%;margin:10px 12px;padding:12px 18px;'
+        'border-radius:12px;background:#06786c;color:white;border:2px solid #7af4df;'
+        'font:800 16px system-ui,sans-serif;text-decoration:none" '
+        'title="Open clickable Kanji with compound words">🔎 '
+        + level + ' Kanji क्लिक गर्नुहोस् → 熟語・関連語</a>'
+    )
+    assert "<body>" in text
+    return text.replace("<body>", "<body>" + link, 1)
+
 def inject_backlink(text,level):
     link=('<a class="nextstep-home-link" href="../" '
           'aria-label="Return to all NextStep Study JLPT books">'
@@ -41,6 +58,7 @@ for level in ("N4","N5"):
     s=inject_meta(s,description[level])
     s=s.replace("</head>",'<link rel="stylesheet" href="../assets/legacy-responsive.css">\n</head>',1)
     s=inject_backlink(s,level)
+    s=inject_compound_link(s,level)
     assert "</body>" in s
     s=s[:s.rfind("</body>")]+'<script src="../assets/legacy-responsive.js" defer></script>\n'+s[s.rfind("</body>"):]
     assert "const D=" in s and "function render" in s
@@ -59,6 +77,7 @@ extra_css='<style>.nextstep-home-link{display:inline-flex;min-height:44px;align-
     '@media print{.nextstep-home-link{display:none}}</style>')
 s=s.replace("</head>",extra_css+"</head>",1)
 s=inject_backlink(s,level)
+s=inject_compound_link(s,level)
 needle='root.innerHTML=`<style>${D.css}</style>'
 assert needle in s, "N3 shadow HTML template changed; refusing to modify"
 replacement='const NEXTSTEP_N3_RESPONSIVE_CSS='+json.dumps(N3_CSS,ensure_ascii=False)+';\n'+(
