@@ -16,6 +16,21 @@ Japanese self-study website, served as static HTML/CSS/JavaScript from GitHub Pa
 
 **N1 source:** `N1/` matches the files supplied in the uploaded `NextStep_Study.zip`. N1 source data is supplied in `N1/data/{kanji,grammar,vocab}.json` using the independently curated OpenJLPT N1-labeled collection (CC BY-SA 4.0). See `N1/THIRD-PARTY-NOTICE.txt`.
 
+## Facebook / WhatsApp / Messenger social previews
+
+This repository's GitHub Pages build creates **six branded 1200 × 630 JPEG cover pictures** every time the website is published. A small Python+Pillow script (`scripts/build-social-preview.py`) prepares artwork, then injects static **Open Graph** and **Twitter Card** metadata into the published HTML. This approach works for social crawlers that do not execute page JavaScript.
+
+The following seven URLs receive link-preview metadata (N2 quizzes reuse the N2 cover): the home page, five N1–N5 book home pages, and N2 quiz page.
+
+- **Home share photo**: https://dadalupendra.github.io/nextstep-study/assets/nextstep-facebook-cover.jpg
+- **Book cover**: substitute `N5`, `N4`, `N3`, `N2` or `N1` in `assets/nextstep-N2-cover.jpg`.
+- **Shareable main page**: https://dadalupendra.github.io/nextstep-study/
+- **Meta Sharing Debugger**: https://developers.facebook.com/tools/debug/
+
+**How to share:** Open the main website or use the “Share on Facebook” button. Facebook normally generates a clickable photo card, title and description from the link metadata. If it shows the old version, use the Sharing Debugger, paste the **page URL**, and select **Scrape Again**. Facebook controls how and whether the card is ultimately displayed; it may still show the link or domain underneath the image. To create an **image-only photo post**, save the social JPEG and upload it as a Facebook photo, then include your website link in the caption.
+
+**Technology used:** HTML Open Graph tags, Python + Pillow for static photo generation, GitHub Actions YAML for publishing, JavaScript/CSS for the existing reader functionality. No Java, SQL server, PHP, TypeScript or paid hosting is necessary to make a GitHub Pages link preview.
+
 ## Automatic Updates (already configured)
 
 **Content-source refresh:** The workflow `.github/workflows/auto-update-content.yml` checks the licensed OpenJLPT N1 and N2 datasets **every day at approximately 09:23 Japan time (00:23 UTC)**. GitHub may delay a scheduled run. If existing N1/N2 entries change safely, `scripts/update-content.cjs` validates their level tags, identities, counts and the size of the change, preserves custom Nepali grammar explanations and lesson order, and commits only genuine data updates. The educational test suite runs before any commit.
