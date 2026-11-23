@@ -38,6 +38,7 @@ function variant(level,kind,subtype,ctx,sequence){
 }
 function buildReading(level,paper,index){
  const types=TYPES[level].reading,subtype=types[(index+(paper-1))%types.length],ctx=context(level,paper,index,'read');
+ if(global.NextStepReadingStories&&['短文','中文','長文','主張理解'].includes(subtype))return global.NextStepReadingStories.story(level,paper,index,subtype);
  const v=variant(level,'read',subtype,ctx,index);
  let passage=v.short,query='開始時刻はいつですか。',answer=ctx.time,options=TIMES.filter(x=>x!==answer);
  if(subtype==='中文'||subtype==='主張理解'||subtype==='長文')passage=v.mid;
