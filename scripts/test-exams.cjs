@@ -11,6 +11,7 @@ if(!CHROME)throw Error('Chromium not available');
 const PORT=8778;
 const server=spawn('python3',['-m','http.server',String(PORT),'--bind','127.0.0.1','--directory',ROOT],{stdio:'ignore'});
 const fixture=Array.from({length:160},(_,i)=>({word:'単語'+String(i).padStart(3,'0'),reading:'たんご'+String(i).padStart(3,'0'),meanings:['test entry '+i],examples:[{ja:'単語'+String(i).padStart(3,'0')+'を確認します。'}]}));
+const grammarFixture=Array.from({length:90},(_,i)=>({pattern:'〜試験'+i,meaning:'mock pattern '+i,examples:[{ja:'この文は試験'+i+'を含みます。'}]}));
 let browser;
 (async()=>{
  await new Promise(resolve=>setTimeout(resolve,800));
@@ -19,6 +20,7 @@ let browser;
   const page=await browser.newPage({viewport:{width:390,height:840},isMobile:true,hasTouch:true});
   const errors=[];page.on('pageerror',e=>errors.push(e.message));
   await page.route('**/data/json/vocab/*.json',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(fixture)}));
+  await page.route('**/data/json/grammar/*.json',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(grammarFixture)}));
   await page.goto('http://127.0.0.1:'+PORT+'/exams/?level='+level,{waitUntil:'domcontentloaded'});
   assert.equal(await page.locator('#levels button').count(),5);
   await page.locator('#levels button').filter({hasText:level}).click();
