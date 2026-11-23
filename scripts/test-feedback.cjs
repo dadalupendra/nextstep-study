@@ -1,0 +1,57 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
+const {spawn}=require('node:child_process'),{chromium}=require('playwright-core');
+const ROOT=path.resolve(process.argv[2]||'public-site');
+const CHROME=process.env.CHROME_PATH||['/usr/bin/google-chrome','/usr/bin/google-chrome-stable','/usr/bin/chromium','/usr/bin/chromium-browser'].find(f=>fs.existsSync(f));
+if(!CHROME)throw Error('Chromium browser required for NextStep feedback tests');
+const PORT=8826,server=spawn('python3',['-m','http.server',String(PORT),'--bind','127.0.0.1','--directory',ROOT],{stdio:'ignore'});
+let browser;
+(async()=>{
+ await new Promise(ok=>setTimeout(ok,850));
+ browser=await chromium.launch({headless:true,executablePath:CHROME,args:['--no-sandbox','--disable-dev-shm-usage']});
+ const context=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
+ const page=await context.newPage(),errors=[];
+ page.on('pageerror',err=>errors.push(err.message));
+ await page.goto('http://127.0.0.1:'+PORT+'/',{waitUntil:'domcontentloaded'});
+ assert.equal(await page.locator('a[href="feedback/"]').count(),1,'Homepage feedback CTA missing');
+ await page.goto('http://127.0.0.1:'+PORT+'/feedback/',{waitUntil:'domcontentloaded'});
+ await page.locator('#feedback-form').waitFor();
+ assert.match(await page.locator('#facebook-status').innerText(),/not connected yet/);
+ assert.match(await page.locator('#messenger-status').innerText(),/not configured/);
+ assert.equal(await page.locator('#facebook-post').isVisible(),false);
+ assert.equal(await page.locator('#messenger-link').isVisible(),false);
+ assert.equal(await page.locator('#feedback-message').getAttribute('required'),'');
+ // Invalid input must not open a fake submission.
+ await page.locator('#copy-feedback').click();
+ assert.equal(await page.locator('#feedback-message').evaluate(e=>e.validity.valueMissing),true);
+ await page.locator('#feedback-type').selectOption('Bug report');
+ await page.locator('#feedback-level').selectOption('N2');
+ await page.locator('input[name="rating"][value="5"]').check();
+ await page.locator('#feedback-message').fill('N2 読解の問題の答えの説明を改善してください。');
+ await page.locator('#feedback-page').fill('https://dadalupendra.github.io/nextstep-study/exams/');
+ await page.locator('#copy-feedback').click();
+ assert.match(await page.locator('#form-status').innerText(),/NOT been sent automatically|nothing has been sent/);
+ let issueUrl='';
+ await page.route('https://github.com/dadalupendra/nextstep-study/issues/new**',route=>{
+  issueUrl=route.request().url();
+  return route.fulfill({status:200,contentType:'text/html',body:'<!doctype html><title>GitHub issue confirmation fixture</title>'});
+ });
+ await page.locator('#github-feedback').click();
+ await page.waitForURL(/github\.com\/dadalupendra\/nextstep-study\/issues\/new/);
+ assert.match(issueUrl,/title=/);
+ const destination=new URL(issueUrl);
+ assert.match(destination.searchParams.get('title'),/Bug report/);
+ assert.match(destination.searchParams.get('body'),/N2 読解/);
+ assert.match(destination.searchParams.get('body'),/5\/5/);
+ console.log('PASS feedback page mobile: opt-in submission, honest Facebook status, GitHub issue prefill, no silent sending');
+ await page.goto('http://127.0.0.1:'+PORT+'/feedback/',{waitUntil:'domcontentloaded'});
+ // Inject valid Page/post fixture in test only; production config remains empty until owner provides URLs.
+ await page.route('**/community-config.js**',route=>route.fulfill({status:200,contentType:'text/javascript',body:"window.NextStepCommunityConfig={facebookPostUrl:'https://www.facebook.com/Example/posts/123',facebookPageUrl:'https://facebook.com/Example',messengerUrl:'https://m.me/Example',githubIssuesBase:'https://github.com/dadalupendra/nextstep-study/issues/new'};"}));
+ await page.reload({waitUntil:'domcontentloaded'});
+ assert.equal(await page.locator('#facebook-post').isVisible(),true);
+ assert.match(await page.locator('#facebook-post').getAttribute('href'),/facebook\.com\/Example\/posts\/123/);
+ assert.equal(await page.locator('#messenger-link').isVisible(),true);
+ console.log('PASS configured Facebook post comment link and Messenger button use only explicitly configured URLs');
+ assert.equal(errors.length,0,errors.join(' | '));
+ await context.close();
+})().catch(e=>{console.error('FEEDBACK TEST FAILED:',e);process.exitCode=1;}).finally(async()=>{if(browser)await browser.close();server.kill()});
