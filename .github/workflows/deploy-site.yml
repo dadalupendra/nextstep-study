@@ -7,6 +7,9 @@ on:
       - 'index.html'
       - 'kanji-compounds.js'
       - 'daily-100.js'
+      - 'daily-reminder.js'
+      - 'daily-reminder.css'
+      - 'scripts/test-daily-reminder.cjs'
       - 'scripts/test-daily-100.cjs'
       - 'scripts/test-daily-100-browser.cjs'
       - 'manifest.webmanifest'
@@ -80,13 +83,15 @@ jobs:
           node --check exams/full-papers.js
           node --check exams/studio.js
           node --check daily-100.js
+          node --check daily-reminder.js
+          test -s daily-reminder.css
           test -s exams/studio.css
 
       - name: Create a reader-only publishing folder
         run: |
           set -eu
           mkdir -p public-site
-          cp index.html kanji-compounds.js daily-100.js public-site/
+          cp index.html kanji-compounds.js daily-100.js daily-reminder.js daily-reminder.css public-site/
           node --check kanji-compounds.js
           cp manifest.webmanifest sw.js public-site/
           mkdir -p public-site/icons
@@ -141,6 +146,9 @@ jobs:
 
       - name: Test daily challenge navigation and saved progress in mobile browser
         run: node scripts/test-daily-100-browser.cjs public-site
+
+      - name: Test opt-in Today’s Challenge reminders and notification click support
+        run: node scripts/test-daily-reminder.cjs public-site
 
       - name: Test clickable Kanji and compound words on N1–N5 readers
         run: node scripts/test-kanji-compounds.cjs public-site
