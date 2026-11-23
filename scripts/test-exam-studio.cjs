@@ -20,9 +20,14 @@ let browser;
   await page.route('**/data/json/grammar/*.json',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(grammar)}));
   await page.goto('http://127.0.0.1:'+PORT+'/exams/?level='+level,{waitUntil:'domcontentloaded'});
   assert.equal(await page.locator('#studio-level').inputValue(),level);
-  await page.locator('#studio-start').click();
+  // Clicking an EXISTING paper card must open the single-question exam view.
+  assert.equal(await page.locator('#papers .studio-paper-card').count(),20);
+  await page.locator('#papers .studio-paper-card').first().click();
+  assert.match(page.url(),/view=exam/);
+  assert.match(page.url(),/paper=1/);
   await page.locator('#studio-test:not([hidden])').waitFor({timeout:14000});
   assert.equal(await page.locator('#studio-answers .studio-number').count(),100);
+  assert.match(await page.locator('#studio-paper-label').innerText(),new RegExp(level+' · Paper 01'));
   assert.equal(await page.locator('#studio-question .studio-choice').count(),4);
   assert.equal(await page.locator('#studio-question .studio-explanation').count(),0);
   await page.locator('#studio-question .studio-choice').first().click();
