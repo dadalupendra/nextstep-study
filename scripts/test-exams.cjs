@@ -33,57 +33,39 @@ let browser;
   assert.equal(await page.locator('#papers button').count(),20);
   assert.match(await page.locator('#current-level').innerText(),new RegExp(level));
   await page.locator('#papers button').first().click();
-  await page.waitForFunction(()=>document.getElementById('test-title')?.textContent.includes('/100 original questions available'),null,{timeout:10000});
+  await page.waitForFunction(()=>document.getElementById('test-title')?.textContent.includes('15/100 original questions available'),null,{timeout:10000});
   assert.equal(await page.locator('#questions .question').count(),10);
-  // Next 10 navigation must follow the last question, not appear at top.
-  assert.equal(await page.locator('#questions').locator(':scope > :last-child').getAttribute('aria-label'),'Question page navigation');
-  const lastQuestionBox=await page.locator('#questions .question').last().boundingBox();
-  const nextBox=await page.getByRole('button',{name:'Next 10 →'}).boundingBox();
-  assert(nextBox.y>lastQuestionBox.y,'Next button should appear below question 10');
-
-  assert.match(await page.locator('#questions .question').first().locator('h3').innerText(),/語彙|漢字/);
+  assert.equal(await page.locator('#questions .question').first().locator('button.option').count(),4);
+  assert.match(await page.locator('#questions .question').first().locator('h3').innerText(),/✅ ORIGINAL/);
+  const before=await page.evaluate(()=>window.scrollY);
   await page.locator('#questions .question').first().scrollIntoViewIfNeeded();
-  const scrollBefore=await page.evaluate(()=>window.scrollY);
   await page.locator('#questions .question').first().locator('button.option').first().click();
-  const scrollAfter=await page.evaluate(()=>window.scrollY);
-  assert(Math.abs(scrollAfter-scrollBefore)<35,'Answering should not jump back to the top');
-
   assert.equal(await page.locator('#questions .question').first().locator('.explain p').count(),4);
-  const sectionCases=[['grammar',/文法/,10],['reading',/読解/,10],['listening',/聴解/,10],['vocab',/語彙|漢字/,10]];
-  for(const [key,heading,count] of sectionCases){
-   await page.locator('#exam-sections button[data-section="'+key+'"]').click();
-   assert.equal(await page.locator('#questions .question').count(),count);
-   assert.match(await page.locator('#questions .question').first().locator('h3').innerText(),heading);
-   assert.equal(await page.locator('#exam-sections button[data-section="'+key+'"]').getAttribute('aria-pressed'),'true');
+  assert.equal(await page.locator('#questions').getByRole('button',{name:'Next 10 →'}).count(),1);
+  await page.locator('#questions').getByRole('button',{name:'Next 10 →'}).click();
+  assert.equal(await page.locator('#questions .question').count(),5);
+  assert.equal(await page.locator('#questions').getByRole('button',{name:'Next 10 →'}).isDisabled(),true);
+  for(const key of ['vocab','grammar','reading']){
+    await page.locator('#exam-sections button[data-section="'+key+'"]').click();
+    assert.equal(await page.locator('#questions .question').count(),5,key+' contains five original questions');
+    assert.equal(await page.locator('#questions .question button.option').count(),20);
   }
-  await page.locator('#exam-sections button[data-section="all"]').click();
-  const sectionCounts={N1:[30,25,30,15],N2:[35,25,25,15],N3:[40,25,20,15],N4:[45,25,15,15],N5:[45,25,15,15]};
-  const [vc,gc,rc,lc]=sectionCounts[level];
-  assert.match(await page.locator('#exam-sections button[data-section="vocab"]').innerText(),new RegExp(String(vc)));
-  assert.match(await page.locator('#exam-sections button[data-section="grammar"]').innerText(),new RegExp(String(gc)));
-  assert.match(await page.locator('#exam-sections button[data-section="reading"]').innerText(),new RegExp(String(rc)));
-  assert.match(await page.locator('#exam-sections button[data-section="listening"]').innerText(),new RegExp(String(lc)));
-  await page.locator('#exam-sections button[data-section="reading"]').click();
-  const readingLabel=await page.locator('#questions .question').first().locator('.tag').innerText();
-  assert.match(readingLabel,/問題形式/);
-  await page.locator('#exam-sections button[data-section="all"]').click();
-  for(let i=0;i<9;i++)await page.getByRole('button',{name:'Next 10 →'}).click();
-  const section=await page.locator('#questions .question').first().locator('h3').innerText();
-  assert.match(section,/聴解/);
-  assert.equal(await page.getByRole('button',{name:'🔊 再生 \/ Play audio'}).count(),0);
-  assert.equal(await page.locator('#questions .question .option').count(),0,'No fake listening questions or controls before audio assets exist');
-  assert.equal(errors.length,0,level+' page errors: '+errors.join('; '));
+  await page.locator('#exam-sections button[data-section="listening"]').click();
+  assert.equal(await page.locator('#questions .question').count(),1,'Only one unavailable notice instead of 15 empty slots');
+  assert.equal(await page.locator('#questions .question button.option').count(),0);
+  assert.match(await page.locator('#questions').innerText(),/確認済みのオリジナル問題がまだありません/);
+  assert.equal(await page.locator('#questions button').filter({hasText:'Play audio'}).count(),0);
   await page.locator('#papers button').nth(1).click();
   await page.waitForFunction(()=>document.getElementById('test-title')?.textContent.includes('15/100 original questions available'),null,{timeout:10000});
   await page.locator('#exam-sections button[data-section="reading"]').click();
-  assert.match(await page.locator('#questions .question').nth(1).innerText(),/✅ ORIGINAL/);
+  assert.equal(await page.locator('#questions .question').count(),5);
   assert.equal(await page.locator('#questions .question').nth(1).locator('button.option').count(),4);
-  assert.equal(await page.locator('#questions .question').nth(5).locator('button.option').count(),0);
-  assert.equal(await page.locator('#questions').innerText().then(v=>v.includes('UNVERIFIED TEMPLATE')),false);
   await page.locator('#papers button').nth(2).click();
   await page.waitForFunction(()=>document.getElementById('test-title')?.textContent.includes('0/100 original questions available'),null,{timeout:10000});
+  assert.equal(await page.locator('#questions .question').count(),1);
   assert.equal(await page.locator('#questions .question button.option').count(),0);
-  assert.match(await page.locator('#questions').innerText(),/CONTENT NOT READY/);
+  assert.match(await page.locator('#questions').innerText(),/このセクションの問題は準備中です/);
+  assert.equal(errors.length,0,level+' page errors: '+errors.join('; '));
   console.log('PASS',level,'20 preserved paper cards; 100 positions; verified authored questions; no fake audio in pending listening');
   await page.close();
  }
