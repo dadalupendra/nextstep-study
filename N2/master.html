@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#071a31" />
+  <meta name="description" content="NextStep JLPT N2 advanced study collection: 398 kanji, level-specific vocabulary and grammar, quizzes, and chapter PDF export." />
+  <title>NextStep N2 • Advanced Japanese Study Book</title>
+  <link rel="stylesheet" href="../N1/style.css" />
+  <link rel="manifest" href="../manifest.webmanifest" />
+  <link rel="icon" type="image/svg+xml" href="../icons/icon.svg" />
+</head>
+<body>
+  <div class="app-shell" id="appShell">
+    <header class="topbar">
+      <a class="brand" href="../" title="NextStep Home"><span class="brand-icon">進</span><span><strong>NextStep</strong><small>JAPANESE LEARNING</small></span></a>
+      <div class="top-actions"><a href="../install/" style="color:#5ee9d5;font-weight:700;text-decoration:none;padding:10px;display:inline-flex;min-height:44px;align-items:center">📲 Install App</a>
+        <span id="networkBadge" class="network-badge" aria-live="polite">Data loading…</span>
+        <button type="button" id="themeBtn" class="icon-btn" aria-label="Toggle contrast">☀</button>
+      </div>
+    </header>
+    <section class="hero">
+      <div class="eyebrow">JLPT N2 • UPPER INTERMEDIATE • SEPARATE LEVEL-BASED STUDY COLLECTION</div><div style="margin:10px 0 22px"><a href="../exams/?level=N2" style="display:inline-flex;align-items:center;min-height:52px;padding:12px 22px;border-radius:12px;background:#2ad3c3;color:#06273a;font-weight:850;text-decoration:none;font-size:18px">📝 JLPT N2 · 20 Practice Papers · 100 Questions Each →</a></div>
+      <h1>N2 Master Book <em>日本語能力試験</em></h1><div style="display:flex;flex-wrap:wrap;gap:11px;margin-top:18px"><a href="?section=kanji" style="display:inline-block;border:1px solid #5ee9d5;border-radius:12px;padding:12px 18px;background:#104766;color:#dffaff;text-decoration:none;font-weight:800;min-height:48px">📗 N2 Kanji Book · 漢字</a><a href="?section=vocab" style="display:inline-block;border:1px solid #5ee9d5;border-radius:12px;padding:12px 18px;background:#104766;color:#dffaff;text-decoration:none;font-weight:800;min-height:48px">📘 N2 Vocabulary Book · 語彙</a><a href="../N2/" style="display:inline-block;border:1px solid #6985a1;border-radius:12px;padding:12px 18px;color:#dffaff;text-decoration:none;font-weight:700;min-height:48px">↗ Original reader</a></div>
+      <p>日本語だけの問題と選択肢 · 4つの選択肢の解説 · नेपाली / English / 日本語 · Furigana ON/OFF · Daily Challenge</p>
+      <div class="stats">
+        <div><b id="statKanji">398</b><span>N2 Kanji</span></div>
+        <div><b id="statVocab">Loading…</b><span>N2 Vocabulary</span></div>
+        <div><b id="statGrammar">123</b><span>N2 Grammar Patterns</span></div>
+        <div><b id="statCards">500</b><span>Grammar Practice Cards</span></div>
+      </div>
+    </section>
+    <nav class="tabs" aria-label="Learning sections">
+      <button type="button" class="tab active" data-section="kanji">漢字 <span>Kanji</span></button>
+      <button type="button" class="tab" data-section="grammar">文法 <span>Grammar</span></button>
+      <button type="button" class="tab" data-section="vocab">語彙 <span>Vocabulary</span></button>
+      <button type="button" class="tab" data-section="daily">📅 今日の挑戦 <span>Daily Challenge</span></button>
+      <button type="button" class="tab" data-section="quiz">模擬問題 <span>Quiz & Papers</span></button>
+      <button type="button" class="tab" data-section="guide">使い方 <span>How to use</span></button>
+    </nav>
+    <div class="workarea">
+      <aside class="sidebar">
+        <h2>📚 Lessons <span id="lessonCount"></span></h2>
+        <div id="lessonNav" class="lesson-nav"></div>
+        <div class="sidebar-note"><b>💡 नेपालीमा</b><p>कुनै पनि Lesson छान। तलका प्रश्न अभ्यास गर। PDF चाहियो भने “Save Chapter as PDF” थिच।</p></div>
+      </aside>
+      <main class="content" id="mainContent">
+        <div id="stateBox" class="status" role="status">लोड हुँदैछ… Data from OpenJLPT.</div>
+        <div id="studyView" hidden>
+          <div class="controlbar">
+            <div class="controlrow">
+              <label class="control-label" for="searchBox">🔎 Search</label>
+              <input id="searchBox" type="search" placeholder="漢字 / reading / English meaning" autocomplete="off" />
+              <label class="control-label" for="targetLang">🌐 Translate</label>
+              <select id="targetLang" aria-label="Translation language">
+                <option value="ne">नेपाली — Nepali</option>
+                <option value="en">English</option>
+                <option value="hi">हिन्दी — Hindi</option>
+                <option value="ja">日本語 — Japanese</option>
+                <option value="bn">বাংলা — Bengali</option>
+                <option value="zh-CN">中文 — Chinese</option>
+                <option value="ko">한국어 — Korean</option>
+                <option value="fr">Français</option>
+                <option value="es">Español</option>
+                <option value="de">Deutsch</option>
+                <option value="ar">العربية — Arabic</option>
+                <option value="th">ไทย — Thai</option>
+                <option value="vi">Tiếng Việt</option>
+                <option value="id">Bahasa Indonesia</option>
+                <option value="pt">Português</option>
+                <option value="ru">Русский</option>
+                <option value="custom">Other language…</option>
+              </select>
+              <label for="furiganaToggle" class="furi-control"><input id="furiganaToggle" type="checkbox" checked /> ふりがな ON / OFF</label>
+              <label for="vocabCategory" id="vocabFilterLabel" class="control-label" hidden>品詞 / Word class:</label>
+              <select id="vocabCategory" aria-label="Filter vocabulary by word class" hidden></select>
+            </div>
+            <div class="controlrow utility-row">
+              <span class="summary" id="chapterSummary"></span>
+              <label class="reader-size-control" for="readerFontSize">🔠 文字サイズ / Text size
+                <select id="readerFontSize" aria-label="Reading text size">
+                  <option value="small">小 / Small</option>
+                  <option value="normal" selected>標準 / Normal</option>
+                  <option value="large">大 / Large</option>
+                </select>
+              </label>
+              <button type="button" id="printChapter" class="btn btn-primary">⬇ Save Chapter as PDF</button>
+              <button type="button" id="openQuiz" class="btn">📝 Chapter Paper</button>
+            </div>
+          </div>
+          <div id="itemsView"></div>
+          <div id="bottomNav" class="bottom-nav"></div>
+        </div>
+      </main>
+    </div>
+    <footer>
+      <div>Made for NextStep N2 • <a href="https://github.com/evanclan/OpenJLPT" target="_blank" rel="noopener">OpenJLPT dataset</a> (CC BY-SA 4.0) • <a href="https://www.jlpt.jp/e/" target="_blank" rel="noopener">JLPT official</a></div>
+      <p>Community-defined study lists; NOT official JLPT question papers. Google Translate / MyMemory translations require the internet and should be checked.</p>
+    </footer>
+  </div>
+  <div id="printRoot" aria-hidden="true"></div>
+  <script src="./master.js?v=20261123-level-books" defer></script>
+</body>
+</html>
