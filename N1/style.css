@@ -172,3 +172,33 @@ body{
   .card{transition:none!important}
   html{scroll-behavior:auto}
 }
+
+
+/* Reading-size selector and accessible mobile form labels */
+.reader-size-control{display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap;color:#cce4f2;font-size:12px;font-weight:700}
+.reader-size-control select{min-height:44px;border-radius:9px;border:1px solid #3f7697;background:#11324d;color:#eefaff;padding:9px 10px;max-width:170px}
+.light .reader-size-control{color:#244962}
+.light .reader-size-control select{background:white;color:#16405a}
+body[data-reader-size=small] .card .field,
+body[data-reader-size=small] .card .meaning,
+body[data-reader-size=small] .card .triple-detail>div,
+body[data-reader-size=small] .card .example,
+body[data-reader-size=small] .card .translated{font-size:12px}
+body[data-reader-size=normal] .card .field,
+body[data-reader-size=normal] .card .triple-detail>div{font-size:14px}
+body[data-reader-size=normal] .card .meaning,
+body[data-reader-size=normal] .card .example,
+body[data-reader-size=normal] .card .translated{font-size:15px}
+body[data-reader-size=large] .card .field,
+body[data-reader-size=large] .card .triple-detail>div{font-size:17px}
+body[data-reader-size=large] .card .meaning,
+body[data-reader-size=large] .card .example,
+body[data-reader-size=large] .card .translated{font-size:18px}
+@media(max-width:760px){
+ .controlrow .control-label{display:inline-flex;align-items:center;color:#c2d8e8;font-size:12px}
+ .reader-size-control{min-height:44px;max-width:100%;flex:1 1 175px}
+ .reader-size-control select{max-width:100%;flex:1 1 90px}
+ .utility-row .summary{flex:1 1 100%}
+ body[data-reader-size=normal] .card .triple-detail>div{font-size:14px}
+ .card-actions button,.card-actions a{min-height:44px}
+}
