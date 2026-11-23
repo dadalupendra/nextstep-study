@@ -44,7 +44,7 @@ for(const level of ['N5','N4','N3','N2','N1']){
  assert.equal(today.questions.length,100,level+' not 100 questions');
  assert.equal(new Set(today.questions.map(q=>q.id)).size,100,level+' repeated question ID');
  assert.equal(new Set(today.questions.map(q=>q.stem)).size,100,level+' repeated prompt');
- assert.deepEqual(today.questions.map(q=>q.id),today2.questions.map(q=>q.id),level+' same day not stable');
+ assert.equal(today.questions.map(q=>q.id).join('::'),today2.questions.map(q=>q.id).join('::'),level+' same day not stable');
  assert.deepEqual(Object.fromEntries(['kanji','vocab','grammar'].map(type=>[type,today.questions.filter(q=>q.type===type).length])),{kanji:30,vocab:40,grammar:30});
  for(const question of today.questions){
   assert.equal(question.options.length,4,level+' answer options');
