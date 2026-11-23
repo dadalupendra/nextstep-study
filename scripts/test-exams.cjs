@@ -73,6 +73,17 @@ let browser;
   assert.equal(await page.getByRole('button',{name:'🔊 再生 \/ Play audio'}).count(),0);
   assert.equal(await page.locator('#questions .question .option').count(),0,'No fake listening questions or controls before audio assets exist');
   assert.equal(errors.length,0,level+' page errors: '+errors.join('; '));
+  await page.locator('#papers button').nth(1).click();
+  await page.waitForFunction(()=>document.getElementById('test-title')?.textContent.includes('15/100 original questions available'),null,{timeout:10000});
+  await page.locator('#exam-sections button[data-section="reading"]').click();
+  assert.match(await page.locator('#questions .question').nth(1).innerText(),/✅ ORIGINAL/);
+  assert.equal(await page.locator('#questions .question').nth(1).locator('button.option').count(),4);
+  assert.equal(await page.locator('#questions .question').nth(5).locator('button.option').count(),0);
+  assert.equal(await page.locator('#questions').innerText().then(v=>v.includes('UNVERIFIED TEMPLATE')),false);
+  await page.locator('#papers button').nth(2).click();
+  await page.waitForFunction(()=>document.getElementById('test-title')?.textContent.includes('0/100 original questions available'),null,{timeout:10000});
+  assert.equal(await page.locator('#questions .question button.option').count(),0);
+  assert.match(await page.locator('#questions').innerText(),/CONTENT NOT READY/);
   console.log('PASS',level,'20 preserved paper cards; 100 positions; verified authored questions; no fake audio in pending listening');
   await page.close();
  }
