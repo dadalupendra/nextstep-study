@@ -51,10 +51,12 @@ let browser;
     assert.equal(await page.locator('#questions .question button.option').count(),20);
   }
   await page.locator('#exam-sections button[data-section="listening"]').click();
-  assert.equal(await page.locator('#questions .question').count(),1,'Only one unavailable notice instead of 15 empty slots');
-  assert.equal(await page.locator('#questions .question button.option').count(),0);
-  assert.match(await page.locator('#questions').innerText(),/確認済みのオリジナル問題がまだありません/);
-  assert.equal(await page.locator('#questions button').filter({hasText:'Play audio'}).count(),0);
+  const expectedListening=level==='N5'?10:5;
+  assert.equal(await page.locator('#questions .question').count(),expectedListening);
+  assert.equal(await page.locator('#questions .question button.option').count(),expectedListening*4);
+  assert.equal(await page.getByRole('button',{name:'🔊 再生 / Play audio'}).count(),expectedListening);
+  assert.match(await page.locator('#questions').innerText(),/Browser-generated Japanese voice/);
+  assert.doesNotMatch(await page.locator('#questions').innerText(),/UNVERIFIED TEMPLATE|CONTENT NOT READY/);
   await page.locator('#papers button').nth(1).click();
   await page.waitForFunction(()=>document.getElementById('test-title')?.textContent.includes('15/100 original questions available'),null,{timeout:10000});
   await page.locator('#exam-sections button[data-section="reading"]').click();
@@ -66,7 +68,7 @@ let browser;
   assert.equal(await page.locator('#questions .question button.option').count(),0);
   assert.match(await page.locator('#questions').innerText(),/このセクションの問題は準備中です/);
   assert.equal(errors.length,0,level+' page errors: '+errors.join('; '));
-  console.log('PASS',level,'20 preserved paper cards; 100 positions; verified authored questions; no fake audio in pending listening');
+  console.log('PASS',level,'20 preserved paper cards; original Japanese questions and TTS-only listening dialogues; incomplete papers blocked');
   await page.close();
  }
  console.log('PASS: five-level JLPT practice center smoke tests');
