@@ -8,6 +8,7 @@ on:
       - 'kanji-compounds.js'
       - 'daily-100.js'
       - 'scripts/test-daily-100.cjs'
+      - 'scripts/test-daily-100-browser.cjs'
       - 'manifest.webmanifest'
       - 'sw.js'
       - 'icons/**'
@@ -137,6 +138,9 @@ jobs:
 
       - name: Verify 100 unique daily questions for N1–N5 where sources are available
         run: node scripts/test-daily-100.cjs public-site
+
+      - name: Test daily challenge navigation and saved progress in mobile browser
+        run: node scripts/test-daily-100-browser.cjs public-site
 
       - name: Test clickable Kanji and compound words on N1–N5 readers
         run: node scripts/test-kanji-compounds.cjs public-site
