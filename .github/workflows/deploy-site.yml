@@ -129,6 +129,9 @@ jobs:
       - name: Check independent N5–N2 kanji vocabulary master books on mobile
         run: node scripts/test-master-books.cjs public-site
 
+      - name: Test clickable Kanji and compound words on N1–N5 readers
+        run: node scripts/test-kanji-compounds.cjs public-site
+
       - name: Smoke test N5–N1 JLPT exam practice sections and controls
         run: node scripts/test-exams.cjs public-site
 
