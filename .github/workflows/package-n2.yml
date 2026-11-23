@@ -1,0 +1,25 @@
+name: Package N2 Study Books
+on:
+  push:
+    paths:
+      - '.github/workflows/package-n2.yml'
+  workflow_dispatch:
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Create N2-only ZIP
+        run: |
+          test -f N2/index.html
+          zip -r -q -9 NextStep_N2_Only.zip N2
+          unzip -l NextStep_N2_Only.zip
+      - name: Upload download artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: NextStep_N2_Only
+          path: NextStep_N2_Only.zip
+          if-no-files-found: error
