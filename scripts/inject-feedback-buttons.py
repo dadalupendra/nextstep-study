@@ -17,6 +17,7 @@ for path in paths:
     snippet = '<script defer src="' + prefix + 'feedback/feedback-buttons.js?v=20261123"></script>'
     if "</body>" not in html:
         raise SystemExit(f"No body closing tag in {relative}, aborting injection")
-    html = html.replace("</body>", snippet + "</body>", 1)
+    pos = html.rfind("</body>")
+    html = html[:pos] + snippet + html[pos:]
     path.write_text(html, encoding="utf-8")
     print("Feedback actions added:", relative)
