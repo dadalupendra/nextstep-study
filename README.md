@@ -16,6 +16,23 @@ Japanese self-study website, served as static HTML/CSS/JavaScript from GitHub Pa
 
 **N1 source:** `N1/` matches the files supplied in the uploaded `NextStep_Study.zip`. N1 source data is supplied in `N1/data/{kanji,grammar,vocab}.json` using the independently curated OpenJLPT N1-labeled collection (CC BY-SA 4.0). See `N1/THIRD-PARTY-NOTICE.txt`.
 
+## Responsive design, professional UI and QA
+
+The public website is designed to adapt to phones, tablets and desktop computers. Its original learning material is **not** rewritten by the responsive enhancements.
+
+- **N1:** bilingual / trilingual reading cards with font-size choice, full multiline explanations, mobile one-column layout and desktop grid.
+- **N2:** responsive Kanji, Vocabulary, Grammar notebooks and a dedicated Japanese practice interface.
+- **N3:** its original 500-page interactive study collection renders in a Shadow DOM; `scripts/n3-responsive.css` is injected into that **Shadow DOM** at build time, making book selection, page layout and long Japanese/Nepali text more mobile-friendly.
+- **N4 and N5:** publication applies `scripts/legacy-responsive.css` and `scripts/legacy-responsive.js` to existing self-contained books. On small phones, lesson tables with three or more labeled columns become labeled, vertically stacked study cards instead of being cut off. Standard tables retain desktop layouts.
+- **Navigation:** N3, N4 and N5 now include a return link to the main JLPT collection.
+- **SEO:** descriptions, canonical URLs, structured social preview metadata and sitemap are generated for published readers.
+
+**Build-time QA:** `scripts/test-responsive.cjs` checks 11 N1/N2 mobile, tablet and desktop scenarios using Chromium. `scripts/test-all-readers.cjs` checks 16 additional N5-to-N1 layouts, N3 book controls, N4/N5 study tables, back-to-books links, N1 font settings, N2 navigation and immediate quiz feedback. All tests must pass **before** a site artifact is published. `scripts/audit-all-levels.cjs` provides an additional diagnostic-only browser audit across 28 route/viewport combinations.
+
+**What has not been certified:** these automated browser checks do not independently proofread every word, Japanese pronunciation, translation, or all hundreds of printable pages. Very large legacy books (N3: >7 MB HTML, N4: >4 MB HTML) can take longer to parse on slow phones; a future authoring refactor could split their content into smaller, independently cached assets.
+
+This public static website uses **HTML, CSS, vanilla JavaScript, Python (build-time), and GitHub Actions YAML**. Unnecessary Java/PHP/SQL frameworks were not added merely to increase the number of languages.
+
 ## Facebook / WhatsApp / Messenger social previews
 
 This repository's GitHub Pages build creates **six branded 1200 × 630 JPEG cover pictures** every time the website is published. A small Python+Pillow script (`scripts/build-social-preview.py`) prepares artwork, then injects static **Open Graph** and **Twitter Card** metadata into the published HTML. This approach works for social crawlers that do not execute page JavaScript.
