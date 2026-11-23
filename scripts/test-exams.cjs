@@ -30,6 +30,14 @@ let browser;
   assert.match(await page.locator('#questions .question').first().locator('h3').innerText(),/語彙|漢字/);
   await page.locator('#questions .question').first().locator('button.option').first().click();
   assert.equal(await page.locator('#questions .question').first().locator('.explain p').count(),4);
+  const sectionCases=[['grammar',/文法/,10],['reading',/読解/,10],['listening',/聴解/,10],['vocab',/語彙|漢字/,10]];
+  for(const [key,heading,count] of sectionCases){
+   await page.locator('#exam-sections button[data-section="'+key+'"]').click();
+   assert.equal(await page.locator('#questions .question').count(),count);
+   assert.match(await page.locator('#questions .question').first().locator('h3').innerText(),heading);
+   assert.equal(await page.locator('#exam-sections button[data-section="'+key+'"]').getAttribute('aria-pressed'),'true');
+  }
+  await page.locator('#exam-sections button[data-section="all"]').click();
   for(let i=0;i<9;i++){await page.getByRole('button',{name:'Next 10 →'}).click();if(i===3)assert.match(await page.locator('#questions .question').first().locator('h3').innerText(),/文法/);if(i===6)assert.match(await page.locator('#questions .question').first().locator('h3').innerText(),/読解/);}
   const section=await page.locator('#questions .question').first().locator('h3').innerText();
   assert.match(section,/聴解/);
