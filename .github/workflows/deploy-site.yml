@@ -1,0 +1,72 @@
+name: Publish NextStep Study (N5–N1)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - '.nojekyll'
+      - 'N1/**'
+      - 'N2/**'
+      - 'N3/**'
+      - 'N4/**'
+      - 'N5/**'
+      - '.github/workflows/deploy-site.yml'
+      - 'scripts/test-n2.cjs'
+  workflow_dispatch:
+
+concurrency:
+  group: nextstep-pages
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout public reading material
+        uses: actions/checkout@v4
+
+      - name: Validate all five readers
+        run: |
+          set -eu
+          for page in index.html N1/index.html N2/index.html N3/index.html N4/index.html N5/index.html; do
+            test -s "$page" || { echo "Missing: $page"; exit 1; }
+          done
+          node scripts/test-n2.cjs
+
+      - name: Create a reader-only publishing folder
+        run: |
+          set -eu
+          mkdir -p public-site
+          cp index.html public-site/
+          cp .nojekyll public-site/
+          for level in N1 N2 N3 N4 N5; do
+            cp -R "$level" public-site/
+          done
+          test -s public-site/N2/quiz.html
+          test -s public-site/N1/data/vocab.json
+          # Exclude maintenance/batch/source-attribution documents from the deployed navigation,
+          # but keep license notices required by upstream datasets.
+          rm -f public-site/N1/Download_N1_Data.ps1 public-site/N1/GET_REAL_N1_DATA.bat
+
+      - name: Upload static website
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: public-site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publish website
+        id: deployment
+        uses: actions/deploy-pages@v4
