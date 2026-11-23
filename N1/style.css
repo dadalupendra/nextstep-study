@@ -202,3 +202,42 @@ body[data-reader-size=large] .card .translated{font-size:18px}
  body[data-reader-size=normal] .card .triple-detail>div{font-size:14px}
  .card-actions button,.card-actions a{min-height:44px}
 }
+
+
+/* Kanji → 熟語 explorer, shared by N1–N5 master readers */
+body.ns-compounds-open{overflow:hidden}
+.kanji-main-link{border:2px solid #4be0ce;border-radius:14px;background:#103650;padding:8px 13px;min-height:94px;min-width:94px;text-align:center;transition:background .15s,transform .15s;cursor:pointer}
+.kanji-main-link:hover,.kanji-main-link:focus-visible{background:#195a6a;transform:translateY(-2px)}
+.wordchips .kanji-chip{background:#1b425e;color:#d9faff;border:1px solid #43758b;border-radius:8px;font-size:13px;padding:9px 12px;min-height:44px}
+.wordchips .kanji-chip:hover,.wordchips .kanji-chip:focus-visible{background:#276b7c}
+.ns-compounds-backdrop[hidden]{display:none!important}
+.ns-compounds-backdrop{position:fixed;inset:0;z-index:5000;background:#010c17df;padding:12px;overflow:auto;display:flex;justify-content:center;align-items:flex-start}
+.ns-compounds-panel{margin:1vh auto 2vh;width:min(960px,100%);max-height:96vh;overflow:auto;background:#081d32;border:2px solid #478399;border-radius:18px;padding:22px;color:#eaf8ff;box-shadow:0 14px 60px #000b}
+.ns-compounds-header{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;border-bottom:1px solid #385d77;padding-bottom:12px}
+.ns-compounds-header h2{color:#6cf3df;font-size:clamp(31px,5vw,45px);margin:5px 0}
+.ns-compounds-kicker{font-size:13px;color:#9ad8ea}
+.ns-compounds-close,.ns-compound-actions button,#ns-compounds-more{background:#145070;color:#eefcff;border:1px solid #61b5b5;border-radius:10px;min-height:44px;padding:10px 15px;font-size:15px;cursor:pointer}
+.ns-compounds-close{white-space:nowrap}
+#ns-compounds-status{font-size:13px;color:#add9df;margin:15px 0}
+.ns-compounds-controls{display:grid;grid-template-columns:2fr 1fr;gap:14px;margin:12px 0}
+.ns-compounds-controls label{font-size:14px;color:#b8e7ed;display:flex;flex-direction:column;gap:7px}
+.ns-compounds-controls input,.ns-compounds-controls select{background:#132e48;color:#fff;border:1px solid #698ba5;border-radius:9px;min-height:44px;padding:9px 12px;width:100%;font-size:16px}
+#ns-compounds-count{color:#8ef2d4;font-weight:700;margin-bottom:12px}
+.ns-compound-item{border:1px solid #386984;background:#102e47;border-radius:12px;margin:9px 0;overflow:hidden}
+.ns-compound-item summary{cursor:pointer;display:flex;gap:12px;flex-wrap:wrap;align-items:center;list-style:none;padding:14px;min-height:56px}
+.ns-compound-item summary::-webkit-details-marker{display:none}
+.ns-compound-item summary:before{content:"▸";color:#67e2d2}
+.ns-compound-item[open] summary:before{content:"▾"}
+.ns-compound-word{font-size:24px;font-weight:800;color:#fff}
+.ns-compound-reading{font-size:16px;color:#87e7db}
+.ns-compound-gloss{font-size:14px;color:#d0e2f3;flex:1 1 160px}
+.ns-compound-details{padding:12px 18px 18px;background:#0c253b;line-height:1.65;border-top:1px solid #41667c}
+.ns-compound-details p{margin:8px 0}
+.ns-compound-example{padding:12px;border-left:3px solid #7bdac7;background:#193951;border-radius:8px;margin:12px 0}
+.ns-compound-example div{margin-top:6px}
+.ns-compound-example ruby rt{font-size:10px}
+.ns-compound-actions{display:flex;flex-wrap:wrap;gap:9px}
+.ns-compounds-note{color:#b5c9d8;font-size:12px;line-height:1.6}
+.ns-compounds-footer{display:flex;justify-content:center;margin:20px 0}
+.ns-compounds-panel :focus-visible{outline:3px solid #76ffe7;outline-offset:2px}
+@media(max-width:690px){.ns-compounds-backdrop{padding:0}.ns-compounds-panel{max-height:100dvh;margin:0;border-radius:0;border-width:0;padding:16px}.ns-compounds-header{flex-direction:column}.ns-compounds-close{align-self:flex-end}.ns-compounds-controls{grid-template-columns:1fr}.ns-compound-word{font-size:22px}}
