@@ -61,7 +61,7 @@
 @media(max-width:480px){#exam-studio{padding:15px}.studio-numbers{grid-template-columns:repeat(7,minmax(0,1fr))}.studio-choice{font-size:16px}.studio-nav #studio-next{margin-left:0}.studio-answersheet{padding:12px}}
 @media print{#exam-studio{display:none!important}}
 
-/* NextStep Paper Mode 2026: Bunpro-inspired workflow, original visual identity. */
+/* NextStep Paper Mode 2026: original NextStep Study workflow and visual identity. */
 .studio-paper-card{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;text-align:left;gap:7px;min-height:139px;padding:16px 17px;position:relative;transition:transform .2s,box-shadow .2s,border-color .2s;box-shadow:0 7px 19px #00111f33}
 .studio-paper-card strong{font-size:18px;line-height:1.3}
 .studio-paper-count{color:#c6dfed;font-size:12px;font-weight:500;line-height:1.4}
