@@ -72,28 +72,31 @@ let page=0,paper=1,items=[],answers={},pending=false,sectionMode='all';
  const hours=['午前9時','午前10時','午前11時','午後1時','午後2時','午後3時','午後4時'];
  const verbs=['開きます','始まります','行われます'];
  function scenario(level,num,serial,kind){
-  const seed=hash(level+':'+num+':'+serial+':'+kind);
-  const place=notices[level][seed%3],day=days[Math.floor(seed/3)%7],hour=hours[Math.floor(seed/7)%7];
-  const newHour=hours[(hours.indexOf(hour)+2)%7];
-  const reading=kind==='読解';
-  let passage,prompt,options;
-  const TEXT={
-   N5:['【おしらせ】'+day+'は、'+place+'へ行きます。'+hour+'に始まります。'+newHour+'ではありません。',
-    'あしたではなく、'+day+'です。'+place+'で会いましょう。'+hour+'に始まります。'+newHour+'ではありません。'],
-   N4:['【予定の変更】'+day+'の'+place+'での集まりは、'+newHour+'から'+hour+'に変わりました。遅れないでください。',
-    'もしもし。'+day+'の'+place+'の集まりは、'+newHour+'ではなく、'+hour+'からになりました。'],
-   N3:['【連絡】'+day+'に'+place+'で予定している説明会について、開始時刻を'+newHour+'から'+hour+'へ変更しました。場所は変わりません。',
-    'お問い合わせの説明会ですが、'+day+'に'+place+'で行います。開始時刻が変更され、'+newHour+'ではなく'+hour+'からです。'],
-   N2:['【重要】'+place+'における'+day+'の研修は、参加者からの要望を受け、当初予定していた'+newHour+'より開始時刻を変更し、'+hour+'に実施することになりました。',
-    'お申し込みいただいた'+day+'の研修についてお電話しました。'+place+'での開催に変更はありませんが、開始は当初の'+newHour+'から'+hour+'に変更となりました。'],
-   N1:['【実施要領の改訂】'+day+'に'+place+'で開催予定の研究報告会は、運営上の都合により、従来公表していた'+newHour+'から開始時刻を変更し、'+hour+'に改めました。会場の変更はありません。',
-    '先日ご案内した'+day+'の報告会について、予定変更のご連絡です。会場は'+place+'のままですが、開始時刻につきましては、当初の'+newHour+'ではなく'+hour+'となりました。ご注意ください。']
-  };
-  passage=TEXT[level][reading?0:1];
-  prompt=reading?'【文章】'+passage+'\n【質問】変更後の開始時刻として正しいものはどれですか。':'【聴解】音声を聞いて、変更後の開始時刻を選んでください。';
-  options=distinct([hour,newHour,...hours.filter(x=>x!==hour&&x!==newHour)]).slice(0,4);
-  const shuffled=mix(options,level+'|'+num+'|'+serial+'|'+kind);
-  return{type:kind,prompt,passage,options:shuffled,answer:shuffled.indexOf(hour),generated:false,scenario:true,listen:!reading,correctValue:hour,place,day,locale:level};
+  const listening=kind==='聴解',seq=(num-1)*(listening?15:20)+serial;
+  const locations=[...notices[level],'駅の前','ホール'];
+  const events=['説明会','勉強会','展示会','日本語教室','相談会','発表会','交流会','研修'];
+  const day=days[Math.floor(seq/7)%7],hour=hours[seq%7];
+  const place=locations[Math.floor(seq/49)%locations.length],event=events[Math.floor(seq/245)%events.length];
+  const previousHour=hours[(seq%7+2)%7];
+  const questionKind=seq%3;
+  const word={
+   N5:'今日の予定をお知らせします。',
+   N4:'イベントの予定が変わりました。',
+   N3:'イベントの予定についてお知らせします。以前の予定と違うのでご注意ください。',
+   N2:'今回の開催予定につきまして、変更後の内容をご案内いたします。',
+   N1:'運営上の調整を踏まえ、開催概要の一部を下記のとおり改訂いたしました。'
+  }[level];
+  const plain='「'+event+'」は'+day+'、'+place+'で行います。開始は'+hour+'です。以前お知らせした'+previousHour+'ではありません。';
+  const passage=listening?'もしもし。'+word+plain+'参加する方は変更後の予定を確認してください。':'【案内】'+word+plain+'参加をご希望の方は、日時と会場をご確認ください。';
+  let options,correctValue,prompt,property;
+  if(questionKind===0){property='time';correctValue=hour;options=[hour,previousHour,...hours.filter(v=>v!==hour&&v!==previousHour)].slice(0,4);prompt='変更後の開始時間はいつですか。';}
+  else if(questionKind===1){property='day';correctValue=day;options=[day,...days.filter(v=>v!==day)].slice(0,4);prompt='いつ開催されますか。';}
+  else{property='place';correctValue=place;options=[place,...locations.filter(v=>v!==place)].slice(0,4);prompt='会場はどこですか。';}
+  const shuffled=mix(options,level+'|'+num+'|'+serial+'|'+kind+'|choices');
+  const heading=listening?'【聴解】音声を聞いて答えてください。':'【読解】次の文章を読んで答えてください。';
+  return{type:kind,prompt:heading+(listening?'':'\n'+passage)+'\n【質問】'+prompt,
+   passage,options:shuffled,answer:shuffled.indexOf(correctValue),generated:false,scenario:true,listen:listening,
+   correctValue,place,day,property,locale:level};
  }
  function grammar(level,num,serial){
   const base=bank[level].filter(q=>q[0]==='文法');
@@ -118,7 +121,7 @@ let page=0,paper=1,items=[],answers={},pending=false,sectionMode='all';
  function explanation(q,j){
   if(q.grammarSource){const good=j===q.answer,item=q.grammarTarget,option=q.grammarOptions[j];return '<strong>'+escText(option.form)+(good?' ✅':' ❌')+'</strong><br>🇯🇵 '+(good?'正解です。':'不正解です。')+'教材の原文は「'+escText(item.sentence)+'」で、文法表現は「'+escText(item.form)+'」です。<br>🇳🇵 '+(good?'सही विकल्प। ':'गलत विकल्प। ')+'मूल उदाहरणमा प्रयोग भएको व्याकरण '+escText(item.form)+' हो।<br>🇬🇧 '+(good?'Correct. ':'Incorrect. ')+'The source sentence uses '+escText(item.form)+' ('+escText(item.meaning)+').';}
 
-  if(q.scenario){const good=j===q.answer,choice=q.options[j];return '<strong>'+escText(choice)+(good?' ✅':' ❌')+'</strong><br>🇯🇵 '+(good?'正解です。':'不正解です。')+'案内では「'+escText(q.day)+'の開始は'+escText(q.correctValue)+'」です。'+(good?'':'この選択肢は案内された開始時間ではありません。')+'<br>🇳🇵 '+(good?'सही उत्तर हो।':'गलत उत्तर हो।')+' सूचनाअनुसार '+escText(q.day)+' सुरु हुने समय '+escText(q.correctValue)+' हो।'+'<br>🇬🇧 '+(good?'Correct. ':'Incorrect. ')+'The announcement says the start time on '+escText(q.day)+' is '+escText(q.correctValue)+'.';}
+  if(q.scenario){const good=j===q.answer,choice=q.options[j];return '<strong>'+escText(choice)+(good?' ✅':' ❌')+'</strong><br>🇯🇵 '+(good?'正解です。':'不正解です。')+'案内の答えは「'+escText(q.correctValue)+'」です。'+(good?'':'この選択肢は案内された開始時間ではありません。')+'<br>🇳🇵 '+(good?'सही उत्तर हो।':'गलत उत्तर हो।')+' सूचनाअनुसार सही विकल्प '+escText(q.correctValue)+' हो।'+'<br>🇬🇧 '+(good?'Correct. ':'Incorrect. ')+'The announcement identifies the correct answer as '+escText(q.correctValue)+'.';}
   if(!q.generated){const opt=q.original[3][j],good=j===q.answer;return '<strong>'+escText(opt[0])+(good?' ✅':' ❌')+'</strong><br>🇯🇵 '+escText(opt[1])+'. '+(good?escText(q.original[4]):'この設問の正答ではありません。')+'<br>🇳🇵 '+escText(opt[2])+'। '+(good?escText(q.original[5]):'यस प्रश्नमा यो विकल्प सही होइन।')+'<br>🇬🇧 '+escText(opt[3])+'. '+(good?escText(q.original[6]):'This is not the correct option here.');}
   const item=q.source[j],right=item.correct,target=q.word;const english=target.meaning?' / Meaning: '+target.meaning:'';
   return '<strong>'+escText(item.text)+(right?' ✅':' ❌')+'</strong><br>'+
