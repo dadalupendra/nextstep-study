@@ -16,6 +16,20 @@ Japanese self-study website, served as static HTML/CSS/JavaScript from GitHub Pa
 
 **N1 source:** `N1/` matches the files supplied in the uploaded `NextStep_Study.zip`. N1 source data is supplied in `N1/data/{kanji,grammar,vocab}.json` using the independently curated OpenJLPT N1-labeled collection (CC BY-SA 4.0). See `N1/THIRD-PARTY-NOTICE.txt`.
 
+## Automatic Updates (already configured)
+
+**Content-source refresh:** The workflow `.github/workflows/auto-update-content.yml` checks the licensed OpenJLPT N1 and N2 datasets **every day at approximately 09:23 Japan time (00:23 UTC)**. GitHub may delay a scheduled run. If existing N1/N2 entries change safely, `scripts/update-content.cjs` validates their level tags, identities, counts and the size of the change, preserves custom Nepali grammar explanations and lesson order, and commits only genuine data updates. The educational test suite runs before any commit.
+
+**Automatic publishing:** Any changed N1–N5 or homepage file on `main` launches `.github/workflows/deploy-site.yml` to test and publish the updated site. Nothing needs to be uploaded again when a validated source update is committed.
+
+**Automatic display refresh:** N1 has a network-first service worker (with offline fallback), so online readers check for the newest version of HTML/JS/CSS and learning data rather than staying on an old cached copy. N1's daily practice changes each day based on the Japan local date. Normal browser/GitHub Pages caching can still introduce a short delay.
+
+**Scope:** N1 and N2 existing source entries may refresh automatically. N5/N4/N3 books and their PDFs do not gain newly authored lessons automatically; they require editorial content updates in this repository. New or deleted N1/N2 target entries are deliberately not inserted without review, so the 400/300/300 study page and chapter structures remain consistent. If source verification fails, the workflow stops rather than publishing unsafe data.
+
+**Check or manually trigger:** Visit **Actions → Automatically update JLPT N1 and N2 study data → Run workflow → main**. Successful runs can show `No upstream changes ... Nothing to publish`; that is expected and means the content is already up to date with the tracked source entries.
+
+GitHub can suspend scheduled workflows after **60 days of inactivity in public repositories**. If automatic checks stop, review Actions, enable the workflow and push a regular update.
+
 ## Publish on GitHub Pages
 
 For the prepared automated deployment, the repository owner must **enable GitHub Pages once**:
