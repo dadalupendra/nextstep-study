@@ -1,0 +1,61 @@
+/* NextStep Study unified 2026 design, colors/spacing only; retains original lessons and scripts. */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+:root{--bg:#FFF8EE;--panel:#FFFFFF;--panel2:#F6F2FF;--ink:#1B1740;--muted:#514B70;--line:#DFD8EE;--cyan:#4338CA;--blue:#4338CA;--gold:#FFC93C;--ok:#7EE0B5;--warn:#FF9B85;--radius:22px}
+html{scroll-behavior:smooth}
+body{background:#FFF8EE!important;color:#1B1740!important;font-family:Poppins,system-ui,'Noto Sans JP',sans-serif!important}
+a{color:#3026A0}
+button,input,select{font-family:inherit}
+button,a{touch-action:manipulation}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #4338CA;outline-offset:3px}
+.app-shell{background:#FFF8EE}
+.topbar{background:#FFFFFF;border-bottom:1px solid #E4DDEE;border-radius:0 0 20px 20px}
+.brand,.brand strong{color:#1B1740}
+.brand-icon{background:#FFC93C;color:#1B1740;border-radius:15px}
+.network-badge{color:#514B70;border-color:#E4DDEE}
+.icon-btn{background:#E4E1FB;color:#1B1740;border-color:#C7C2E9;border-radius:14px;min-height:44px}
+.hero{background:#4338CA!important;color:#fff;border-radius:24px;margin:15px 17px;padding:25px!important}
+.hero h1,.hero h2,.hero p,.hero .eyebrow,.hero em{color:white!important}
+.hero .stats div,.stats div{background:#fff!important;color:#1B1740;border-radius:18px;border:0}
+.hero .stats b,.stats b{color:#3026A0!important}
+.hero .stats span,.stats span{color:#514B70!important}
+.tabs{background:#fff!important;border-bottom:1px solid #E4DDEE;gap:9px;padding:13px 17px}
+.tab{background:#F6F2FF!important;border-radius:15px;color:#1B1740!important;min-height:52px}
+.tab.active{background:#FFC93C!important;color:#1B1740!important;box-shadow:none!important}
+.workarea{gap:14px;padding:0 16px}
+.sidebar{background:#fff!important;border:1px solid #E4DDEE;border-radius:22px;margin-top:15px;color:#1B1740}
+.sidebar h2,.sidebar-note{color:#1B1740}
+.lesson-btn{color:#1B1740;background:#F6F2FF;border-radius:13px;min-height:46px}
+.lesson-btn small{color:#514B70}
+.lesson-btn.active{background:#FFC93C;color:#1B1740;border-color:#FFC93C}
+.sidebar-note{background:#E4E1FB;border:0;border-radius:16px}
+.content{background:transparent!important}
+.controlbar,.status{background:#fff!important;color:#1B1740;border:1px solid #E4DDEE;border-radius:22px;padding:17px}
+.control-label,.summary{color:#514B70}
+.controlrow input,.controlrow select,.controlbar select,.controlbar input{background:#fff;color:#1B1740;border:1px solid #ACA4C7;border-radius:13px;min-height:46px}
+.btn,.btn-primary{background:#4338CA!important;color:white!important;border:0!important;border-radius:16px;min-height:46px;padding:10px 16px}
+.btn-warm{background:#FFC93C!important;color:#1B1740!important}
+.card{background:#fff!important;color:#1B1740!important;border:1px solid #E4DDEE!important;border-radius:23px!important;box-shadow:0 8px 24px #2A237012}
+.card p,.card small,.card label,.card h2,.card h3{color:#1B1740}
+.cards{gap:13px}
+.bottom-nav,.bottom-nav button{border-radius:16px}
+@media(max-width:800px){.hero{margin:10px!important;padding:19px!important}.workarea{display:block;padding:0 9px}.sidebar{margin-bottom:10px}.content{padding:10px!important}.tabs{padding:8px;gap:6px}.tab{min-width:98px;padding:8px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+/* Exam pages: improve visual appearance but retain real studio behavior. */
+body:has(#exam-studio){background:#FFF8EE!important;color:#1B1740!important}
+body:has(#exam-studio) a{color:#4338CA}
+body:has(#exam-studio) header{background:#fff;border-bottom:1px solid #E4DDEE;border-radius:0 0 20px 20px}
+body:has(#exam-studio) .muted{color:#514B70}
+body:has(#exam-studio) .panel,body:has(#exam-studio) .question{background:#fff;color:#1B1740;border-color:#E4DDEE;border-radius:22px}
+body:has(#exam-studio) #exam-studio{background:#fff;border:1px solid #E4DDEE;border-radius:25px}
+body:has(#exam-studio) .studio-badge{background:#FFC93C;color:#1B1740;border-color:#FFC93C}
+body:has(#exam-studio) #exam-studio .studio-setting-row label{color:#1B1740}
+body:has(#exam-studio) .studio-setting-row select{background:#fff;color:#1B1740;border:1px solid #ACA4C7;border-radius:14px}
+body:has(#exam-studio) #studio-start{background:#4338CA;color:white;border-radius:16px}
+body:has(#exam-studio) #studio-loader{color:#514B70}
+body:has(#exam-studio) .studio-workspace{background:#FFF8EE;border-radius:23px}
+body:has(#exam-studio) .studio-answersheet{background:#2A2370;border-radius:20px}
+body:has(#exam-studio) .studio-choice{border-radius:17px;min-height:60px}
+body:has(#exam-studio) .level-grid button{background:#E4E1FB;color:#1B1740;border:2px solid #C7C2E9;border-radius:18px}
+body:has(#exam-studio) .level-grid button[aria-pressed="true"]{background:#FFC93C;color:#1B1740;border-color:#FFC93C}
+body:has(#exam-studio) .paper{background:#E4E1FB;color:#1B1740;border-color:#C7C2E9;border-radius:16px}
+body:has(#exam-studio) .section-overview>div{background:#E4E1FB;color:#1B1740;border-color:#C7C2E9}
+body:has(#exam-studio) .section-overview small{color:#514B70}
