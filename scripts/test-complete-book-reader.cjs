@@ -23,7 +23,7 @@ const server=spawn('python3',['-m','http.server',String(PORT),'--bind','127.0.0.
    assert(page.url().includes(expected),'Book should open directly, without another menu');
    await page.locator('#nsBookLanguage').waitFor({timeout:12000});
    assert.equal(await page.locator('.ns-book-toolbar').count(),1,'Japanese textbook toolbar must exist');
-   assert((await page.locator('#nsBookLanguage option').count())>=16,'Book should expose source language selector');
+   assert((await page.locator('#nsBookLanguage option').count())>=90,'Book should expose 90+ reader language selections');
    assert.equal(await page.locator('.ns-book-actions button').count(),3);
    assert.equal(await page.locator('body.ns-japanese-book').count(),1);
    const style=await page.evaluate(()=>getComputedStyle(document.querySelector('.workarea')).borderTopStyle);
