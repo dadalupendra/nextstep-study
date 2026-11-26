@@ -1,8 +1,8 @@
 /* NextStep Study PWA: cache only pages/assets a reader actually opens.
  * Avoid precaching several-megabyte book files. */
-const VERSION='nextstep-shell-v6';
+const VERSION='nextstep-shell-v7';
 const ROOT=new URL('./',self.registration.scope);
-const SHELL=[ROOT.href,new URL('index.html',ROOT).href,new URL('manifest.webmanifest',ROOT).href,new URL('icons/icon.svg',ROOT).href,new URL('daily/index.html',ROOT).href,new URL('daily/style.css?v=4',ROOT).href,new URL('daily/data.js?v=4',ROOT).href,new URL('daily/app.js?v=4',ROOT).href,new URL('daily/compounds.js?v=4',ROOT).href,new URL('daily/offline-ai.js?v=1',ROOT).href,new URL('kanji-3d/index.html',ROOT).href,new URL('kanji-3d/style.css?v=1',ROOT).href,new URL('kanji-3d/app.js?v=1',ROOT).href];
+const SHELL=[ROOT.href,new URL('index.html',ROOT).href,new URL('manifest.webmanifest',ROOT).href,new URL('icons/icon.svg',ROOT).href,new URL('daily/index.html',ROOT).href,new URL('daily/style.css?v=4',ROOT).href,new URL('daily/data.js?v=4',ROOT).href,new URL('daily/app.js?v=4',ROOT).href,new URL('daily/compounds.js?v=4',ROOT).href,new URL('daily/offline-ai.js?v=1',ROOT).href,new URL('kanji-3d/index.html',ROOT).href,new URL('kanji-3d/style.css?v=1',ROOT).href,new URL('kanji-3d/app.js?v=1',ROOT).href,new URL('exam-plus/index.html',ROOT).href,new URL('exam-plus/style.css?v=1',ROOT).href,new URL('exam-plus/app.js?v=2',ROOT).href,new URL('exam-plus/reference.js?v=1',ROOT).href];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(VERSION).then(c=>c.addAll(SHELL)).then(()=>self.skipWaiting()));});
 self.addEventListener('activate',event=>{event.waitUntil(Promise.all([caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('nextstep-shell-')&&k!==VERSION).map(k=>caches.delete(k)))),self.clients.claim()]));});
 self.addEventListener('fetch',event=>{
