@@ -238,7 +238,16 @@ async function load(){
  url.searchParams.set('level',level);history.replaceState(null,'',url.pathname+url.search);
  try{
   loaded=await API.load(level);cards=API.dayCards(level,day,loaded,10);readProgress();render();
-  $('ready').hidden=false;$('status').hidden=true
+  $('ready').hidden=false;$('status').hidden=true;
+  if(url.searchParams.get('ai')==='1'){
+    const kanji=cards.find(item=>item.type==='kanji')||cards[0];
+    if(kanji){
+      openDetails(kanji);
+      requestAnimationFrame(()=>document.getElementById('offlineAI')?.scrollIntoView({block:'nearest',behavior:'instant'}));
+    }
+    url.searchParams.delete('ai');
+    history.replaceState(null,'',url.pathname+url.search);
+  }
  }catch(e){
   loaded=null;$('status').className='placeholder';$('status').replaceChildren();
   $('status').append(text('strong','⚠ Study source unavailable'),text('p',e.message),text('p','No duplicate or demo entries were added. Check your connection and retry.'));
