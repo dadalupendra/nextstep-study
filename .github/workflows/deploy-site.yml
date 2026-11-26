@@ -7,6 +7,11 @@ on:
       - 'index.html'
       - 'unified-theme.css'
       - 'mobile-app/**'
+      - 'onboarding/**'
+      - 'auth/**'
+      - 'account/**'
+      - 'admin-users/**'
+      - 'scripts/test-onboarding.cjs'
       - 'daily/**'
       - 'kanji-3d/**'
       - 'scripts/test-kanji-3d.cjs'
@@ -126,13 +131,20 @@ jobs:
           mkdir -p public-site/icons
           cp icons/icon.svg public-site/icons/
           cp -R install public-site/
-          cp -R mobile-app study-hub native-privacy daily kanji-3d public-site/
+          cp -R mobile-app study-hub native-privacy daily kanji-3d onboarding auth account admin-users public-site/
           test -s public-site/kanji-3d/index.html
           node --check kanji-3d/app.js
           test -s public-site/daily/index.html
           node --check daily/app.js
           node --check daily/data.js
           test -s public-site/mobile-app/index.html
+          test -s public-site/onboarding/index.html
+          test -s public-site/auth/client.js
+          test -s public-site/account/index.html
+          test -s public-site/admin-users/index.html
+          node --check public-site/onboarding/app.js
+          node --check public-site/auth/client.js
+          node --check public-site/admin-users/app.js
           test -s public-site/study-hub/index.html
           mkdir -p public-site/feedback/admin
           cp feedback/index.html feedback/feedback.css feedback/feedback.js feedback/feedback-upgrade.js feedback/feedback-buttons.js public-site/feedback/
@@ -190,6 +202,9 @@ jobs:
 
       - name: Verify direct Complete Books navigation and Japanese textbook reader for all levels
         run: node scripts/test-complete-book-reader.cjs public-site
+
+      - name: Check first-run welcome, personalization and account security without fake logins
+        run: node scripts/test-onboarding.cjs public-site
 
       - name: Test 3D vocabulary POS categories and related words in all five Library levels
         run: node scripts/test-library-vocabulary-3d.cjs public-site
