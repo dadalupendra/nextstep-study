@@ -66,7 +66,7 @@ function applyLevelLayout(level){
   if(CACHE.has(level))return CACHE.get(level);
   const res=await fetch(endpoint(level),{cache:'force-cache'});if(!res.ok)throw Error('Vocabulary download failed ('+res.status+').');
   const data=await res.json();if(!Array.isArray(data))throw Error('Invalid vocabulary data.');
-  const cleaned=data.filter(w=>w&&typeof w.word==='string'&&typeof w.reading==='string'&&w.reading.trim()&&w.word.trim()&&w.word!==w.reading&&!kana.test(w.word)).map(w=>({word:w.word,reading:w.reading,meaning:Array.isArray(w.meanings)?String(w.meanings[0]||''):'',example:Array.isArray(w.examples)?String((w.examples.find(e=>e&&typeof e.ja==='string'&&e.ja.includes(w.word))||{}).ja||''):''}));
+  const cleaned=data.filter(w=>w&&typeof w.word==='string'&&typeof w.reading==='string'&&w.reading.trim()&&w.word.trim()&&w.word!==w.reading&&!kana.test(w.word)).map(w=>({word:w.word,reading:w.reading,meaning:Array.isArray(w.meanings)?String(w.meanings[0]||''):'',example:Array.isArray(w.examples)?String((w.examples.find(e=>e&&typeof e.ja==='string'&&e.ja.includes(w.word)&&/[。！？!?]$/.test(e.ja.trim()))||{}).ja||''):''})).filter(w=>w.example&&w.example.length>=9);
   const dedup=new Map();for(const w of cleaned){const id=w.word;if(!dedup.has(id))dedup.set(id,w);}
   const vocabulary=[...dedup.values()];if(vocabulary.length<94)throw Error('Not enough verified kanji-reading items for this level: '+vocabulary.length+'.');
   CACHE.set(level,vocabulary);return vocabulary;
