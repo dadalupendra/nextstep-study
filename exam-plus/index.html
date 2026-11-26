@@ -1,0 +1,32 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#39af9c">
+<title>NAT-TEST · JFT-Basic · BJT Japanese Books & Practice | NextStep Study</title>
+<meta name="description" content="Independent Japanese language study books and original quizzes for NAT-TEST 1Q–5Q, JFT-Basic and Business Japanese BJT, with Japanese, English and Nepali explanations.">
+<link rel="stylesheet" href="./style.css?v=1"></head><body>
+<header class="top"><div class="top-inner"><a href="../exams/" class="back">← Full Test</a><strong>NextStep Study</strong><span>📖 Study Books</span></div><h1>NAT · JFT · BJT</h1><p>日本語学習ブック & Original Practice Questions</p></header>
+<main>
+<nav class="categories" id="categories" aria-label="Select Japanese exam">
+<button type="button" data-exam="NAT" aria-pressed="true">📘 NAT-TEST</button>
+<button type="button" data-exam="JFT" aria-pressed="false">🌿 JFT-Basic</button>
+<button type="button" data-exam="BJT" aria-pressed="false">💼 BJT</button>
+</nav>
+<section id="intro" class="intro" aria-live="polite"></section>
+<div id="levelRow" class="level-row" aria-label="Choose NAT-TEST level"></div>
+<div class="work-tabs" role="tablist" aria-label="Choose study book or practice test">
+<button id="bookTab" type="button" role="tab" aria-selected="true">📚 Complete Study Book</button>
+<button id="quizTab" type="button" role="tab" aria-selected="false">📝 Practice Questions</button>
+</div>
+<div class="tools"><label>🌐 Explanation <select id="language"><option value="ja">日本語</option><option value="en">English</option><option value="ne">नेपाली</option></select></label>
+<button type="button" id="furi" aria-pressed="true">ふりがな ON</button><button type="button" id="saveBook">🖨 Print / Save PDF</button></div>
+<div id="status" role="status" aria-live="polite">Loading original study materials…</div>
+<section id="book" class="book" aria-label="Japanese textbook"><div id="contents" class="contents"></div><div id="chapters" class="chapters"></div></section>
+<section id="quiz" class="quiz" hidden aria-label="Original Japanese practice questions">
+<div class="quiz-head"><div id="quizCount"></div><button id="retry" type="button">↻ Restart practice</button></div>
+<div class="progress"><div id="progressBar"></div></div>
+<div id="question" aria-live="polite"></div>
+<div id="questionControls" class="question-controls"><button id="previous" type="button">← Previous</button><button id="next" type="button">Next →</button><button id="finish" type="button">Finish practice</button></div>
+<div id="results" hidden></div>
+</section>
+<p class="disclaimer">This is independently written practice, not an official exam paper. Questions are short starter sets, not full NAT/JFT/BJT simulations. Listening-style practice uses optional device speech, not original recordings. Results are local practice accuracy, never official scaled scores or pass predictions. Some language pairs and device voices may not be supported.</p>
+</main>
+<footer>NextStep Study · Independent Japanese learning · <a href="../">Home</a></footer>
+<script src="../mobile-app/translate.js" defer></script><script src="./app.js?v=1" defer></script></body></html>
