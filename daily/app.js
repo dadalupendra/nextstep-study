@@ -245,6 +245,41 @@ async function load(){
   const retry=text('button','↻ Retry','action');retry.onclick=load;$('status').append(retry)
  }
 }
+
+async function prepareOffline(){
+ const button=$('saveOffline'),status=$('offlineStatus');
+ if(!('caches'in window)){status.textContent='This browser does not support offline caching.';return}
+ button.disabled=true;
+ const base=new URL('./',location.href);
+ const relative=[
+  'index.html','style.css?v=4','data.js?v=4','app.js?v=4','compounds.js?v=4','offline-ai.js?v=1',
+  '../mobile-app/translate.js?v=2',
+  '../'+level+'/data/kanji.json',
+  level==='N2'?'../N2/data.js':'../'+level+'/data/vocab.json'
+ ];
+ // Cache all possible level-specific entry URLs, but only the selected level's
+ // large study data files. A device can download more levels when chosen.
+ for(const lv of LEVELS)relative.push('?level='+lv);
+ let success=0,failed=[];
+ try{
+  const store=await caches.open('nextstep-shell-v5');
+  for(const path of relative){
+   const url=new URL(path,base);
+   try{
+    const response=await fetch(url,{cache:'no-cache'});
+    if(!response.ok)throw Error('HTTP '+response.status);
+    await store.put(url,response.clone());success++;
+   }catch(error){failed.push(path)}
+   status.textContent='Saving offline files: '+success+'/'+relative.length+'…';
+  }
+  const essential=['index.html','style.css?v=4','data.js?v=4','app.js?v=4','compounds.js?v=4','offline-ai.js?v=1','../'+level+'/data/kanji.json',level==='N2'?'../N2/data.js':'../'+level+'/data/vocab.json'];
+  const done=essential.every(path=>!failed.includes(path));
+  status.textContent=done?'✅ '+level+' offline pack saved ('+success+' files). Open this page once while online; use it offline after caching.':
+   '⚠ Some required files were not cached ('+failed.join(', ')+'). Please retry with internet.';
+ }catch(error){status.textContent='Offline cache unavailable: '+error.message}
+ finally{button.disabled=false}
+}
+
 function init(){
  for(const code of CODES){const opt=document.createElement('option');opt.value=code;opt.textContent=(NAMES[code]||getName(code))+' ('+code+')';$('lang').append(opt)}
  applyPrefs();
@@ -257,6 +292,7 @@ function init(){
  $('close').onclick=()=>$('detail').close();
  $('detail').addEventListener('click',e=>{if(e.target===$('detail'))$('detail').close()});
  $('translate').onclick=translateCurrent;$('speak').onclick=speak;
+ $('saveOffline').onclick=prepareOffline;
  if(window.NextStepOfflineAI)window.NextStepOfflineAI.initialize();
  if('serviceWorker'in navigator)navigator.serviceWorker.register('../sw.js',{scope:'../'}).catch(()=>{});
  load()
