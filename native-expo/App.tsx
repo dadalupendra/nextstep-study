@@ -86,7 +86,7 @@ const NAV:{key:Tab;label:string;icon:IconComponent}[] = [
   {key:'Planner',label:'Planner',icon:CalendarDays},{key:'Stats',label:'Stats',icon:ChartColumn},
   {key:'Profile',label:'Profile',icon:UserRound}
 ];
-function ProgressRing({progress,size=104,onDark=false}:{progress:number;size?:number;onDark?:boolean}) {
+function ProgressRing({progress,size=104,onDark=false,label}:{progress:number;size?:number;onDark?:boolean;label?:string}) {
   const stroke=11,center=size/2,r=(size-stroke)/2-3,circ=2*Math.PI*r;
   return <View style={{width:size,height:size,alignItems:'center',justifyContent:'center'}}>
     <Svg width={size} height={size}>
@@ -97,7 +97,7 @@ function ProgressRing({progress,size=104,onDark=false}:{progress:number;size?:nu
         rotation={-90} originX={center} originY={center}/>
     </Svg>
     <Text style={{position:'absolute',fontFamily:'Poppins_700Bold',fontSize:size>180?36:24,
-      color:onDark?PALETTE.white:PALETTE.ink}}>{Math.round(progress*100)}%</Text>
+      color:onDark?PALETTE.white:PALETTE.ink}}>{label||String(Math.round(progress*100))+'%'}</Text>
   </View>;
 }
 function Field({label,value,onChange,placeholder,multiline=false,theme}:{label:string;value:string;onChange:(v:string)=>void;placeholder?:string;multiline?:boolean;theme:any}) {
@@ -316,10 +316,7 @@ export default function App() {
           </Text></Pressable>)}
       </View>
       <View style={{marginVertical:10}}>
-        <ProgressRing progress={pct} size={236} onDark/>
-        <View style={{position:'absolute',alignSelf:'center',top:136}}>
-          <Text style={font(27,'bold',PALETTE.white)}>{time}</Text>
-        </View>
+        <ProgressRing progress={pct} size={236} onDark label={time}/>
       </View>
       <Text style={[font(13,'semi',PALETTE.white),{marginVertical:8}]}>Session {(doneToday%4)+1} of 4</Text>
       <View style={{flexDirection:'row',gap:9,marginBottom:21}}>
@@ -628,7 +625,7 @@ export default function App() {
   return <View style={{flex:1,backgroundColor:theme.bg,paddingTop:Platform.OS==='android'?(NativeStatusBar.currentHeight||24):52}}>
     <StatusBar style={data.dark?'light':'dark'} backgroundColor={theme.bg}/>
     <ScrollView key={tab+'-'+tool} keyboardShouldPersistTaps="handled" contentContainerStyle={{paddingHorizontal:17,paddingTop:13,paddingBottom:110,maxWidth:760,width:'100%',alignSelf:'center'}}>
-      {tab==='Home'?<HomeView/>:tab==='Study'?<StudyView/>:tab==='Planner'?<PlannerView/>:tab==='Stats'?<StatsView/>:<ProfileView/>}
+      {tab==='Home'?HomeView():tab==='Study'?StudyView():tab==='Planner'?PlannerView():tab==='Stats'?StatsView():ProfileView()}
     </ScrollView>
     <View style={{flexDirection:'row',backgroundColor:theme.card,borderTopLeftRadius:27,borderTopRightRadius:27,
       paddingBottom:Platform.OS==='ios'?20:10,paddingTop:8,paddingHorizontal:5,position:'absolute',bottom:0,left:0,right:0,
@@ -647,6 +644,6 @@ export default function App() {
     </View>
     {!!toast&&<View accessible accessibilityRole="alert" style={{position:'absolute',bottom:91,alignSelf:'center',backgroundColor:PALETTE.deep,paddingHorizontal:17,paddingVertical:11,borderRadius:15}}>
       <Text style={font(12,'semi',PALETTE.white)}>{toast}</Text></View>}
-    <FormView/><PrivacyView/>
+    {FormView()}{PrivacyView()}
   </View>;
 }
