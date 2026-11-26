@@ -15,10 +15,10 @@
 <button id="bookTab" type="button" role="tab" aria-selected="true">📚 Study Book</button>
 <button id="quizTab" type="button" role="tab" aria-selected="false">📝 Practice Questions</button>
 </div>
-<div class="tools"><label>🌐 Explanation <select id="language"><option value="ja">日本語</option><option value="en">English</option><option value="ne">नेपाली</option></select></label>
+<div class="tools"><label for="language">🌐 Explanation language</label><select id="language" aria-label="Choose explanation language"><option value="ja">日本語</option><option value="en">English</option><option value="ne">नेपाली</option></select><button type="button" id="translatePage">🌍 Translate current chapter</button>
 <button type="button" id="saveBook">🖨 Print / Save PDF</button></div>
 <div id="status" role="status" aria-live="polite">Loading original study materials…</div>
-<section id="book" class="book" aria-label="Japanese textbook"><div id="contents" class="contents"></div><div id="chapters" class="chapters"></div></section>
+<section id="book" class="book" aria-label="Japanese textbook"><div id="contents" class="contents"></div><nav class="book-pager" aria-label="Textbook chapter pages"><button id="bookPrev" type="button">← Previous chapter</button><span id="bookPageNumber" role="status" aria-live="polite"></span><button id="bookNext" type="button">Next chapter →</button></nav><div id="chapters" class="chapters"></div><nav class="book-pager" aria-label="Next textbook chapter"><button id="bookPrevBottom" type="button">← Previous</button><button id="bookNextBottom" type="button">Next chapter →</button></nav></section>
 <section id="quiz" class="quiz" hidden aria-label="Original Japanese practice questions">
 <div class="quiz-head"><div id="quizCount"></div><button id="retry" type="button">↻ Restart practice</button></div>
 <div class="progress"><div id="progressBar"></div></div>
