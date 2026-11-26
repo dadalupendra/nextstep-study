@@ -93,7 +93,7 @@ function ProgressRing({progress,size=104,onDark=false,label}:{progress:number;si
     <Svg width={size} height={size}>
       <Circle cx={center} cy={center} r={r} fill="none" stroke={onDark?'#FFFFFF55':'#E4E1FB'} strokeWidth={stroke}/>
       <Circle cx={center} cy={center} r={r} fill="none" stroke={PALETTE.yellow}
-        strokeWidth={stroke} strokeLinecap="round" strokeDasharray={circ}
+        strokeWidth={stroke} strokeLinecap="round" strokeDasharray={[circ,circ]}
         strokeDashoffset={circ*(1-Math.min(1,Math.max(0,progress)))}
         rotation={-90} originX={center} originY={center}/>
     </Svg>
@@ -281,7 +281,7 @@ export default function App() {
             <Text style={font(20,'bold',PALETTE.ink)}>{lv}</Text>
             <Text style={font(11,'semi',PALETTE.ink)}>{minText(n)}</Text>
             <View style={{height:8,backgroundColor:'#1B174030',borderRadius:8,overflow:'hidden',marginTop:10}}>
-              <View style={{width:String(Math.min(100,Math.round(n/300*100)))+'%',height:8,backgroundColor:PALETTE.indigo}}/>
+              <View style={{width:(Math.min(100,Math.round(n/300*100))+'%') as `${number}%`,height:8,backgroundColor:PALETTE.indigo}}/>
             </View>
             <Text style={font(10,'semi',PALETTE.ink)}>Open lessons ↗</Text>
           </Pressable>
@@ -528,7 +528,7 @@ export default function App() {
               <Text style={font(12,'semi')}>{name}</Text><Text style={font(12,'semi',theme.muted)}>{minText(min)}</Text>
             </View>
             <View style={{height:9,marginTop:7,backgroundColor:theme.pale,borderRadius:9}}>
-              <View style={{width:String(Math.min(100,Math.round(min/Math.max(1,weekMinutes)*100)))+'%',height:9,backgroundColor:PALETTE.indigo,borderRadius:9}}/>
+              <View style={{width:(Math.min(100,Math.round(min/Math.max(1,weekMinutes)*100))+'%') as `${number}%`,height:9,backgroundColor:PALETTE.indigo,borderRadius:9}}/>
             </View>
           </View>)}
       </View>
