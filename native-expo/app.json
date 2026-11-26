@@ -1,0 +1,25 @@
+{
+  "expo": {
+    "name": "NextStep Study",
+    "slug": "nextstep-study",
+    "scheme": "nextstepstudy",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.nextstepstudy.mobile"
+    },
+    "android": {
+      "package": "com.nextstepstudy.mobile",
+      "edgeToEdgeEnabled": true
+    },
+    "plugins": [
+      "expo-secure-store"
+    ],
+    "extra": {
+      "privacyPolicy": "https://dadalupendra.github.io/nextstep-study/native-privacy/"
+    }
+  }
+}
