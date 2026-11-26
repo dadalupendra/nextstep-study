@@ -210,8 +210,8 @@ function openDetails(card){
  $('translate').textContent='🌍 Explain everything in '+(NAMES[language]||getName(language));
  $('translated').hidden=true;$('translated').textContent='';
  if(!$('detail').open)$('detail').showModal();
- // Tap a word and receive its explanation automatically in the chosen language.
- if(language!=='en')translateCurrent();
+ // Offline AI starts with source-backed facts. Online translation is only on explicit request.
+ if(language!=='en'&&!navigator.onLine){$('translated').hidden=false;$('translated').textContent='Offline mode: use the AI Teacher below for local explanations. The separate machine-translation service needs internet.'}
 }
 async function translateCurrent(){
  if(!current)return;
