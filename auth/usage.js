@@ -1,7 +1,11 @@
 (function(){'use strict';
 if(!window.NextStepAuth?.configured?.())return;
 if(localStorage.getItem('nextstep-profile-activity-consent')!=='yes')return;
-// One consented activity timestamp per device per 12h, while signed in.
+// Refresh after a date change or twelve hours of signed-in activity.
 // Anonymous/guest traffic is not collected here.
-window.NextStepAuth.markActivity().catch(()=>{});
+function recordVisit(){
+ if(document.visibilityState==='visible')window.NextStepAuth.markActivity().catch(()=>{});
+}
+recordVisit();
+document.addEventListener('visibilitychange',recordVisit);
 })();
