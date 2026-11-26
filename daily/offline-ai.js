@@ -91,7 +91,7 @@ async function modelReply(question){
  if(!state.session)state.session=await global.LanguageModel.create();
  const prompt=[
  'You are a Japanese study teacher. Only use the supplied trusted lesson facts. Never invent a dictionary definition, reading, grammar fact, or example sentence. If a fact is absent, say so.',
- 'Reply in '+(state.lang==='ne'?'Nepali':state.lang==='ja'?'Japanese':state.lang==='en'?'English':'the user-selected language ('+state.lang+')')+' where the on-device model supports it.',
+ 'Reply in '+(state.lang==='ne'?'Nepali':state.lang==='ja'?'Japanese':state.lang==='en'?'English':(new Intl.DisplayNames(['en'],{type:'language'}).of(state.lang)||state.lang))+' where the on-device model supports it. If unsupported, reply in clear English.',
  'Keep original Japanese and example sentences unchanged.',
  'LESSON FACTS:\n'+currentFacts(),
  'STUDENT QUESTION:\n'+question.slice(0,400),
@@ -117,13 +117,13 @@ function record(question,answer){
  }catch{}
 }
 function select(card,{level,language,related=[],progress={}}={}){
- state.card=card;state.level=level||state.level;state.lang=['ne','en','ja'].includes(language)?language:'en';state.related=related;state.progress=progress;
+ state.card=card;state.level=level||state.level;state.lang=language||'en';state.related=related;state.progress=progress;
  const topic=$$('aiTopic');if(topic)topic.textContent='📖 '+name(card)+' · '+state.level;
  const answer=$$('aiAnswer');if(answer)answer.textContent=t('offline');
  refreshLabels();
 }
 function setRelated(words){state.related=Array.isArray(words)?words:[]}
-function setLanguage(language){state.lang=['ne','en','ja'].includes(language)?language:'en';refreshLabels()}
+function setLanguage(language){state.lang=language||'en';refreshLabels()}
 function refreshLabels(){
  const h=$$('aiTitle');if(h)h.textContent=t('heading');
  const intro=$$('aiIntro');if(intro)intro.textContent=t('intro');
