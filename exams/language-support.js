@@ -5,7 +5,6 @@
 const codes='ne en ja hi bn zh-CN ko fr es de ar th vi id pt ru it tr uk pl nl sv fi da no el he fa ur ta te mr gu pa ms sw fil my km lo af sq am hy az eu be bs bg ca hr cs et gl ka ht hu is ig ga jv kk ku ky lv lt mk mn ps ro sr sk sl so su tg uz cy zu yo xh si or as tk fy lb mt ny st sd yi ceb'.split(' ');
 const names={ne:'नेपाली',en:'English',ja:'日本語',hi:'हिन्दी',bn:'বাংলা','zh-CN':'中文',ko:'한국어',ar:'العربية',ur:'اردو',ta:'தமிழ்',te:'తెలుగు'};
 const STORE='nextstep-unified-prefs',CACHE='nextstep-exam-translations-v1';
-const esc=s=>String(s??'').replace(/[&<>"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;':'&quot;'}[ch]));
 let prefs={};try{prefs=JSON.parse(localStorage.getItem(STORE)||'{}')||{}}catch{}
 let lang=prefs.lang&&codes.includes(prefs.lang)?prefs.lang:'ne',cache={};try{cache=JSON.parse(localStorage.getItem(CACHE)||'{}')||{}}catch{}
 const displayName=code=>{try{return new Intl.DisplayNames(['en'],{type:'language'}).of(code)||code}catch{return code}};
