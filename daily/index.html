@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#FFF8EE">
+<meta name="description" content="NextStep Study daily JLPT N1–N5 Japanese Kanji and vocabulary with 3D flashcards, full explanations and multilingual translation.">
+<title>NextStep Study · Daily 3D Kanji & Vocabulary</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css?v=2">
+</head><body>
+<header class="header"><a class="logo" href="../">📚 NextStep Study</a>
+<nav aria-label="Study navigation"><a class="navlink" href="../mobile-app/learn.html">📖 JLPT Library</a></nav></header>
+<main class="container">
+<section class="hero"><span class="eyebrow">✨ YOUR DAILY JAPANESE COLLECTION</span>
+<h1>🧊 3D Kanji & Vocabulary</h1>
+<p>Learn real Japanese words every day. Tap to flip a card, open its complete dictionary details, and read explanations in your selected language. No multiple-choice questions.</p>
+</section>
+<section class="controls" aria-label="Daily study settings">
+<label>🎓 JLPT Level<select id="level"><option>N5</option><option>N4</option><option>N3</option><option>N2</option><option>N1</option></select></label>
+<label>🌍 Translation language<select id="lang" aria-label="Language used for detailed explanations"></select></label>
+<label>📚 Show<select id="filter"><option value="all">Kanji + Vocabulary</option><option value="kanji">Kanji only</option><option value="vocab">Vocabulary only</option><option value="pending">Not learned yet</option></select></label>
+<button class="action light" type="button" id="theme" aria-label="Toggle dark and light mode">🌙 Dark mode</button>
+<button class="action" type="button" id="furigana" aria-pressed="true">ふりがな ON</button>
+</section>
+<div id="status" class="loader" role="status" aria-live="polite">Loading level-specific Japanese study sources…</div>
+<div id="ready" hidden>
+<div class="summary" aria-label="Daily progress"><span class="stat" id="day"></span><span class="stat" id="count"></span><span class="stat" id="learned"></span><span class="stat" id="streak"></span></div>
+<section id="kanjiSection" aria-labelledby="kanjiTitle"><div class="section-head"><h2 id="kanjiTitle">🈶 Today's Kanji</h2><small>Click Flip or Details for a complete explanation</small></div><div class="tiles" id="kanjiCards"></div></section>
+<section id="vocabSection" aria-labelledby="vocabTitle"><div class="section-head"><h2 id="vocabTitle">🗾 Today's Vocabulary</h2><small>Reading, meanings, word class and example sentences</small></div><div class="tiles" id="vocabCards"></div></section>
+<p class="note">✅ Learn 10 Kanji + 10 Vocabulary each day (Japan calendar). Real level-specific source data only; no invented cards or duplicate entries within a day. Daily completion is stored only in this browser. These are educational study lists, not an official JLPT item list.</p>
+</div>
+<dialog id="detail" aria-label="Kanji or vocabulary complete details"><div class="detail-top"><strong id="detailLabel">Study entry</strong><button class="action light" id="close" type="button">✕ Close</button></div>
+<div id="detailBody"></div>
+<div class="modal-actions"><button class="action indigo" id="translate" type="button">🌍 Translate full explanation</button><button class="action light" type="button" id="speak">🔉 Japanese pronunciation</button></div>
+<div id="translated" class="translation-result" role="status" aria-live="polite" hidden></div>
+</dialog>
+</main><footer class="footer">NextStep Study · Original Japanese source and license information preserved with the existing N1–N5 study books.</footer>
+<script src="./data.js?v=2" defer></script>
+<script src="../mobile-app/translate.js?v=2" defer></script>
+<script src="./app.js?v=2" defer></script>
+</body></html>
