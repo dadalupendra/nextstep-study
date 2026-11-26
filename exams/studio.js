@@ -29,7 +29,24 @@ function renderSheet(){
   const b=document.createElement('button');b.type='button';b.textContent=String(i+1);b.setAttribute('aria-label','Question '+(i+1));
   b.title=typeOf(state.questions[i])+(state.flagged[i]?' • Flagged':'');
   b.className='studio-number'+(i===state.index?' current':'')+(state.answers[i]!==undefined?' answered':'')+(state.flagged[i]?' flagged':'');
-  b.addEventListener('click',()=>position(i));buttons.append(b);
+  b.addEventListener('click',()=>position(i));
+  const row=document.createElement('div');row.className='ns-sheet-row';
+  row.append(b);
+  for(let j=0;j<4;j++){
+   const chip=document.createElement('span');chip.className='ns-sheet-choice';
+   const selected=state.answers[i]===j;
+   if(selected)chip.classList.add('selected');
+   if(state.submitted&&j===state.questions[i].answer)chip.classList.add('correct');
+   if(state.submitted&&selected&&j!==state.questions[i].answer)chip.classList.add('wrong');
+   chip.textContent=String(j+1);chip.setAttribute('role','button');chip.tabIndex=state.submitted?-1:0;
+   chip.setAttribute('aria-label','Question '+(i+1)+' choice '+(j+1));
+   chip.setAttribute('aria-pressed',String(selected));
+   if(!state.submitted){const select=()=>{state.answers[i]=j;save();position(i)};
+     chip.addEventListener('click',select);
+     chip.addEventListener('keydown',ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();select()}});}
+   row.append(chip);
+  }
+  buttons.append(row);
  }
  $('studio-progress').textContent='Answered '+count()+'/'+state.questions.length;
  $('studio-progressbar').value=count();$('studio-progressbar').max=state.questions.length;
