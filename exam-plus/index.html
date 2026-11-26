@@ -1,25 +1,21 @@
 <!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#39af9c">
-<title>NAT-TEST · JFT-Basic · BJT Japanese Books & Practice | NextStep Study</title>
+<title>Japanese Study Book | NextStep Study</title>
 <meta name="description" content="Independent Japanese language study books and original quizzes for NAT-TEST 1Q–5Q, JFT-Basic and Business Japanese BJT, with Japanese, English and Nepali explanations.">
 <link rel="stylesheet" href="./style.css?v=1"></head><body>
-<header class="top"><div class="top-inner"><a href="../exams/" class="back">← Full Test</a><strong>NextStep Study</strong><span>📖 Study Books</span></div><h1>NAT · JFT · BJT</h1><p>日本語学習ブック & Original Practice Questions</p></header>
+<header class="top"><div class="top-inner"><a href="../exams/" class="back">← Full Test</a><strong>NextStep Study</strong><span>📖 Study Books</span></div><h1 id="examTitle">Japanese Study Book</h1><p>日本語学習ブック & Original Practice Questions</p></header>
 <main>
-<nav class="categories" id="categories" aria-label="Select Japanese exam">
-<button type="button" data-exam="NAT" aria-pressed="true">📘 NAT-TEST</button>
-<button type="button" data-exam="JFT" aria-pressed="false">🌿 JFT-Basic</button>
-<button type="button" data-exam="BJT" aria-pressed="false">💼 BJT</button>
-</nav>
+
 <section id="intro" class="intro" aria-live="polite"></section>
 <div id="levelRow" class="level-row" aria-label="Choose NAT-TEST level"></div>
 <div class="work-tabs" role="tablist" aria-label="Choose study book or practice test">
 <button id="bookTab" type="button" role="tab" aria-selected="true">📚 Study Book</button>
-<button id="refTab" type="button" role="tab" aria-selected="false">📖 600-Word Reference</button><button id="quizTab" type="button" role="tab" aria-selected="false">📝 Practice Questions</button>
+<button id="quizTab" type="button" role="tab" aria-selected="false">📝 Practice Questions</button>
 </div>
 <div class="tools"><label for="language">🌐 Explanation language</label><select id="language" aria-label="Choose explanation language"><option value="ja">日本語</option><option value="en">English</option><option value="ne">नेपाली</option></select><button type="button" id="translatePage">🌍 Translate current chapter</button>
 <button type="button" id="saveBook">🖨 Print / Save PDF</button></div>
 <div id="status" role="status" aria-live="polite">Loading original study materials…</div>
 <section id="book" class="book" aria-label="Japanese textbook"><div id="contents" class="contents"></div><nav class="book-pager" aria-label="Textbook chapter pages"><button id="bookPrev" type="button">← Previous chapter</button><span id="bookPageNumber" role="status" aria-live="polite"></span><button id="bookNext" type="button">Next chapter →</button></nav><div id="chapters" class="chapters"></div><nav class="book-pager" aria-label="Next textbook chapter"><button id="bookPrevBottom" type="button">← Previous</button><button id="bookNextBottom" type="button">Next chapter →</button></nav></section>
-<section id="reference" class="book" hidden aria-label="Source-backed supplementary vocabulary pages"><h2 id="referenceTitle">📖 600-Word Reference</h2><p id="referenceIntro" class="disclaimer">General Japanese vocabulary from the existing NextStep JLPT sources, not official NAT/JFT/BJT vocabulary or a complete 600-page specialized textbook.</p><div class="reference-tools"><label for="referenceSearch">🔎 Search word / reading / English meaning</label><input type="search" id="referenceSearch" placeholder="例: 学校 / がっこう / school" autocomplete="off"></div><div id="referenceStatus" role="status">Choose the reference tab to load source vocabulary.</div><div id="referencePage"></div><nav class="book-pager" aria-label="Vocabulary reference pages"><button id="referencePrev" type="button">← Previous</button><span id="referenceIndex" role="status"></span><button id="referenceNext" type="button">Next →</button></nav></section>
+<section id="reference" class="book" hidden aria-label="General JLPT vocabulary appendix, not an exam-specific book"><h2 id="referenceTitle">📖 600-Word Reference</h2><p id="referenceIntro" class="disclaimer">General Japanese vocabulary from the existing NextStep JLPT sources, not official NAT/JFT/BJT vocabulary or a complete 600-page specialized textbook.</p><div class="reference-tools"><label for="referenceSearch">🔎 Search word / reading / English meaning</label><input type="search" id="referenceSearch" placeholder="例: 学校 / がっこう / school" autocomplete="off"></div><div id="referenceStatus" role="status">Choose the reference tab to load source vocabulary.</div><div id="referencePage"></div><nav class="book-pager" aria-label="Vocabulary reference pages"><button id="referencePrev" type="button">← Previous</button><span id="referenceIndex" role="status"></span><button id="referenceNext" type="button">Next →</button></nav></section>
 <section id="quiz" class="quiz" hidden aria-label="Original Japanese practice questions">
 <div class="quiz-head"><div id="quizCount"></div><button id="retry" type="button">↻ Restart practice</button></div>
 <div class="progress"><div id="progressBar"></div></div>
