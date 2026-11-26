@@ -6,7 +6,7 @@
 <title>NextStep Study · Daily 3D Kanji & Vocabulary</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./style.css?v=2">
+<link rel="stylesheet" href="./style.css?v=4">
 </head><body>
 <header class="header"><a class="logo" href="../">📚 NextStep Study</a>
 <nav aria-label="Study navigation"><a class="navlink" href="../mobile-app/learn.html">📖 JLPT Library</a></nav></header>
@@ -33,10 +33,23 @@
 <div id="detailBody"></div>
 <div class="modal-actions"><button class="action indigo" id="translate" type="button">🌍 Translate full explanation</button><button class="action light" type="button" id="speak">🔉 Japanese pronunciation</button></div>
 <div id="translated" class="translation-result" role="status" aria-live="polite" hidden></div>
+<section id="offlineAI" class="offline-ai" aria-labelledby="aiTitle">
+<h3 id="aiTitle">🧠 Offline AI Teacher</h3>
+<p id="aiIntro">Ask about this Kanji or word. Answers use local JLPT sources.</p>
+<div class="ai-state"><span class="ai-dot" aria-hidden="true"></span><span id="aiStatus" role="status" aria-live="polite">Checking device AI capability…</span></div>
+<div class="ai-topic" id="aiTopic">Select a Kanji or Vocabulary item</div>
+<div class="ai-quick" id="aiQuick" aria-label="Common study questions"></div>
+<label class="ai-label" for="aiQuestion">Ask your Japanese teacher</label>
+<div class="ai-question-row"><input id="aiQuestion" type="text" maxlength="400" autocomplete="off" placeholder="Explain how to use this word"><button type="button" class="action indigo" id="aiAsk">Ask offline</button></div>
+<button id="aiEnable" class="action" type="button" hidden>Enable on-device AI</button>
+<pre id="aiAnswer" class="ai-answer" aria-live="polite" role="status">Select a Japanese word to get started.</pre>
+<p class="small" id="aiPrivacy">No question is sent to our server or external AI API. A browser-native language model works only on supported devices after its one-time download; other devices get source-backed offline responses.</p>
+</section>
 </dialog>
 </main><footer class="footer">NextStep Study · Original Japanese source and license information preserved with the existing N1–N5 study books.</footer>
-<script src="./data.js?v=2" defer></script>
+<script src="./data.js?v=4" defer></script>
 <script src="../mobile-app/translate.js?v=2" defer></script>
-<script src="./compounds.js?v=3" defer></script>
-<script src="./app.js?v=3" defer></script>
+<script src="./compounds.js?v=4" defer></script>
+<script src="./offline-ai.js?v=1" defer></script>
+<script src="./app.js?v=4" defer></script>
 </body></html>
