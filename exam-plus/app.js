@@ -8,7 +8,7 @@ let exam=EXAMS.includes((params.get('exam')||'').toUpperCase())?params.get('exam
 let level=LEVELS.includes((params.get('level')||'').toUpperCase())?params.get('level').toUpperCase():'5Q';
 let mode=['book','quiz'].includes(params.get('mode'))?params.get('mode'):'book';
 let lang=['ja','en','ne'].includes(params.get('lang'))?params.get('lang'):'ja';
-let furigana=true,books=null,bank=null,position=0,answers={},all=[],finished=false;
+let books=null,bank=null,position=0,answers={},all=[],finished=false;
 const make=(tag,className,value)=>{const x=document.createElement(tag);if(className)x.className=className;if(value!==undefined)x.textContent=String(value);return x};
 const key=()=>exam+'|'+(exam==='NAT'?level:'');
 const activeBooks=()=>books?.books?.[exam]?.filter(b=>exam!=='NAT'||b.level===level)||[];
@@ -129,7 +129,6 @@ async function init(){
   document.querySelectorAll('#categories button').forEach(btn=>btn.onclick=()=>{exam=btn.dataset.exam;reset();loadAnswers();display()});
   $('bookTab').onclick=()=>{mode='book';display()};$('quizTab').onclick=()=>{mode='quiz';loadAnswers();display()};
   $('language').onchange=e=>{lang=e.target.value;display()};
-  $('furi').onclick=()=>{furigana=!furigana;$('furi').textContent=furigana?'ふりがな ON':'ふりがな OFF';$('furi').setAttribute('aria-pressed',String(furigana))};
   $('saveBook').onclick=()=>{mode='book';display();window.print()};
   $('previous').onclick=()=>{if(position>0){position--;renderQuiz()}};
   $('next').onclick=()=>{if(position<all.length-1){position++;renderQuiz()}};
