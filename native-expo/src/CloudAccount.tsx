@@ -17,12 +17,12 @@ export default function CloudAccount({theme,data,onRestore,onDelete}:Props){
   useEffect(()=>{if(!cloud)return;
     let mounted=true;
     const read=async()=>{
-      const {data:userData}=await cloud.auth.getUser();
+      const {data:userData}=await cloud!.auth.getUser();
       if(mounted)setUserEmail(userData.user?.email||'');
-      const assurance=await cloud.auth.mfa.getAuthenticatorAssuranceLevel();
+      const assurance=await cloud!.auth.mfa.getAuthenticatorAssuranceLevel();
       if(mounted)setRequiresMFA(assurance.data?.nextLevel==='aal2'&&assurance.data?.currentLevel==='aal1');
     };read().catch(()=>{});
-    const {data:watch}=cloud.auth.onAuthStateChange(()=>{read().catch(()=>{})});
+    const {data:watch}=cloud!.auth.onAuthStateChange(()=>{read().catch(()=>{})});
     return()=>{mounted=false;watch.subscription.unsubscribe()}
   },[]);
   const run=async(fn:()=>Promise<unknown>,success:string)=>{
@@ -54,7 +54,7 @@ export default function CloudAccount({theme,data,onRestore,onDelete}:Props){
         <Text style={[text(12,false,theme.muted),{marginTop:7}]}>Two-factor authentication is required for cloud operations.</Text>
         {input(code,setCode,'6-digit authenticator code')}
         {action('Verify 2FA',()=>run(async()=>{
-          const listed=await cloud.auth.mfa.listFactors();
+          const listed=await cloud!.auth.mfa.listFactors();
           const factor=listed.data?.totp?.find(x=>x.status==='verified');
           if(!factor)throw new Error('No verified TOTP factor is available.');
           await verifyTOTP(factor.id,code);setRequiresMFA(false);setCode('');
