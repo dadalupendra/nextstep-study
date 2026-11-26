@@ -49,7 +49,7 @@ function translationSection(q,api,{includeQuestion=true,includeReview=true}={}){
  }
  if(includeReview&&q.type==='聴解'&&q.passage){
   const transcriptBtn=document.createElement('button');transcriptBtn.type='button';
-  transcriptBtn.textContent='🎧 Translate full Listening Script';
+  transcriptBtn.textContent='🎧 Translate the spoken dialogue';
   const transcriptOut=document.createElement('div');transcriptOut.className='ns-translation-output';transcriptOut.setAttribute('aria-live','polite');
   transcriptBtn.onclick=async()=>{
     transcriptBtn.disabled=true;const target=lang;transcriptOut.textContent='⏳ Translating listening transcript…';
