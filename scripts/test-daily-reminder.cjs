@@ -15,7 +15,7 @@ let browser;
  await page.goto('http://127.0.0.1:'+PORT+'/',{waitUntil:'domcontentloaded'});
  await page.locator('.ns-reminder-panel').waitFor({timeout:20000});
  assert.match(await page.locator('.ns-reminder-panel').innerText(),/Today.s Challenge/);
- assert.match(await page.locator('[data-ns-today]').innerText(),/100 questions/);
+ assert.match(await page.locator('[data-ns-today]').innerText(),/20 3D cards/);
  assert.equal(await page.evaluate(()=>localStorage.getItem('nextstep-daily-reminder-v1')),null,'No visitor is auto-subscribed');
  const helper=await page.evaluate(()=>{
   const api=window.NextStepDailyReminder;
