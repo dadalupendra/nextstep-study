@@ -1,0 +1,1095 @@
+{
+  "meta": {
+    "created": "2026-11-26",
+    "license": "Original NextStep Study independent practice; not an official exam or reproduction of past papers.",
+    "counts": {
+      "NAT": 30,
+      "JFT": 12,
+      "BJT": 12
+    },
+    "scoring": "Practice accuracy only. No JFT official scale, NAT pass prediction or BJT 0–800 scaled-score estimate.",
+    "audio": "Device text-to-speech for listening-style questions; no official audio recordings."
+  },
+  "questions": [
+    {
+      "id": "NAT-5Q-01",
+      "exam": "NAT",
+      "level": "5Q",
+      "section": "語彙",
+      "prompt": "「やすみ」の漢字はどれですか。",
+      "options": [
+        "体み",
+        "休み",
+        "林み",
+        "使み"
+      ],
+      "answer": 1,
+      "explanation": {
+        "ja": "「休み」は仕事や勉強をしない時間です。",
+        "en": "休み means a rest or day off.",
+        "ne": "休み भनेको बिदा वा आराम हो।"
+      },
+      "audioPractice": false
+    },
+    {
+      "id": "NAT-5Q-02",
+      "exam": "NAT",
+      "level": "5Q",
+      "section": "文字",
+      "prompt": "「学校」の読み方はどれですか。",
+      "options": [
+        "がこう",
+        "かっこう",
+        "がっこう",
+        "がくせい"
+      ],
+      "answer": 2,
+      "explanation": {
+        "ja": "学校は「がっこう」と読みます。",
+        "en": "学校 is read がっこう (school).",
+        "ne": "学校 को उच्चारण がっこう हो।"
+      },
+      "audioPractice": false
+    },
+    {
+      "id": "NAT-5Q-03",
+      "exam": "NAT",
+      "level": "5Q",
+      "section": "文法",
+      "prompt": "毎朝七時（　）起きます。",
+      "options": [
+        "で",
+        "を",
+        "に",
+        "が"
+      ],
+      "answer": 2,
+      "explanation": {
+        "ja": "時刻には助詞「に」を使います。",
+        "en": "Use に for a specific time.",
+        "ne": "निश्चित समयसँग に प्रयोग हुन्छ।"
+      },
+      "audioPractice": false
+    },
+    {
+      "id": "NAT-5Q-04",
+      "exam": "NAT",
+      "level": "5Q",
+      "section": "文法",
+      "prompt": "学校（　）日本語を勉強します。",
+      "options": [
+        "で",
+        "を",
+        "は",
+        "に"
+      ],
+      "answer": 0,
+      "explanation": {
+        "ja": "動作する場所は「で」で示します。",
+        "en": "で marks the place an action happens.",
+        "ne": "काम हुने ठाउँसँग で आउँछ।"
+      },
+      "audioPractice": false
+    },
+    {
+      "id": "NAT-5Q-05",
+      "exam": "NAT",
+      "level": "5Q",
+      "section": "読解",
+      "prompt": "案内：図書館は日曜日に休みます。図書館はいつ休みますか。",
+      "options": [
+        "月曜日",
+        "火曜日",
+        "土曜日",
+        "日曜日"
+      ],
+      "answer": 3,
+      "explanation": {
+        "ja": "案内には日曜日が休みと書いてあります。",
+        "en": "The notice says the library closes Sunday.",
+        "ne": "सूचनाअनुसार आइतबार बन्द हुन्छ।"
+      },
+      "audioPractice": false
+    },
+    {
+      "id": "NAT-5Q-06",
+      "exam": "NAT",
+      "level": "5Q",
+      "section": "聴解練習",
+      "prompt": "次の文を聞いてください。「電車は八時に出ます。」電車は何時に出ますか。",
+      "options": [
+        "七時",
+        "九時",
+        "八時",
+        "十時"
+      ],
+      "answer": 2,
+      "explanation": {
+        "ja": "「八時に出ます」と言っています。",
+        "en": "The train departs at 8.",
+        "ne": "रेल आठ बजे छुट्छ।"
+      },
+      "audioPractice": true
+    },
+    {
+      "id": "NAT-4Q-01",
+      "exam": "NAT",
+      "level": "4Q",
+      "section": "語彙",
+      "prompt": "「運転」の意味に近いものはどれですか。",
+      "options": [
+        "食事を作る",
+        "車を動かす",
+        "本を売る",
+        "服を洗う"
+      ],
+      "answer": 1,
+      "explanation": {
+        "ja": "運転は車などを操作して走らせることです。",
+        "en": "運転 means driving or operating a vehicle.",
+        "ne": "運転 भनेको सवारी चलाउनु हो।"
+      },
+      "audioPractice": false
+    },
+    {
+      "id": "NAT-4Q-02",
+      "exam": "NAT",
+      "level": "4Q",
+      "section": "文字",
+      "prompt": "「病院」の読み方はどれですか。",
+      "options": [
+        "びよういん",
+        "びょいん",
+        "びょういん",
+        "ひょういん"
+      ],
+      "answer": 2,
+      "explanation": {
+        "ja": "病院は「びょういん」です。",
+        "en": "病院 is read びょういん (hospital).",
+        "ne": "病院 लाई びょういん पढिन्छ।"
+      },
+      "audioPractice": false
+    },
+    {
+      "id": "NAT-4Q-03",
+      "exam": "NAT",
+      "level": "4Q",
+      "section": "文法",
+      "prompt": "この紙に名前を書い（　）ください。",
+      "options": [
+        "て",
+        "た",
+        "で",
+        "ない"
+      ],
+      "answer": 0,
+      "explanation": {
+        "ja": "「書いてください」は丁寧な依頼です。",
+        "en": "書いてください is the polite request form.",
+        "ne": "書いてください लेखिदिनुहोस् भन्ने विनम्र अनुरोध हो।"
+      },
+      "audioPractice": false
+    },
+    {
+      "id": "NAT-4Q-04",
+      "exam": "NAT",
+      "level": "4Q",
+      "section": "文法",
+      "prompt": "日本へ行ったことが（　）。",
+      "options": [
+        "あります",
+        "います",
+        "なります",
+        "できます"
+      ],
+      "answer": 0,
+      "explanation": {
+        "ja": "「〜たことがあります」は経験を表します。",
+        "en": "〜たことがあります describes past experience.",
+        "ne": "〜たことがあります ले अनुभव जनाउँछ।"
+      },
+      "audioPractice": false
+    },
+    {
+      "id": "NAT-4Q-05",
+      "exam": "NAT",
+      "level": "4Q",
+      "section": "読解",
+      "prompt": "お知らせ：市役所は月曜日から金曜日まで開いています。土曜日はどうですか。",
+      "options": [
+        "開いています",
+        "午前だけ開きます",
+        "休みです",
+        "夜だけ開きます"
+      ],
+      "answer": 2,
+      "explanation": {
+        "ja": "月曜から金曜までなので土曜は開いていません。",
+        "en": "Only Monday through Friday are open.",
+        "ne": "सोमदेखि शुक्रबार खुल्ने भएकाले शनिबार बन्द हुन्छ।"
+      },
+      "audioPractice": false
+    },
+    {
+      "id": "NAT-4Q-06",
+      "exam": "NAT",
+      "level": "4Q",
+      "section": "聴解練習",
+      "prompt": "次の文を聞いてください。「会議は午後二時からです。」会議はいつ始まりますか。",
+      "options": [
+        "午前二時",
+        "午後二時",
+        "午後三時",
+        "午前十時"
+      ],
+      "answer": 1,
+      "explanation": {
+        "ja": "午後二時に始まります。",
+        "en": "The meeting begins at 2 p.m.",
+        "ne": "बैठक दिउँसो २ बजे सुरु हुन्छ।"
+      },
+      "audioPractice": true
+    },
+    {
+      "id": "NAT-3Q-01",
+      "exam": "NAT",
+      "level": "3Q",
+      "section": "語彙",
+      "prompt": "「連絡する」の意味に一番近いのはどれですか。",
+      "options": [
+        "情報を伝える",
+        "机を作る",
+        "食事をする",
+        "紙を切る"
+      ],
+      "answer": 0,
+      "explanation": {
+        "ja": "連絡するとは必要な情報を相手に伝えることです。",
+        "en": "連絡する means to contact or inform.",
+        "ne": "連絡する भनेको सम्पर्क/जानकारी दिनु हो।"
+      },
+      "audioPractice": false
+    },
+    {
+      "id": "NAT-3Q-02",
+      "exam": "NAT",
+      "level": "3Q",
+      "section": "文字",
+      "prompt": "「経験」の読み方はどれですか。",
+      "options": [
+        "けいけい",
+        "けんげん",
+        "けいけん",
+        "きょうけん"
+      ],
+      "answer": 2,
+      "explanation": {
+        "ja": "経験は「けいけん」と読みます。",
+        "en": "経験 is read けいけん (experience).",
+        "ne": "経験 को उच्चारण けいけん हो।"
+      },
+      "audioPractice": false
+    },
+    {
+      "id": "NAT-3Q-03",
+      "exam": "NAT",
+      "level": "3Q",
+      "section": "文法",
+      "prompt": "毎日練習して、日本語で話せる（　）なりました。",
+      "options": [
+        "ほど",
+        "ように",
+        "ため",
+        "まま"
+      ],
+      "answer": 1,
+      "explanation": {
+        "ja": "能力が変わったときは「〜ようになる」です。",
+        "en": "〜ようになる marks a change in ability.",
+        "ne": "क्षमतामा परिवर्तन हुँदा 〜ようになる प्रयोग हुन्छ।"
+      },
+      "audioPractice": false
+    },
+    {
+      "id": "NAT-3Q-04",
+      "exam": "NAT",
+      "level": "3Q",
+      "section": "文法",
+      "prompt": "友達（　）、道が分かりました。",
+      "options": [
+        "のおかげで",
+        "のせいで",
+        "にしては",
+        "にとって"
+      ],
+      "answer": 0,
+      "explanation": {
+        "ja": "よい結果の理由なので「おかげで」が適切です。",
+        "en": "おかげで gives the positive cause.",
+        "ne": "राम्रो नतिजाको कारणमा おかげで उपयुक्त छ।"
+      },
+      "audioPractice": false
+    },
+    {
+      "id": "NAT-3Q-05",
+      "exam": "NAT",
+      "level": "3Q",
+      "section": "読解",
+      "prompt": "案内：申込書は木曜日までに提出してください。金曜日に出しても受け付けません。いつまでに提出しますか。",
+      "options": [
+        "金曜日",
+        "木曜日",
+        "土曜日",
+        "日曜日"
+      ],
+      "answer": 1,
+      "explanation": {
+        "ja": "締め切りは木曜日までです。",
+        "en": "The deadline is Thursday.",
+        "ne": "बिहीबारसम्म बुझाउनुपर्छ।"
+      },
+      "audioPractice": false
+    },
+    {
+      "id": "NAT-3Q-06",
+      "exam": "NAT",
+      "level": "3Q",
+      "section": "聴解練習",
+      "prompt": "次の文を聞いてください。「雨の場合、遠足は来週に延期します。」雨が降ったらどうなりますか。",
+      "options": [
+        "今日行います",
+        "中止します",
+        "来週に延ばします",
+        "場所を変えます"
+      ],
+      "answer": 2,
+      "explanation": {
+        "ja": "延期は予定を後の日に移すことです。",
+        "en": "延期 means postponing to a later date.",
+        "ne": "वर्षा भए अर्को हप्तामा सारिन्छ।"
+      },
+      "audioPractice": true
+    },
+    {
+      "id": "NAT-2Q-01",
+      "exam": "NAT",
+      "level": "2Q",
+      "section": "語彙",
+      "prompt": "「促進」の意味に最も近いものはどれですか。",
+      "options": [
+        "進みを速くすること",
+        "進行を止めること",
+        "内容を隠すこと",
+        "数を減らすこと"
+      ],
+      "answer": 0,
+      "explanation": {
+        "ja": "促進は物事の進行を早めることです。",
+        "en": "促進 means promoting or accelerating progress.",
+        "ne": "促進 भनेको प्रगति छिटो गराउनु हो।"
+      },
+      "audioPractice": false
+    },
+    {
+      "id": "NAT-2Q-02",
+      "exam": "NAT",
+      "level": "2Q",
+      "section": "文字",
+      "prompt": "「懸念」の読み方はどれですか。",
+      "options": [
+        "けんねん",
+        "けねん",
+        "かんねん",
+        "けにん"
+      ],
+      "answer": 1,
+      "explanation": {
+        "ja": "懸念は「けねん」と読み、不安・心配を表します。",
+        "en": "懸念 is read けねん, meaning concern.",
+        "ne": "懸念 को उच्चारण けねん र अर्थ चिन्ता हो।"
+      },
+      "audioPractice": false
+    },
+    {
+      "id": "NAT-2Q-03",
+      "exam": "NAT",
+      "level": "2Q",
+      "section": "文法",
+      "prompt": "悪天候（　）、イベントは予定どおり実施された。",
+      "options": [
+        "に伴って",
+        "にもかかわらず",
+        "に関して",
+        "に比べて"
+      ],
+      "answer": 1,
+      "explanation": {
+        "ja": "悪天候なのに実施された逆接なので「にもかかわらず」です。",
+        "en": "Despite bad weather, the event proceeded.",
+        "ne": "खराब मौसम भए पनि कार्यक्रम भयो भन्ने विरोध जनाउँछ।"
+      },
+      "audioPractice": false
+    },
+    {
+      "id": "NAT-2Q-04",
+      "exam": "NAT",
+      "level": "2Q",
+      "section": "文法",
+      "prompt": "人口の増加（　）、住宅の需要が高まっている。",
+      "options": [
+        "に伴って",
+        "を問わず",
+        "に反して",
+        "に限り"
+      ],
+      "answer": 0,
+      "explanation": {
+        "ja": "二つの変化が連動するので「に伴って」です。",
+        "en": "Housing demand rises along with population growth.",
+        "ne": "जनसंख्या बढेसँगै आवास माग बढेको हो।"
+      },
+      "audioPractice": false
+    },
+    {
+      "id": "NAT-2Q-05",
+      "exam": "NAT",
+      "level": "2Q",
+      "section": "読解",
+      "prompt": "通知：来月から受付時間を午前九時から午後四時に変更します。従来は午後五時まででした。何が変わりますか。",
+      "options": [
+        "開始が一時間早まる",
+        "終了が一時間早まる",
+        "休館日が増える",
+        "受付がなくなる"
+      ],
+      "answer": 1,
+      "explanation": {
+        "ja": "終了は午後五時から四時に一時間早まります。",
+        "en": "Closing time moves from 5 p.m. to 4 p.m.",
+        "ne": "अन्त्य समय ५ बाट ४ बजे, एक घण्टा अगाडि सर्छ।"
+      },
+      "audioPractice": false
+    },
+    {
+      "id": "NAT-2Q-06",
+      "exam": "NAT",
+      "level": "2Q",
+      "section": "聴解練習",
+      "prompt": "次の文を聞いてください。「契約内容の確認後、担当者から折り返し連絡します。」次に連絡するのは誰ですか。",
+      "options": [
+        "顧客",
+        "受付の人だけ",
+        "担当者",
+        "配達員"
+      ],
+      "answer": 2,
+      "explanation": {
+        "ja": "担当者から折り返し連絡すると言っています。",
+        "en": "The responsible staff member will call back.",
+        "ne": "सम्बन्धित कर्मचारीले फेरि सम्पर्क गर्छ।"
+      },
+      "audioPractice": true
+    },
+    {
+      "id": "NAT-1Q-01",
+      "exam": "NAT",
+      "level": "1Q",
+      "section": "語彙",
+      "prompt": "「看過する」の意味に最も近いものはどれですか。",
+      "options": [
+        "注意深く調べる",
+        "見過ごす",
+        "強く支持する",
+        "詳しく説明する"
+      ],
+      "answer": 1,
+      "explanation": {
+        "ja": "看過するは問題などを見過ごすことです。",
+        "en": "看過する means to overlook.",
+        "ne": "看過する भनेको समस्यालाई बेवास्ता गर्नु हो।"
+      },
+      "audioPractice": false
+    },
+    {
+      "id": "NAT-1Q-02",
+      "exam": "NAT",
+      "level": "1Q",
+      "section": "文字",
+      "prompt": "「脆弱」の読み方はどれですか。",
+      "options": [
+        "ぜいじゃく",
+        "さいじゃく",
+        "きじゃく",
+        "ぜいよわ"
+      ],
+      "answer": 0,
+      "explanation": {
+        "ja": "脆弱は「ぜいじゃく」と読み、弱く壊れやすいことです。",
+        "en": "脆弱 (ぜいじゃく) means fragile or vulnerable.",
+        "ne": "脆弱 (ぜいじゃく) कमजोर वा असुरक्षित हो।"
+      },
+      "audioPractice": false
+    },
+    {
+      "id": "NAT-1Q-03",
+      "exam": "NAT",
+      "level": "1Q",
+      "section": "文法",
+      "prompt": "事情の（　）、申請期限は変更されません。",
+      "options": [
+        "いかんにかかわらず",
+        "おかげで",
+        "あまり",
+        "次第でしか"
+      ],
+      "answer": 0,
+      "explanation": {
+        "ja": "理由に左右されないため「いかんにかかわらず」です。",
+        "en": "The deadline applies regardless of circumstances.",
+        "ne": "परिस्थिति जेसुकै भए पनि म्याद नबदलिने अर्थ हो।"
+      },
+      "audioPractice": false
+    },
+    {
+      "id": "NAT-1Q-04",
+      "exam": "NAT",
+      "level": "1Q",
+      "section": "文法",
+      "prompt": "突然の事故により、計画の変更を（　）。",
+      "options": [
+        "余儀なくされた",
+        "禁じえなかった",
+        "かねなかった",
+        "問わなかった"
+      ],
+      "answer": 0,
+      "explanation": {
+        "ja": "避けられない事情による変更は「余儀なくされる」です。",
+        "en": "The accident forced a plan change.",
+        "ne": "दुर्घटनाका कारण योजना बदल्न बाध्य हुनु परेको हो।"
+      },
+      "audioPractice": false
+    },
+    {
+      "id": "NAT-1Q-05",
+      "exam": "NAT",
+      "level": "1Q",
+      "section": "読解",
+      "prompt": "論説：新技術の利点は明白だ。しかし、導入費用や利用者への説明を軽視すべきではない。筆者の主張は何ですか。",
+      "options": [
+        "新技術は不要だ",
+        "費用だけが重要だ",
+        "利点に加えて課題への配慮も必要だ",
+        "説明は不要だ"
+      ],
+      "answer": 2,
+      "explanation": {
+        "ja": "利点を認めながら費用や説明も重視すべきだと述べています。",
+        "en": "Benefits exist, but costs and communication still matter.",
+        "ne": "लाभ भए पनि खर्च र प्रयोगकर्तालाई जानकारी दिनुपर्ने तर्क हो।"
+      },
+      "audioPractice": false
+    },
+    {
+      "id": "NAT-1Q-06",
+      "exam": "NAT",
+      "level": "1Q",
+      "section": "聴解練習",
+      "prompt": "次の文を聞いてください。「議論を重ねた末、提案は一部修正のうえ採用されました。」結果はどうなりましたか。",
+      "options": [
+        "全面的に却下された",
+        "修正して採用された",
+        "審査を中止した",
+        "変更せず採用された"
+      ],
+      "answer": 1,
+      "explanation": {
+        "ja": "一部修正してから採用されました。",
+        "en": "The proposal was adopted after partial revision.",
+        "ne": "आंशिक संशोधनपछि प्रस्ताव स्वीकृत भयो।"
+      },
+      "audioPractice": true
+    },
+    {
+      "id": "JFT-01",
+      "exam": "JFT",
+      "level": null,
+      "section": "文字と語彙",
+      "prompt": "「入口」の意味はどれですか。",
+      "options": [
+        "Exit",
+        "Entrance",
+        "Toilet",
+        "Ticket"
+      ],
+      "answer": 1,
+      "explanation": {
+        "ja": "入口は入る場所です。",
+        "en": "入口 means entrance.",
+        "ne": "入口 प्रवेशद्वार हो।"
+      },
+      "audioPractice": false
+    },
+    {
+      "id": "JFT-02",
+      "exam": "JFT",
+      "level": null,
+      "section": "文字と語彙",
+      "prompt": "「定休日」の意味はどれですか。",
+      "options": [
+        "営業時間",
+        "毎日開いている日",
+        "いつも休みの日",
+        "半額の日"
+      ],
+      "answer": 2,
+      "explanation": {
+        "ja": "定休日は店が定期的に休む日です。",
+        "en": "A regular closing day.",
+        "ne": "पसल नियमित बन्द हुने दिन।"
+      },
+      "audioPractice": false
+    },
+    {
+      "id": "JFT-03",
+      "exam": "JFT",
+      "level": null,
+      "section": "文字と語彙",
+      "prompt": "「受付」はどこですか。",
+      "options": [
+        "申込や案内を受ける場所",
+        "料理を作る場所",
+        "車を止める場所",
+        "寝る場所"
+      ],
+      "answer": 0,
+      "explanation": {
+        "ja": "受付は手続きや案内をする場所です。",
+        "en": "Reception handles registration and information.",
+        "ne": "受付 दर्ता र जानकारी दिने ठाउँ।"
+      },
+      "audioPractice": false
+    },
+    {
+      "id": "JFT-04",
+      "exam": "JFT",
+      "level": null,
+      "section": "会話と表現",
+      "prompt": "上司に「もう一度言ってほしい」と丁寧に伝えたい。どれが適切ですか。",
+      "options": [
+        "もう一度言え。",
+        "もう一度お願いします。",
+        "黙って。",
+        "早くしろ。"
+      ],
+      "answer": 1,
+      "explanation": {
+        "ja": "「もう一度お願いします」は丁寧な聞き直しです。",
+        "en": "A polite way to ask for repetition.",
+        "ne": "फेरि भन्न अनुरोध गर्ने विनम्र अभिव्यक्ति।"
+      },
+      "audioPractice": false
+    },
+    {
+      "id": "JFT-05",
+      "exam": "JFT",
+      "level": null,
+      "section": "会話と表現",
+      "prompt": "約束に遅れそうです。まず何と言いますか。",
+      "options": [
+        "何でもありません。",
+        "おめでとうございます。",
+        "少し遅れます。申し訳ありません。",
+        "どういたしまして。"
+      ],
+      "answer": 2,
+      "explanation": {
+        "ja": "遅れる連絡と謝罪が必要です。",
+        "en": "Inform the other person and apologize.",
+        "ne": "ढिलो हुने खबर र माफी दिनु उचित छ।"
+      },
+      "audioPractice": false
+    },
+    {
+      "id": "JFT-06",
+      "exam": "JFT",
+      "level": null,
+      "section": "会話と表現",
+      "prompt": "書類を確認してもらいたい。丁寧な依頼はどれですか。",
+      "options": [
+        "これを捨てて。",
+        "見ないで。",
+        "必ず買って。",
+        "この書類を確認していただけますか。"
+      ],
+      "answer": 3,
+      "explanation": {
+        "ja": "「〜していただけますか」は丁寧な依頼です。",
+        "en": "〜していただけますか is a polite request.",
+        "ne": "〜していただけますか विनम्र अनुरोध हो।"
+      },
+      "audioPractice": false
+    },
+    {
+      "id": "JFT-07",
+      "exam": "JFT",
+      "level": null,
+      "section": "聴解練習",
+      "prompt": "次の案内を聞いてください。「午後三時に一階の受付へ来てください。」どこに行きますか。",
+      "options": [
+        "二階の事務所",
+        "一階の受付",
+        "地下の売店",
+        "三階の会議室"
+      ],
+      "answer": 1,
+      "explanation": {
+        "ja": "「一階の受付」と言っています。",
+        "en": "Go to first-floor reception.",
+        "ne": "पहिलो तलाको受付मा जानुपर्छ।"
+      },
+      "audioPractice": true
+    },
+    {
+      "id": "JFT-08",
+      "exam": "JFT",
+      "level": null,
+      "section": "聴解練習",
+      "prompt": "次の文を聞いてください。「明日の研修は九時からです。」何時に始まりますか。",
+      "options": [
+        "八時",
+        "十時",
+        "九時",
+        "十一時"
+      ],
+      "answer": 2,
+      "explanation": {
+        "ja": "研修は九時からです。",
+        "en": "Training starts at nine.",
+        "ne": "तालिम नौ बजे सुरु हुन्छ।"
+      },
+      "audioPractice": true
+    },
+    {
+      "id": "JFT-09",
+      "exam": "JFT",
+      "level": null,
+      "section": "聴解練習",
+      "prompt": "次の文を聞いてください。「会議室は二階の右側です。」会議室はどこですか。",
+      "options": [
+        "一階の左側",
+        "二階の右側",
+        "二階の左側",
+        "三階の右側"
+      ],
+      "answer": 1,
+      "explanation": {
+        "ja": "「二階の右側」と言っています。",
+        "en": "The meeting room is on the second floor, right side.",
+        "ne": "बैठक कोठा दोस्रो तलाको दायाँ छ।"
+      },
+      "audioPractice": true
+    },
+    {
+      "id": "JFT-10",
+      "exam": "JFT",
+      "level": null,
+      "section": "読解",
+      "prompt": "掲示：図書館は月曜日が休みです。いつ利用できませんか。",
+      "options": [
+        "火曜日",
+        "水曜日",
+        "月曜日",
+        "木曜日"
+      ],
+      "answer": 2,
+      "explanation": {
+        "ja": "月曜日は閉まっています。",
+        "en": "Closed Mondays.",
+        "ne": "सोमबार बन्द हुन्छ।"
+      },
+      "audioPractice": false
+    },
+    {
+      "id": "JFT-11",
+      "exam": "JFT",
+      "level": null,
+      "section": "読解",
+      "prompt": "案内：申込書は金曜日までに受付へ出してください。いつが期限ですか。",
+      "options": [
+        "火曜日",
+        "金曜日",
+        "土曜日",
+        "日曜日"
+      ],
+      "answer": 1,
+      "explanation": {
+        "ja": "提出期限は金曜日です。",
+        "en": "The deadline is Friday.",
+        "ne": "शुक्रबार म्याद हो।"
+      },
+      "audioPractice": false
+    },
+    {
+      "id": "JFT-12",
+      "exam": "JFT",
+      "level": null,
+      "section": "読解",
+      "prompt": "お知らせ：会場は十時に開きます。受付は九時半からです。受付は何時からですか。",
+      "options": [
+        "九時",
+        "十時",
+        "九時半",
+        "十時半"
+      ],
+      "answer": 2,
+      "explanation": {
+        "ja": "会場の開場時刻と受付開始時刻は異なります。",
+        "en": "Reception starts at 9:30, earlier than opening.",
+        "ne": "दर्ता साढे नौदेखि सुरु हुन्छ।"
+      },
+      "audioPractice": false
+    },
+    {
+      "id": "BJT-01",
+      "exam": "BJT",
+      "level": null,
+      "section": "聴解練習",
+      "prompt": "取引先からの依頼に、内容を理解したことを丁寧に伝える表現はどれですか。",
+      "options": [
+        "了解したよ。",
+        "承知いたしました。",
+        "知らない。",
+        "勝手にしてください。"
+      ],
+      "answer": 1,
+      "explanation": {
+        "ja": "社外の相手への丁寧な承諾には「承知いたしました」が適切です。",
+        "en": "承知いたしました is an appropriate polite acknowledgment.",
+        "ne": "व्यापारिक साझेदारलाई विनम्र स्वीकारोक्ति हो।"
+      },
+      "audioPractice": true
+    },
+    {
+      "id": "BJT-02",
+      "exam": "BJT",
+      "level": null,
+      "section": "聴解練習",
+      "prompt": "電話で担当者が不在です。何と言うのが適切ですか。",
+      "options": [
+        "今いないよ。",
+        "用事がないなら切って。",
+        "あいにく担当者は席を外しております。",
+        "知りません。"
+      ],
+      "answer": 2,
+      "explanation": {
+        "ja": "「席を外しております」は丁寧な不在の説明です。",
+        "en": "A polite explanation that the person is away.",
+        "ne": "सम्बन्धित व्यक्ति अहिले सिटमा नभएको विनम्र भनाइ।"
+      },
+      "audioPractice": true
+    },
+    {
+      "id": "BJT-03",
+      "exam": "BJT",
+      "level": null,
+      "section": "聴解練習",
+      "prompt": "資料を自分が読んだことを謙譲語で伝えるときは。",
+      "options": [
+        "資料を拝見しました。",
+        "資料をご覧になりました。",
+        "資料を見るぞ。",
+        "資料を召し上がりました。"
+      ],
+      "answer": 0,
+      "explanation": {
+        "ja": "自分の「見る」の謙譲語は「拝見する」です。",
+        "en": "拝見する is the humble form of 見る.",
+        "ne": "आफूले हेरेको भन्न 拝見する नम्र रूप हो।"
+      },
+      "audioPractice": true
+    },
+    {
+      "id": "BJT-04",
+      "exam": "BJT",
+      "level": null,
+      "section": "聴読解練習",
+      "prompt": "メール：『添付資料をご確認のうえ、金曜日までにご返信ください。』求められる行動は何ですか。",
+      "options": [
+        "資料を削除する",
+        "金曜日までに資料を確認し返信する",
+        "返信を来月に延ばす",
+        "資料を印刷するだけ"
+      ],
+      "answer": 1,
+      "explanation": {
+        "ja": "資料の確認と期限内の返信が求められています。",
+        "en": "Check the attachment and reply by Friday.",
+        "ne": "संलग्न फाइल हेरी शुक्रबारसम्म जवाफ दिनुपर्छ।"
+      },
+      "audioPractice": true
+    },
+    {
+      "id": "BJT-05",
+      "exam": "BJT",
+      "level": null,
+      "section": "聴読解練習",
+      "prompt": "案内：『会議は15時開始ですが、受付は14時30分からです。』正しい説明はどれですか。",
+      "options": [
+        "受付は15時から",
+        "会議は14時30分から",
+        "受付は14時30分、会議は15時から",
+        "会議は中止"
+      ],
+      "answer": 2,
+      "explanation": {
+        "ja": "受付と会議の開始時刻を区別します。",
+        "en": "Reception is 14:30; meeting begins 15:00.",
+        "ne": "दर्ता २:३० र बैठक ३ बजे हो।"
+      },
+      "audioPractice": true
+    },
+    {
+      "id": "BJT-06",
+      "exam": "BJT",
+      "level": null,
+      "section": "聴読解練習",
+      "prompt": "社内連絡：『納期は来週月曜日に変更になりました。』変更点は何ですか。",
+      "options": [
+        "担当者",
+        "納品の期限",
+        "商品の色",
+        "会議の場所"
+      ],
+      "answer": 1,
+      "explanation": {
+        "ja": "納期は納品期限を意味します。",
+        "en": "納期 refers to a delivery deadline.",
+        "ne": "納期 सामान बुझाउने अन्तिम मिति हो।"
+      },
+      "audioPractice": true
+    },
+    {
+      "id": "BJT-07",
+      "exam": "BJT",
+      "level": null,
+      "section": "聴読解練習",
+      "prompt": "顧客：『不具合の原因を調べて連絡してください。』まず適切な対応は。",
+      "options": [
+        "原因を調査し、確認した事実を報告する",
+        "原因を想像して断言する",
+        "連絡せず放置する",
+        "無関係な商品を勧める"
+      ],
+      "answer": 0,
+      "explanation": {
+        "ja": "事実の確認が先で、未確認のことは断言しません。",
+        "en": "Investigate facts before reporting.",
+        "ne": "पहिले तथ्य जाँचेर मात्र रिपोर्ट गर्नुपर्छ।"
+      },
+      "audioPractice": true
+    },
+    {
+      "id": "BJT-08",
+      "exam": "BJT",
+      "level": null,
+      "section": "読解",
+      "prompt": "文：『本日の会議資料を添付いたします。』何をしたと考えられますか。",
+      "options": [
+        "資料を破棄した",
+        "資料を郵送だけした",
+        "メールに資料を付けた",
+        "会議を延期した"
+      ],
+      "answer": 2,
+      "explanation": {
+        "ja": "添付はメールなどにファイルを付けることです。",
+        "en": "The meeting materials were attached.",
+        "ne": "इमेलमा बैठक सामग्री संलग्न गरिएको हो।"
+      },
+      "audioPractice": false
+    },
+    {
+      "id": "BJT-09",
+      "exam": "BJT",
+      "level": null,
+      "section": "読解",
+      "prompt": "社内通知：『研修の対象は全社員です。ただし、新入社員は除きます。』参加対象ではないのは誰ですか。",
+      "options": [
+        "部長",
+        "一般社員",
+        "新入社員",
+        "課長"
+      ],
+      "answer": 2,
+      "explanation": {
+        "ja": "「ただし」は例外を示します。",
+        "en": "New employees are excluded.",
+        "ne": "नयाँ कर्मचारी अपवाद हुन्।"
+      },
+      "audioPractice": false
+    },
+    {
+      "id": "BJT-10",
+      "exam": "BJT",
+      "level": null,
+      "section": "読解",
+      "prompt": "表：『先月の売上100万円、今月の売上120万円』正しい説明はどれですか。",
+      "options": [
+        "今月は20万円減った",
+        "今月は20万円増えた",
+        "変化はない",
+        "今月は200万円"
+      ],
+      "answer": 1,
+      "explanation": {
+        "ja": "120万円−100万円＝20万円の増加です。",
+        "en": "Sales increased by 200,000 yen.",
+        "ne": "बिक्री २ लाख येनले बढेको हो।"
+      },
+      "audioPractice": false
+    },
+    {
+      "id": "BJT-11",
+      "exam": "BJT",
+      "level": null,
+      "section": "読解",
+      "prompt": "メール：『ご多忙のところ恐縮ですが、明日正午までにご回答ください。』期限はいつですか。",
+      "options": [
+        "明日の朝九時",
+        "明日の正午",
+        "今日の正午",
+        "明日の午後六時"
+      ],
+      "answer": 1,
+      "explanation": {
+        "ja": "正午は十二時です。",
+        "en": "The deadline is noon tomorrow.",
+        "ne": "भोलि मध्याह्न १२ बजेसम्म हो।"
+      },
+      "audioPractice": false
+    },
+    {
+      "id": "BJT-12",
+      "exam": "BJT",
+      "level": null,
+      "section": "読解",
+      "prompt": "通知：『決定事項は変更できませんが、実施方法については検討の余地があります。』何が検討できますか。",
+      "options": [
+        "決定事項そのもの",
+        "事業の存在",
+        "実施方法",
+        "すべての条件"
+      ],
+      "answer": 2,
+      "explanation": {
+        "ja": "実施方法のみ再検討の可能性があります。",
+        "en": "The implementation method can be reconsidered.",
+        "ne": "कार्यान्वयन तरिका पुनर्विचार गर्न सकिन्छ।"
+      },
+      "audioPractice": false
+    }
+  ]
+}
