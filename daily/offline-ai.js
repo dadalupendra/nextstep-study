@@ -13,6 +13,13 @@ let state={card:null,related:[],level:'N2',lang:'ne',progress:{},mode:'checking'
 function t(key){return(labels[state.lang]||labels.en)[key]||labels.en[key]}
 function el(tag,className,text){const x=document.createElement(tag);if(className)x.className=className;if(text!==undefined)x.textContent=String(text);return x}
 function examples(card){return(global.NextStepDailySource?.validExamples(card?.item)||[]).slice(0,3)}
+function effectiveExamples(card){
+ const direct=examples(card);
+ if(direct.length)return direct;
+ // Single Kanji sources often have no sentence; use real compound examples
+ // instead of fabricating one.
+ return state.related.flatMap(word=>examples({item:word})).slice(0,4);
+}
 function readings(card){const x=card?.item||{};return card?.type==='kanji'?[...(x.onyomi||[]),...(x.kunyomi||[])].join(' · '):String(x.reading||'')}
 function name(card){return card?.type==='kanji'?card.item.character:card?.item?.word||''}
 function meaning(card){return global.NextStepDailySource?.getGloss(card?.item||{})||''}
@@ -31,7 +38,7 @@ function currentFacts(){
  if(d.pos)rows.push('Part of speech: '+(Array.isArray(d.pos)?d.pos.join(', '):d.pos));
  const rel=state.related.slice(0,35);
  if(rel.length)rows.push('Real related dictionary words: '+rel.map(w=>w.word+' ('+w.reading+'): '+global.NextStepDailySource.getGloss(w)).join('; '));
- const ex=examples(card);if(ex.length)rows.push('Verified sentences: '+ex.map(x=>x.ja+(x.en?' — '+x.en:'')).join(' / '));
+ const ex=effectiveExamples(card);if(ex.length)rows.push('Verified sentences: '+ex.map(x=>x.ja+(x.en?' — '+x.en:'')).join(' / '));
  return rows.join('\n').slice(0,6500);
 }
 function responseGuide(question){
