@@ -8,7 +8,7 @@ const CONFIG={kanji:{size:20,title:'Kanji',max:700},grammar:{size:10,title:'Gram
 const STORE='nextstep-n1-progress-2026';
 const DAILY_STORE='nextstep-n1-daily-v2';
 const TRANS_STORE='nextstep-n1-translations-v2';
-const app={section:'kanji',chapter:0,data:{kanji:[],grammar:[],vocab:[]},loaded:false,quiz:[],quizSection:'kanji',quizChapter:0,progress:{},cache:{},showingResults:false,vocabCategory:'all',showFurigana:(()=>{try{return localStorage.getItem('n1-furigana')!=='off'}catch(e){return true}})(),dailyReveal:{},dailyProgress:{}};
+const app={section:'grammar',chapter:0,data:{kanji:[],grammar:[],vocab:[]},loaded:false,quiz:[],quizSection:'kanji',quizChapter:0,progress:{},cache:{},showingResults:false,vocabCategory:'all',showFurigana:(()=>{try{return localStorage.getItem('n1-furigana')!=='off'}catch(e){return true}})(),dailyReveal:{},dailyProgress:{}};
 const $=id=>document.getElementById(id);
 const esc=x=>String(x??'').replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
 const arr=x=>Array.isArray(x)?x:[];
