@@ -74,7 +74,8 @@ async function markActivity(){
  if(!configured()||!consent())return;
  const user=await waitForUser();if(!user||localStorage.getItem('nextstep-consenting-uid')!==user.uid)return;
  const now=Date.now(),key='nextstep-last-activity-sync:'+user.uid;
- if(now-Number(localStorage.getItem(key)||0)<12*60*60*1000)return;
+ const previous=Number(localStorage.getItem(key)||0);
+ if(new Date(now).toDateString()===new Date(previous).toDateString() && now>=previous && now-previous<12*60*60*1000)return;
  await touch(user);localStorage.setItem(key,String(now))
 }
 global.NextStepAuth={configured,sdk,waitForUser,touch,loginGoogle,loginFacebook,loginEmail,logout,getProfile,listProfiles,watchProfiles,markActivity};

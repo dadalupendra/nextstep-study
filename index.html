@@ -92,6 +92,10 @@ function renderLearner(){
   if(!paths[goal])continue;
   const link=document.createElement('a');link.href=paths[goal];link.textContent=labels[goal];nav.append(link)
  }
+ const workbook=document.createElement('a');
+ workbook.href='https://www.jlpt.jp/e/samples/sampleindex.html';
+ workbook.textContent=({ne:'JLPT आधिकारिक अभ्यास पुस्तिका',ja:'JLPT公式問題集',hi:'आधिकारिक JLPT अभ्यास पुस्तिका',en:'Official JLPT practice workbooks'})[language];
+ nav.append(workbook);
  const edit=document.createElement('a');edit.href='./onboarding/?edit=1';edit.textContent='⚙ Change preferences';nav.append(edit);
 }
 function render(){
@@ -115,7 +119,7 @@ function render(){
   a.append(title,subtitle,action);a.addEventListener('click',()=>{try{localStorage.setItem('nextstep-selected-level',level)}catch{}});$('levels').append(a);
  }
 }
-$('lang').addEventListener('change',e=>{language=e.target.value;try{localStorage.setItem('nextstep-home-lang',language)}catch{}render()});
+$('lang').addEventListener('change',e=>{language=e.target.value;try{localStorage.setItem('nextstep-home-lang',language)}catch{}render();renderLearner()});
 render();renderLearner();
 if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
 })();
