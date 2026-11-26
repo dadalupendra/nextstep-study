@@ -53,3 +53,8 @@ body.nextstep-fulltest #legacy-level-section{display:none!important}
 body.nextstep-fulltest #paper-collection>p.muted:last-child{display:none}
 body.nextstep-fulltest #daily-reminder-root:empty{display:none}
 body.nextstep-fulltest #exam-studio[hidden]{display:none!important}
+
+/* Three original exam-prep book collections use the same FullTest navigation. */
+body.nextstep-fulltest .fulltest-tabs{grid-template-columns:repeat(5,minmax(0,1fr))}
+body.nextstep-fulltest .fulltest-study-link{display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:12px 18px;border-radius:13px;background:#268f80;color:white!important;text-decoration:none;font-weight:800;margin:12px 0}
+@media(max-width:540px){body.nextstep-fulltest .fulltest-tabs button{font-size:11px;padding:10px 2px;min-width:0;white-space:normal}}
