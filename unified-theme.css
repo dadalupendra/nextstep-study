@@ -59,3 +59,8 @@ body:has(#exam-studio) .level-grid button[aria-pressed="true"]{background:#FFC93
 body:has(#exam-studio) .paper{background:#E4E1FB;color:#1B1740;border-color:#C7C2E9;border-radius:16px}
 body:has(#exam-studio) .section-overview>div{background:#E4E1FB;color:#1B1740;border-color:#C7C2E9}
 body:has(#exam-studio) .section-overview small{color:#514B70}
+
+/* A compact level-scoped navigation line on every legacy deep link. */
+.level-jump{display:flex;gap:9px;align-items:center;flex-wrap:wrap;background:#fff;border:1px solid #E4DDEE;border-radius:19px;padding:12px 15px;margin:9px auto;max-width:1400px;color:#1B1740}
+.level-jump strong{margin-right:5px;color:#3026A0;font-size:14px}.level-jump a{background:#E4E1FB;border-radius:13px;color:#1B1740!important;text-decoration:none;font-weight:700;font-size:13px;padding:9px 12px;min-height:44px;display:inline-flex;align-items:center;justify-content:center}.level-jump a:first-of-type{background:#FFC93C}
+@media(max-width:750px){.level-jump{margin:8px 9px;padding:9px;gap:6px}.level-jump a{font-size:12px;padding:8px 10px}.level-jump strong{width:100%}}
