@@ -58,13 +58,17 @@ function translationSection(q,api,{includeQuestion=true,includeReview=true}={}){
    const p=document.createElement('p');p.textContent='⏳';item.append(h,p);nodes.push({p,english});result.append(item);
   }
   try{
-    // Translate one combined explanation first: keeps the API request size manageable.
-    const combined=nodes.map((n,j)=>(j+1)+': '+n.english).join('\n');
-    let translated='';
-    try{translated=await translate(combined,'en',target)}catch(e){if(nodes.length>1)throw e}
-    if(target===lang){const output=document.createElement('p');output.style.whiteSpace='pre-wrap';output.textContent=translated;
-      result.replaceChildren(output);const reminder=document.createElement('strong');reminder.textContent='✓ Correct answer: '+(correct+1)+' — '+q.options[correct];result.prepend(reminder)}
-  }catch(e){result.textContent='Translation unavailable ('+e.message+'). Original Japanese/English explanations remain visible. ';result.append(external(nodes.map((n,j)=>(j+1)+'. '+n.english).join('\n'),'en',target))}
+    // Translate all four actual choice explanations separately, with each
+    // result displayed under its option. Requests are opt-in and sequential.
+    for(const item of nodes){
+      if(target!==lang)break;
+      try{item.p.textContent=await translate(item.english,'en',target)}
+      catch(e){
+        item.p.textContent='Translation unavailable: '+e.message+'. ';
+        item.p.append(external(item.english,'en',target));
+      }
+    }
+  }catch(e){result.append(external(nodes.map((n,j)=>(j+1)+'. '+n.english).join('\\n'),'en',target))}
   finally{review.disabled=false}
  };
  if(includeReview){actions.append(review);panel.append(result)}if(!includeQuestion)panel.append(actions);return panel
