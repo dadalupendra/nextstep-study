@@ -397,7 +397,7 @@ export default function App() {
         <View style={{flexDirection:'row',alignItems:'center',gap:8}}>
           <Folder size={18} color={PALETTE.indigo}/><Text style={[font(17,'bold'),{flex:1}]}>{n.title}</Text>
           <Pressable onPress={()=>Alert.alert('Delete note','Delete this note?',[{text:'Cancel'},{text:'Delete',style:'destructive',onPress:()=>{patch({notes:data.notes.filter(x=>x.id!==n.id)});notify('Note deleted')}}])} accessibilityRole="button" accessibilityLabel={'Delete note '+n.title} style={{padding:12}}>
-            <Trash2 color={PALETTE.coral} size={19}/>
+            <Trash2 color={PALETTE.coral} size={19}/><Text style={font(10,'semi',theme.muted)}>Delete</Text>
           </Pressable>
         </View>
         <Text style={[font(13),{marginVertical:8}]}>{n.body}</Text>
@@ -496,7 +496,7 @@ export default function App() {
       <View style={{flexDirection:'row',alignItems:'center',justifyContent:'space-between',marginBottom:9}}>
         <Text style={font(20,'bold')}>Daily to-do</Text>
         <Pressable onPress={()=>startForm('task')} accessibilityRole="button" accessibilityLabel="Add task" style={{minWidth:48,minHeight:48,alignItems:'center',justifyContent:'center',backgroundColor:PALETTE.yellow,borderRadius:15}}>
-          <Plus size={22} color={PALETTE.ink}/>
+          <Plus size={19} color={PALETTE.ink}/><Text style={font(11,'semi',PALETTE.ink)}>Add</Text>
         </Pressable>
       </View>
       {!data.tasks.length?<View style={cardStyle}><Text style={font(14,'regular',theme.muted)}>{t.emptyTasks}</Text></View>:data.tasks.map(x=><View key={x.id} style={[cardStyle,{flexDirection:'row',alignItems:'center',gap:11}]}>
@@ -508,7 +508,7 @@ export default function App() {
         <View style={{flex:1}}><Text style={[font(13,'semi'),x.done?{textDecorationLine:'line-through',opacity:.7}:null]}>{x.title}</Text>
           <Text style={font(11,'regular',theme.muted)}>{x.due} · {x.subject}</Text></View>
         <Pressable onPress={()=>patch({tasks:data.tasks.filter(y=>y.id!==x.id)})} accessibilityLabel={'Delete task '+x.title} style={{padding:12}}>
-          <Trash2 size={19} color={theme.muted}/>
+          <Trash2 size={19} color={theme.muted}/><Text style={font(10,'semi',theme.muted)}>Delete</Text>
         </Pressable>
       </View>)}
     </>;
@@ -604,7 +604,7 @@ export default function App() {
       <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{backgroundColor:theme.bg,borderTopLeftRadius:27,borderTopRightRadius:27,padding:23,maxHeight:650}}>
         <View style={{flexDirection:'row',justifyContent:'space-between',alignItems:'center'}}>
           <Text style={font(21,'bold')}>{form==='task'?t.newTask:form==='note'?t.newNote:t.newCard}</Text>
-          <Pressable onPress={()=>setForm(null)} accessibilityLabel="Close form" style={{padding:12}}><X color={theme.ink} size={22}/></Pressable>
+          <Pressable onPress={()=>setForm(null)} accessibilityLabel="Close form" style={{padding:12}}><X color={theme.ink} size={20}/><Text style={font(11,'semi')}>Close</Text></Pressable>
         </View>
         <Field label={form==='card'?'Japanese word / Question':'Title'} value={fields.title} onChange={title=>setFields(s=>({...s,title}))} theme={theme}/>
         {form==='task'?<>
