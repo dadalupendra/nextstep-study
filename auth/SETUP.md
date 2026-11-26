@@ -22,14 +22,14 @@
 4. If popup restrictions prevent login on mobile, add a proper redirect flow and test with your actual provider/domain; do not claim it works before testing.
 
 ## Phone number login (SMS)
-Firebase phone authentication **requires a Cloud Billing account** for SMS service; it is not unlimited no-card-free on Spark. This repository intentionally leaves Phone OTP disabled rather than simulating a verified phone sign-in.
-- Official: https://firebase.google.com/docs/auth/faq-and-troubleshooting
-- Consider adding it later only when billing limits, reCAPTCHA/abuse defense, privacy notice and owner approval are configured.
+Enable the Phone provider, authorized domain and intended SMS regions in Firebase. Review billing before enabling real SMS. Set NEXTSTEP_PHONE_LOGIN_READY to true in auth/firebase-config.js after configuring the provider. Test with a Firebase fictional phone number and code, then verify actual delivery on the published domain. The form uses Firebase reCAPTCHA and verifies the received code before saving the profile.
+
+The admin directory updates while open. A new profile displays an in-page announcement. This does not send email or background push notifications.
 
 ## Privacy, usage and limits
 - `auth/firestore.rules`: each verified user can read their **own** profile; other users cannot list or read it; only a manually authorized administrator can list all profiles.
 - The user must actively check the consent box before online login; guests do not generate usage records.
-- Last-use dates are client-reported, synced at most every 12 hours when the person visits the homepage while authenticated and consented. They are not tamper-proof attendance/audit logs; accurate trusted analytics require backend-validated events and a clearly disclosed privacy policy.
+- Last-use dates are client-reported, synced at most every 12 hours on home, level books, reader, exam and daily practice pages while authenticated and consented. They are not tamper-proof attendance/audit logs; accurate trusted analytics require backend-validated events and a clearly disclosed privacy policy.
 - Public pages do not contain private profile names or emails. Never store a password in Firestore, localStorage or the GitHub repo.
 - A Firebase project must be connected before any Google/Email/Facebook button becomes active. Showing this interface does not create accounts by itself.
 - If you expand user tracking, have a legal privacy and deletion procedure appropriate for the users' jurisdictions and age. Avoid collecting more personal data than necessary.
