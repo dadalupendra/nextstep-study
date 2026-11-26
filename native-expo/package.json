@@ -20,7 +20,9 @@
     "react-native": "0.88.1",
     "react-native-svg": "15.16.0",
     "react-native-webview": "14.0.1",
-    "expo-font": "~58.0.12"
+    "expo-font": "~58.0.12",
+    "@supabase/supabase-js": "^2.79.0",
+    "react-native-url-polyfill": "^2.0.0"
   },
   "devDependencies": {
     "@types/react": "~19.3.0",
