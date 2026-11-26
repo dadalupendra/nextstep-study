@@ -14,11 +14,11 @@ const server=spawn('python3',['-m','http.server',String(PORT),'--bind','127.0.0.
    const ctx=await browser.newContext({viewport:{width:390,height:844},serviceWorkers:'block'});
    const page=await ctx.newPage();
    const expected=level==='N1'?'/N1/':'/'+level+'/master.html';
-   await page.goto('http://127.0.0.1:'+PORT+'/mobile-app/learn.html?level='+level+'&section=overview',{waitUntil:'domcontentloaded'});
-   const link=page.locator('#content [data-section="original"]');
-   await link.waitFor({timeout:14000});
-   assert((await link.getAttribute('href')).includes(expected),'Complete Book link must target original book');
-   await link.click();
+   await page.goto('http://127.0.0.1:'+PORT+'/mobile-app/learn.html?level='+level+'&section=kanji',{waitUntil:'domcontentloaded'});
+   const entry=page.locator('#menu button').filter({hasText:'Complete Japanese Textbook'});
+   await entry.waitFor({timeout:14000});
+   assert.equal(await page.locator('#content').getByText('Complete Study Collection').count(),0,'No duplicate Complete Study Collection section');
+   await entry.click();
    await page.waitForURL(url=>url.pathname.endsWith(expected),{timeout:12000});
    assert(page.url().includes(expected),'Book should open directly, without another menu');
    await page.locator('#nsBookLanguage').waitFor({timeout:12000});
@@ -28,7 +28,11 @@ const server=spawn('python3',['-m','http.server',String(PORT),'--bind','127.0.0.
    assert.equal(await page.locator('body.ns-japanese-book').count(),1);
    const style=await page.evaluate(()=>getComputedStyle(document.querySelector('.workarea')).borderTopStyle);
    assert.notEqual(style,'none','Textbook layout needs book-like treatment');
-   console.log('PASS '+level+' direct Complete Books navigation, textbook reader and language controls');
+   console.log('PASS '+level+' direct Complete Books navigation without duplicate collection, textbook reader and language controls');
+   await page.goto('http://127.0.0.1:'+PORT+'/mobile-app/learn.html?level='+level+'&section=kanji',{waitUntil:'domcontentloaded'});
+   await page.locator('#levels button', {hasText:level}).click();
+   await page.waitForURL(url=>url.pathname.endsWith(expected),{timeout:12000});
+   assert(page.url().includes(expected),'Clicking the level must open its book directly');
    await ctx.close();
   }
  }finally{await browser.close()}
