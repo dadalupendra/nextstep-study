@@ -25,7 +25,7 @@ const server=spawn('python3',['-m','http.server',String(PORT),'--bind','127.0.0.
    assert.equal(await page.locator('#detailDialog[open]').count(),1);
    assert.equal(await page.locator('#content .ns-review-filters button').count(),4,'Smart Review categories visible');
    await page.locator('#detailBody .ns-review-grade-buttons button[data-grade="hard"]').click();
-   assert.equal(await page.evaluate(()=>window.NextStepSRS.status('${level}','kanji',[],x=>x.character).total),0);
+   assert.equal(await page.locator('#detailBody .ns-review-message').innerText().then(x=>x.includes('Next review')),true,'Hard rating schedules a future review');
    await page.locator('#detailBody .library-kanji-compound').first().waitFor({timeout:10000});
    assert.equal(await page.locator('#detailBody .library-kanji-compound').count()>=1,true);
    assert.equal(await page.locator('#detailBody .library-kanji-example p:lang(ja)').count()>=1,true);
