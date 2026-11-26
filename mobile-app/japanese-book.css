@@ -1,0 +1,50 @@
+/* Japanese-textbook reading layout applied to the existing N1–N5 Master Books.
+   Original lesson data, progress, chapter navigation and exercises are untouched. */
+body.ns-japanese-book{--ns-paper:#fffcf4;--ns-ink:#263448;--ns-rule:#ddd5c2;--ns-vermillion:#ab372c;--ns-muted:#526072}
+body.ns-japanese-book .workarea{border:1px solid #adbdc5;border-radius:8px;overflow:hidden;background:var(--ns-paper)}
+body.ns-japanese-book .workarea .content{background:#f4f0e6;padding:24px clamp(12px,3vw,35px)}
+body.ns-japanese-book .sidebar{background:#f0eee6;color:#293646;border-right:1px solid var(--ns-rule)}
+body.ns-japanese-book .sidebar h2{color:#233446}
+body.ns-japanese-book .sidebar .lesson-btn{background:#fffdf6;color:#263448;border:1px solid #ded8c6;border-radius:8px;margin-bottom:5px}
+body.ns-japanese-book .sidebar .lesson-btn.active{background:#d9e9e6;color:#133e43;border-color:#7aa4a0}
+body.ns-japanese-book .sidebar .lesson-btn small{color:#526072}
+body.ns-japanese-book .sidebar .sidebar-note{color:#253448;background:#fff9ee;border:1px solid #e5d5bc}
+body.ns-japanese-book .controlbar{background:#fefdf7;color:#263448;border:1px solid #dfdacd;border-radius:9px;box-shadow:0 3px 12px #503c1b0d}
+body.ns-japanese-book .controlbar .control-label,body.ns-japanese-book .controlbar label{color:#293b4b}
+body.ns-japanese-book .controlbar input,body.ns-japanese-book .controlbar select{background:white;color:#253448;border:1px solid #b3b7b4}
+body.ns-japanese-book #itemsView{background:var(--ns-paper);color:var(--ns-ink);padding:clamp(14px,3vw,42px);border:1px solid var(--ns-rule);box-shadow:0 8px 23px #45341f16;min-height:330px;position:relative}
+body.ns-japanese-book #itemsView:before{content:"NEXTSTEP • 日本語学習";display:block;text-align:right;color:#8b7060;border-bottom:2px solid #bf4d3c;padding-bottom:11px;margin-bottom:17px;font-size:12px;letter-spacing:.15em;font-weight:800}
+body.ns-japanese-book #itemsView .section-title{border-bottom:2px solid #d6c8ab;margin:4px 0 24px;padding:0 0 17px}
+body.ns-japanese-book #itemsView .section-title h2{color:#283c49;font-family:"Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif;line-height:1.5;font-size:clamp(22px,3vw,32px)}
+body.ns-japanese-book #itemsView .section-title p{color:#526072}
+body.ns-japanese-book #itemsView .cards{grid-template-columns:1fr;gap:0}
+body.ns-japanese-book #itemsView article.card{background:transparent!important;color:var(--ns-ink)!important;border:0;border-bottom:1px solid #d9cfbe;border-radius:0;box-shadow:none;padding:23px 6px;margin:0;line-height:1.85}
+body.ns-japanese-book #itemsView article.card:last-child{border-bottom:0}
+body.ns-japanese-book #itemsView article.card h3{color:#253b4c!important;font-size:clamp(22px,3vw,29px);font-family:"Noto Serif JP","Yu Mincho",serif}
+body.ns-japanese-book #itemsView article.card .field,body.ns-japanese-book #itemsView article.card .meaning,body.ns-japanese-book #itemsView article.card .en,body.ns-japanese-book #itemsView article.card .small{color:#3f5060!important}
+body.ns-japanese-book #itemsView article.card .meaning{background:#f1eee3;border-left:3px solid #bf4d3c;padding:8px 13px;margin:9px 0;border-radius:0}
+body.ns-japanese-book #itemsView article.card .badge{background:#f4e7df;color:#853a32;border:1px solid #dec4af;border-radius:5px;padding:4px 10px}
+body.ns-japanese-book #itemsView article.card .example{background:#f8f6ee;color:#263448;border:1px solid #e4ded0;border-radius:5px;margin:10px 0;padding:13px}
+body.ns-japanese-book #itemsView article.card .ja{font-size:clamp(17px,2.4vw,22px);line-height:2;color:#1b3447;font-family:"Noto Serif JP","Yu Mincho",serif}
+body.ns-japanese-book #itemsView article.card .bigkanji{color:#1b3447!important;background:#f6f0e2!important;border:1px solid #cdbfa2!important;border-radius:9px}
+body.ns-japanese-book #itemsView article.card .headline{align-items:flex-start}
+body.ns-japanese-book #itemsView article.card .card-actions{margin-top:17px}
+body.ns-japanese-book #itemsView article.card .card-actions button{min-height:44px}
+body.ns-japanese-book .bottom-nav{background:#fffcf4;color:#283b4c;border-top:1px solid var(--ns-rule);border-radius:0}
+body.ns-japanese-book .ns-book-toolbar{background:#fffdf5;color:#293848;padding:15px;border:1px solid #e0d4bb;border-radius:9px;margin-bottom:18px}
+body.ns-japanese-book .ns-book-toolbar .ns-book-title{font-family:"Noto Serif JP","Yu Mincho",serif;font-size:21px;font-weight:800;margin:0 0 8px;color:#a03a31}
+body.ns-japanese-book .ns-book-toolbar .ns-book-subtitle{font-size:12px;color:#516071;margin-bottom:12px}
+body.ns-japanese-book .ns-book-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+body.ns-japanese-book .ns-book-actions button,body.ns-japanese-book .ns-book-actions select{min-height:44px;padding:9px 12px;font:inherit;border-radius:7px;border:1px solid #b6b6ae}
+body.ns-japanese-book .ns-book-actions button{background:#edf2ee;color:#253a43;font-weight:800;cursor:pointer}
+body.ns-japanese-book .ns-book-actions button.ns-book-primary{background:#a53e33;color:white;border-color:#9a392e}
+body.ns-japanese-book .ns-book-actions button:disabled{opacity:.6;cursor:progress}
+body.ns-japanese-book .ns-book-actions label{font-size:13px;font-weight:800;color:#293848}
+body.ns-japanese-book .ns-book-state{font-size:12px;color:#526072;margin:10px 0 0;min-height:20px;overflow-wrap:anywhere}
+body.ns-japanese-book .ns-lesson-translation{display:block;white-space:pre-wrap;line-height:1.8;margin:12px 0;background:#e9f2ee;padding:14px;border:1px solid #b7d2c4;border-radius:6px;color:#1a433d;font-size:14px;overflow-wrap:anywhere}
+body.ns-japanese-book .ns-lesson-translation[hidden]{display:none}
+body.ns-japanese-book .ns-chapter-trans-btn{background:#e4e6ee!important;color:#1e3552!important;border:1px solid #b4bfcd!important;min-height:44px;border-radius:7px;padding:9px 12px;margin:8px 0;cursor:pointer;font-weight:800}
+body.ns-japanese-book .ns-chapter-trans-btn:disabled{opacity:.6;cursor:progress}
+body.ns-japanese-book .ns-book-unavailable{font-size:12px;color:#786044}
+@media(max-width:740px){body.ns-japanese-book .workarea{grid-template-columns:1fr}body.ns-japanese-book .workarea .content{padding:9px}body.ns-japanese-book #itemsView{padding:14px}body.ns-japanese-book #itemsView article.card{padding:17px 2px}body.ns-japanese-book .ns-book-toolbar{padding:12px}body.ns-japanese-book .ns-book-actions button{flex:1 1 42%}}
+@media print{body.ns-japanese-book .ns-book-toolbar,body.ns-japanese-book .ns-chapter-trans-btn{display:none!important}body.ns-japanese-book #itemsView{box-shadow:none;border:0}}
