@@ -8,6 +8,7 @@ on:
       - 'unified-theme.css'
       - 'mobile-app/**'
       - 'onboarding/**'
+      - 'privacy/**'
       - 'auth/**'
       - 'account/**'
       - 'admin-users/**'
@@ -131,7 +132,7 @@ jobs:
           mkdir -p public-site/icons
           cp icons/icon.svg public-site/icons/
           cp -R install public-site/
-          cp -R mobile-app study-hub native-privacy daily kanji-3d onboarding auth account admin-users public-site/
+          cp -R mobile-app study-hub native-privacy daily kanji-3d onboarding auth account admin-users privacy public-site/
           test -s public-site/kanji-3d/index.html
           node --check kanji-3d/app.js
           test -s public-site/daily/index.html
