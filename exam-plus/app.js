@@ -37,7 +37,7 @@ function display(){
  $('levelRow').replaceChildren();$('levelRow').hidden=exam!=='NAT';
  if(exam==='NAT')for(const lv of LEVELS){const b=make('button',null,lv);b.setAttribute('aria-pressed',String(level===lv));b.onclick=()=>{level=lv;bookPage=0;reset();display()};$('levelRow').append(b)}
  $('bookTab').setAttribute('aria-selected',String(mode==='book'));$('quizTab').setAttribute('aria-selected',String(mode==='quiz'));
- $('book').hidden=mode!=='book';$('reference').hidden=true;$('quiz').hidden=mode!=='quiz';$('language').value=lang;
+ $('book').hidden=mode!=='book';$('quiz').hidden=mode!=='quiz';$('language').value=lang;
  const info=$('intro');info.replaceChildren();
  info.append(make('h2',null,title()+' · Original Study Collection'));
  const details=exam==='NAT'?
