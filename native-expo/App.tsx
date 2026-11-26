@@ -283,16 +283,16 @@ export default function App() {
       </View>
       {section(t.subjects)}
       <View style={{flexDirection:'row',gap:10,marginBottom:20}}>
-        {(['N5','N3','N1'] as const).map((lv,i)=>{
-          const n=data.sessions.filter(x=>x.subject.includes(lv)).reduce((a,x)=>a+x.minutes,0);
-          return <Pressable key={lv} onPress={()=>openLevel(lv)} accessibilityLabel={'Open JLPT '+lv}
+        {(['Physics','Math','Chemistry'] as const).map((lv,i)=>{
+          const n=data.sessions.filter(x=>x.subject===lv).reduce((a,x)=>a+x.minutes,0);
+          return <Pressable key={lv} onPress={()=>{setSubject(lv);startTool('timer')}} accessibilityLabel={'Start '+lv+' focus timer'}
             style={{flex:1,minHeight:125,borderRadius:19,padding:12,backgroundColor:[PALETTE.sky,PALETTE.mint,PALETTE.yellow][i]}}>
             <Text style={font(20,'bold',PALETTE.ink)}>{lv}</Text>
             <Text style={font(11,'semi',PALETTE.ink)}>{minText(n)}</Text>
             <View style={{height:8,backgroundColor:'#1B174030',borderRadius:8,overflow:'hidden',marginTop:10}}>
               <View style={{width:(Math.min(100,Math.round(n/300*100))+'%') as `${number}%`,height:8,backgroundColor:PALETTE.indigo}}/>
             </View>
-            <Text style={font(10,'semi',PALETTE.ink)}>Open lessons ↗</Text>
+            <Text style={font(10,'semi',PALETTE.ink)}>Start focus →</Text>
           </Pressable>
         })}
       </View>
@@ -318,6 +318,12 @@ export default function App() {
     return <View style={{backgroundColor:PALETTE.deep,borderRadius:28,padding:22,alignItems:'center'}}>
       <Text style={font(22,'bold',PALETTE.white)}>⏱ {t.timer}</Text>
       <Text style={[font(13,'semi',PALETTE.white),{marginVertical:9,textAlign:'center'}]}>{subject}</Text>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{maxHeight:49,width:'100%'}} contentContainerStyle={{gap:7,paddingBottom:3}}>
+        {['Physics','Math','Chemistry','Japanese · JLPT N2'].map(name=><Pressable key={name} onPress={()=>setSubject(name)} accessibilityRole="button" accessibilityLabel={'Focus on '+name}
+          style={{backgroundColor:subject===name?PALETTE.yellow:'#FFFFFF2C',borderRadius:12,minHeight:44,paddingHorizontal:11,justifyContent:'center'}}>
+          <Text style={font(11,'semi',subject===name?PALETTE.ink:PALETTE.white)}>{name}</Text>
+        </Pressable>)}
+      </ScrollView>
       <View style={{flexDirection:'row',gap:6,marginVertical:12}}>
         {(['focus','break','long'] as Mode[]).map((m)=> <Pressable key={m} onPress={()=>changeMode(m)}
           style={{flex:1,minHeight:46,backgroundColor:mode===m?PALETTE.yellow:'#FFFFFF1A',
