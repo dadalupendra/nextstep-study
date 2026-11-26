@@ -33,7 +33,7 @@ function explanationText(q,index,api){
  const english=enBox.textContent.trim();
  return {english:english||full,full};
 }
-function translationSection(q,api,{includeQuestion=true}={}){
+function translationSection(q,api,{includeQuestion=true,includeReview=true}={}){
  const panel=document.createElement('section');panel.className='ns-translation-panel';
  panel.append(languagePicker());
  const hint=document.createElement('p');hint.className='ns-translation-hint';hint.textContent='The original Japanese text stays visible. Automatic translations can be inaccurate; third-party rate limits and network access apply.';panel.append(hint);
@@ -68,7 +68,7 @@ function translationSection(q,api,{includeQuestion=true}={}){
   }catch(e){result.textContent='Translation unavailable ('+e.message+'). Original Japanese/English explanations remain visible. ';result.append(external(nodes.map((n,j)=>(j+1)+'. '+n.english).join('\n'),'en',target))}
   finally{review.disabled=false}
  };
- actions.append(review);if(!includeQuestion)panel.append(actions);panel.append(result);return panel
+ if(includeReview){actions.append(review);panel.append(result)}if(!includeQuestion)panel.append(actions);return panel
 }
 function addExamToolbar(){
  const root=document.getElementById('exam-studio')||document.querySelector('main');if(!root||document.getElementById('ns-language-bar'))return;
