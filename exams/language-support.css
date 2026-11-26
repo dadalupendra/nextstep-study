@@ -28,3 +28,6 @@
 .ns-sheet-choice.wrong{background:#FF9B85;border-color:#BC4B35;color:#1B1740}
 .studio-answersheet{max-height:80vh;overflow-y:auto}
 @media(max-width:820px){.studio-answersheet{max-height:285px;overflow:auto}#studio-answers.studio-numbers{max-height:185px;grid-template-columns:1fr}}
+
+#studio-practice-toggle{min-height:46px;background:#E4E1FB;color:#1B1740;border:2px solid #C0B8E4;border-radius:14px;font-weight:700}
+#studio-practice-toggle[aria-pressed="true"]{background:#FFC93C;color:#1B1740;border-color:#E3AF24}
