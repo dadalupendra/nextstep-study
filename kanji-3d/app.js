@@ -216,6 +216,7 @@ function init(){
  $('detail').onclick=e=>{if(e.target===$('detail'))$('detail').close()};
  $('translate').onclick=translate;$('speak').onclick=speak;
  window.NextStepOfflineAI?.initialize();
+ if('serviceWorker'in navigator)navigator.serviceWorker.register('../sw.js',{scope:'../'}).catch(()=>{});
  apply();load()
 }
 document.readyState==='loading'?document.addEventListener('DOMContentLoaded',init,{once:true}):init()
