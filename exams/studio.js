@@ -9,7 +9,7 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const LEVELS=['N5','N4','N3','N2','N1'];
 const labels={vocab:'文字・語彙',grammar:'文法',reading:'読解',listening:'聴解'};
 const minutes={N1:165,N2:155,N3:140,N4:115,N5:90};
-let state=null,timerId=null,started=false;
+let state=null,timerId=null,started=false,practiceMode=false;
 function typeOf(q){return q.type==='文法'?'grammar':q.type==='読解'?'reading':q.type==='聴解'?'listening':'vocab';}
 function save(){if(!state)return;try{localStorage.setItem('ns-studio-'+state.level+'-'+state.paper,JSON.stringify({answers:state.answers,index:state.index,startedAt:state.startedAt,submitted:state.submitted,flagged:state.flagged}));}catch(e){}}
 function restore(){try{const s=JSON.parse(localStorage.getItem('ns-studio-'+state.level+'-'+state.paper)||'null');if(!s||typeof s!=='object')return;state.answers=s.answers||{};state.index=Number.isInteger(s.index)?Math.max(0,Math.min(99,s.index)):0;state.startedAt=Number(s.startedAt)||Date.now();state.flagged=s.flagged||{};state.submitted=Boolean(s.submitted);}catch(e){}}
@@ -36,8 +36,8 @@ function renderSheet(){
    const chip=document.createElement('span');chip.className='ns-sheet-choice';
    const selected=state.answers[i]===j;
    if(selected)chip.classList.add('selected');
-   if(state.submitted&&j===state.questions[i].answer)chip.classList.add('correct');
-   if(state.submitted&&selected&&j!==state.questions[i].answer)chip.classList.add('wrong');
+   if((state.submitted||(practiceMode&&state.answers[i]!==undefined))&&j===state.questions[i].answer)chip.classList.add('correct');
+   if((state.submitted||practiceMode)&&selected&&j!==state.questions[i].answer)chip.classList.add('wrong');
    chip.textContent=String(j+1);chip.setAttribute('role','button');chip.tabIndex=state.submitted?-1:0;
    chip.setAttribute('aria-label','Question '+(i+1)+' choice '+(j+1));
    chip.setAttribute('aria-pressed',String(selected));
@@ -77,14 +77,14 @@ function renderQuestion(){
  const options=document.createElement('div');options.className='studio-options';options.setAttribute('role','group');options.setAttribute('aria-label','Choose one answer');
  q.options.forEach((option,j)=>{
   const button=document.createElement('button');button.type='button';button.className='studio-choice';if(state.answers[state.index]===j)button.classList.add('selected');
-  if(state.submitted&&j===q.answer)button.classList.add('correct');
-  if(state.submitted&&state.answers[state.index]===j&&j!==q.answer)button.classList.add('incorrect');
+  if((state.submitted||(practiceMode&&state.answers[state.index]!==undefined))&&j===q.answer)button.classList.add('correct');
+  if((state.submitted||practiceMode)&&state.answers[state.index]===j&&j!==q.answer)button.classList.add('incorrect');
   button.innerHTML='<span class="studio-choice-digit">'+(j+1)+'</span><span>'+esc(option)+'</span>';
   button.setAttribute('aria-pressed',String(state.answers[state.index]===j));
-  button.disabled=state.submitted;
+  button.disabled=state.submitted||(practiceMode&&state.answers[state.index]!==undefined);
   button.addEventListener('click',()=>{state.answers[state.index]=j;save();renderQuestion();renderSheet();});options.append(button);
  });container.append(options);
- if(state.submitted){
+ if(state.submitted||(practiceMode&&state.answers[state.index]!==undefined)){
   const explanation=document.createElement('div');explanation.className='studio-explanation';
   const h=document.createElement('h3');h.textContent='解説 / व्याख्या / Explanation';explanation.append(h);
   const summary=document.createElement('p');summary.textContent='正解：'+(q.answer+1)+' — '+q.options[q.answer];explanation.append(summary);
@@ -174,6 +174,7 @@ function setup(){
  const desiredPaper=Number(query.get('paper'));
  if(Number.isInteger(desiredPaper)&&desiredPaper>=1&&desiredPaper<=20)$('studio-paper').value=String(desiredPaper);
  $('studio-start').addEventListener('click',start);
+ const toggle=$('studio-practice-toggle');if(toggle)toggle.addEventListener('click',()=>{practiceMode=!practiceMode;toggle.setAttribute('aria-pressed',String(practiceMode));toggle.textContent=practiceMode?'✅ Practice Mode ON · Instant explanations':'👁 Practice Mode OFF · Exam review';if(state)render()});
  $('studio-prev').addEventListener('click',()=>position(state.index-1));
  $('studio-next').addEventListener('click',()=>position(state.index+1));
  $('studio-flag').addEventListener('click',()=>{if(state.flagged[state.index])delete state.flagged[state.index];else state.flagged[state.index]=true;save();render();});
