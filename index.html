@@ -57,7 +57,7 @@ function render(){
 
  $('levels').replaceChildren();
  for(const level of levels){
-  const a=document.createElement('a');a.className='level';a.href='./mobile-app/learn.html?level='+level;a.setAttribute('aria-label','Open all JLPT '+level+' learning material');
+  const a=document.createElement('a');a.className='level';a.href=level==='N1'?'./N1/':'./'+level+'/master.html';a.setAttribute('aria-label','Open all JLPT '+level+' learning material');
   const title=document.createElement('b');title.textContent=level;
   const subtitle=document.createElement('small');subtitle.textContent='JLPT '+level;
   const action=document.createElement('strong');action.textContent=c[4];
