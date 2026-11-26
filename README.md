@@ -1,5 +1,12 @@
 # NextStep Study — JLPT N5–N1
 
+## 📱 New native Android + iPhone app (2026)
+
+The new **React Native / Expo SDK 58** application lives in [native-expo/](native-expo/README.md). It uses the cream/indigo/yellow/mint/sky/coral design, five tabs, focus timer, flashcards, notes, timed quizzes, planner, stats, English/Nepali and dark mode. The N5–N1 study materials are accessible together from a level-based in-app WebView. Original JLPT content and exam IDs are preserved.
+
+The Expo app has its own TypeScript/Expo GitHub Actions validator. It is **source code**, not a published App Store or Google Play Store app. Local study works without a cloud account. Optional authenticated backups require configuring Supabase, the supplied RLS migration and delete-account Edge Function. Never expose service-role secrets in the app. See [native-expo/README.md](native-expo/README.md) and [Privacy Policy](native-privacy/index.html).
+
+
 Japanese self-study website, served as static HTML/CSS/JavaScript from GitHub Pages.
 
 ## Study levels
