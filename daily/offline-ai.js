@@ -46,7 +46,7 @@ function responseGuide(question){
  const card=state.card,d=card.item,q=String(question||'').toLowerCase();
  const head=name(card)+' ('+(readings(card)||'—')+')';
  const gloss=meaning(card)||t('missing');
- const ex=examples(card);
+ const ex=effectiveExamples(card);
  const related=state.related;
  const isExample=/例文|example|sentence|文|उदाहरण|वाक्य|例/i.test(q);
  const isReading=/読み|reading|pronun|発音|onyomi|kunyomi|उच्चारण|पढाइ|कैसे पढ़/i.test(q);
