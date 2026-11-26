@@ -3,7 +3,7 @@
 from pathlib import Path
 import sys
 root = Path(sys.argv[1] if len(sys.argv) > 1 else "public-site")
-paths = [root / "index.html", root / "exams/index.html"]
+paths = [root / "index.html"]  # Exam papers must stay free of floating Feedback / Facebook buttons.
 for level in ("N1", "N2", "N3", "N4", "N5"):
     paths += list((root / level).glob("*.html"))
 for path in paths:
