@@ -30,7 +30,10 @@ const server=spawn('python3',['-m','http.server',String(PORT),'--bind','127.0.0.
   const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
   await page.goto('http://127.0.0.1:'+PORT+'/exam-plus/?exam='+exam+(level?'&level='+level:''),{waitUntil:'domcontentloaded'});
   await page.locator('#status').getByText('Ready:',{exact:false}).waitFor({timeout:15000}).catch(()=>{});
-  assert.equal(await page.locator('.chapter').count(),exam==='NAT'?1:4,'Book chapters visible');
+  assert.equal(await page.locator('.chapter').count(),1,'Page-by-page textbook must show one actual chapter');
+  assert.equal(await page.locator('#bookPageNumber').innerText().then(x=>x.includes('/ '+(exam==='NAT'?1:4))),true);
+  assert((await page.locator('#language option').count())>=90,'90+ language options');
+  if(exam!=='NAT'){await page.locator('#bookNext').click();assert((await page.locator('#bookPageNumber').innerText()).includes('2 / 4'),'Next page must navigate a new chapter');}
   assert.equal(await page.locator('#book').isVisible(),true);
   await page.locator('#language').selectOption('ne');
   assert.equal(await page.locator('.chapter .explain').first().innerText().then(x=>x.length>14),true);
