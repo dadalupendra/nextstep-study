@@ -6,7 +6,7 @@ const $=id=>document.getElementById(id),LEVELS=['5Q','4Q','3Q','2Q','1Q'],EXAMS=
 const params=new URLSearchParams(location.search);
 let exam=EXAMS.includes((params.get('exam')||'').toUpperCase())?params.get('exam').toUpperCase():'NAT';
 let level=LEVELS.includes((params.get('level')||'').toUpperCase())?params.get('level').toUpperCase():'5Q';
-let mode=['book','quiz','reference'].includes(params.get('mode'))?params.get('mode'):'book';
+let mode=['book','quiz'].includes(params.get('mode'))?params.get('mode'):'book';
 let lang=params.get('lang')||localStorage.getItem('nextstep-exam-plus-language')||'ja';
 let books=null,bank=null,position=0,bookPage=0,answers={},all=[],finished=false;
 const make=(tag,className,value)=>{const x=document.createElement(tag);if(className)x.className=className;if(value!==undefined)x.textContent=String(value);return x};
@@ -31,11 +31,13 @@ function voice(text){
 }
 function display(){
  changeUrl();
- document.querySelectorAll('#categories button').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.exam===exam)));
+ $('examTitle').textContent=title()+' · Study Book';
+ document.title=title()+' | NextStep Study';
+ document.documentElement.dataset.exam=exam;
  $('levelRow').replaceChildren();$('levelRow').hidden=exam!=='NAT';
  if(exam==='NAT')for(const lv of LEVELS){const b=make('button',null,lv);b.setAttribute('aria-pressed',String(level===lv));b.onclick=()=>{level=lv;bookPage=0;reset();display()};$('levelRow').append(b)}
- $('bookTab').setAttribute('aria-selected',String(mode==='book'));$('refTab').setAttribute('aria-selected',String(mode==='reference'));$('quizTab').setAttribute('aria-selected',String(mode==='quiz'));
- $('book').hidden=mode!=='book';$('reference').hidden=mode!=='reference';$('quiz').hidden=mode!=='quiz';$('language').value=lang;
+ $('bookTab').setAttribute('aria-selected',String(mode==='book'));$('quizTab').setAttribute('aria-selected',String(mode==='quiz'));
+ $('book').hidden=mode!=='book';$('reference').hidden=true;$('quiz').hidden=mode!=='quiz';$('language').value=lang;
  const info=$('intro');info.replaceChildren();
  info.append(make('h2',null,title()+' · Original Study Collection'));
  const details=exam==='NAT'?
@@ -48,7 +50,7 @@ function display(){
  info.append(make('p',null,chapters+' original study chapter'+(chapters===1?'':'s')+' · '+count+' original multiple-choice questions · Japanese/English/Nepali explanations'));
  const link=make('a',null,'Official test structure ↗');link.href=books?.meta?.official?.[exam]||'#';link.target='_blank';link.rel='noopener noreferrer';info.append(link);
  $('status').textContent='Ready: '+title()+'. Your answers are saved locally in this browser.';
- if(mode==='book')renderBook();else if(mode==='reference')window.NextStepExamReference?.select(exam,level,lang);else renderQuiz()
+ if(mode==='book')renderBook();else renderQuiz()
 }
 function chapterText(ch){return lang==='ja'?ch.text:lang==='en'?ch.en:lang==='ne'?ch.ne:ch.text}
 function renderBook(){
@@ -137,9 +139,9 @@ async function init(){
   for(const code of codes){let name=names[code]||code;try{if(!names[code])name=new Intl.DisplayNames(['en'],{type:'language'}).of(code)||code}catch{}
    const option=make('option',null,name+' ('+code+')');option.value=code;select.append(option)}
   if(!codes.includes(lang))lang='ja';
-  document.querySelectorAll('#categories button').forEach(btn=>btn.onclick=()=>{exam=btn.dataset.exam;bookPage=0;reset();loadAnswers();display()});
-  $('bookTab').onclick=()=>{mode='book';display()};$('refTab').onclick=()=>{mode='reference';display()};$('quizTab').onclick=()=>{mode='quiz';loadAnswers();display()};
-  $('language').onchange=e=>{lang=e.target.value;try{localStorage.setItem('nextstep-exam-plus-language',lang)}catch{}if(mode==='reference'){window.NextStepExamReference?.updateLanguage(lang);changeUrl()}else display()};
+  // Exam category is fixed by the home card; never show a different exam inside this book.
+  $('bookTab').onclick=()=>{mode='book';display()};$('quizTab').onclick=()=>{mode='quiz';loadAnswers();display()};
+  $('language').onchange=e=>{lang=e.target.value;try{localStorage.setItem('nextstep-exam-plus-language',lang)}catch{}display()};
   for(const [id,step] of [['bookPrev',-1],['bookPrevBottom',-1],['bookNext',1],['bookNextBottom',1]]){
    $(id).onclick=()=>{bookPage=Math.max(0,Math.min(activeBooks().length-1,bookPage+step));renderBook();$('book').scrollIntoView({block:'start',behavior:'smooth'})};
   }
