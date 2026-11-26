@@ -89,6 +89,16 @@ function renderQuestion(){
   const h=document.createElement('h3');h.textContent='解説 / व्याख्या / Explanation';explanation.append(h);
   const summary=document.createElement('p');summary.textContent='正解：'+(q.answer+1)+' — '+q.options[q.answer];explanation.append(summary);
   for(let j=0;j<4;j++){const opt=document.createElement('div');opt.className='studio-explain-option';opt.innerHTML=api().explain(q,j);explanation.append(opt);}
+  if(q.word?.word||q.grammarTarget?.form){
+    const term=q.word?.word||q.grammarTarget?.form;
+    const selectedSection=q.word?'vocab':'grammar';
+    const detailLink=document.createElement('a');
+    detailLink.href='../mobile-app/learn.html?'+new URLSearchParams({level:state.level,section:selectedSection,word:term});
+    detailLink.className='ns-external-translation';
+    detailLink.textContent='📖 Open complete '+(q.word?'vocabulary':'grammar')+' details · readings, examples and translation ↗';
+    detailLink.target='_blank';detailLink.rel='noopener noreferrer';
+    explanation.append(detailLink);
+  }
   if(isListening){const transcript=document.createElement('details');transcript.open=true;const label=document.createElement('summary');label.textContent='🎧 Listening Script (日本語)';const text=document.createElement('p');text.textContent=q.passage||'';text.style.whiteSpace='pre-wrap';transcript.append(label,text);explanation.append(transcript);}
   if(window.NextStepExamLanguage)explanation.append(window.NextStepExamLanguage.translationSection(q,api(),{includeQuestion:false}));container.append(explanation);
  }
