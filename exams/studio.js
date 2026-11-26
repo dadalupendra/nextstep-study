@@ -46,6 +46,7 @@ function renderQuestion(){
  const body=document.createElement('div');body.textContent=parts[0];body.style.whiteSpace='pre-wrap';prompt.append(body);
  if(parts.length>1){const question=document.createElement('p');question.className='studio-prompt-question';question.textContent='【質問】'+parts.slice(1).join('【質問】');prompt.append(question);}
  container.append(prompt);
+ if(window.NextStepExamLanguage){const helper=window.NextStepExamLanguage.translationSection(q,api(),{includeReview:false});container.append(helper);}
  if(isListening){
   const box=document.createElement('div');box.className='studio-audio';
   const play=document.createElement('button');play.type='button';play.textContent='▶ 音声を再生 / Play Japanese';play.addEventListener('click',()=>api().speak(q.passage||'',1));
@@ -72,7 +73,7 @@ function renderQuestion(){
   const summary=document.createElement('p');summary.textContent='正解：'+(q.answer+1)+' — '+q.options[q.answer];explanation.append(summary);
   for(let j=0;j<4;j++){const opt=document.createElement('div');opt.className='studio-explain-option';opt.innerHTML=api().explain(q,j);explanation.append(opt);}
   if(isListening){const transcript=document.createElement('details');transcript.open=true;const label=document.createElement('summary');label.textContent='🎧 Listening Script (日本語)';const text=document.createElement('p');text.textContent=q.passage||'';text.style.whiteSpace='pre-wrap';transcript.append(label,text);explanation.append(transcript);}
-  container.append(explanation);
+  if(window.NextStepExamLanguage)explanation.append(window.NextStepExamLanguage.translationSection(q,api(),{includeQuestion:false}));container.append(explanation);
  }
  $('studio-prev').disabled=state.index===0;
  $('studio-next').disabled=state.index===state.questions.length-1;
