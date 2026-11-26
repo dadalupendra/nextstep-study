@@ -13,7 +13,7 @@ let browser;
  const page=await context.newPage(),errors=[];
  page.on('pageerror',err=>errors.push(err.message));
  await page.goto('http://127.0.0.1:'+PORT+'/',{waitUntil:'domcontentloaded'});
- assert.equal(await page.locator('a[href="feedback/"]').count(),1,'Homepage feedback CTA missing');
+ assert.equal(await page.locator('a[href="./daily/?level=N2&ai=1"]').count(),1,'Homepage should link directly to Offline AI Teacher');
  assert.equal(await page.locator('#ns-feedback-dock a').count(),2,'Study-page feedback shortcuts missing');
  await page.goto('http://127.0.0.1:'+PORT+'/feedback/',{waitUntil:'domcontentloaded'});
  await page.locator('#feedback-form').waitFor();
