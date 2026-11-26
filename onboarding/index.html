@@ -1,0 +1,54 @@
+<!doctype html><html lang="ne"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#fff8ee"><meta name="description" content="NextStep Study welcome, language, JLPT level, learning preferences and optional verified sign-in."><title>Welcome · NextStep Study</title><link rel="stylesheet" href="./style.css?v=1"></head><body>
+<main id="app">
+<header><a href="../" class="brand">📚 NextStep <span>Study</span></a><span id="stepCount" aria-live="polite">1 / 4</span></header>
+<div class="steps" role="progressbar" aria-label="Onboarding progress" aria-valuemin="1" aria-valuemax="4" aria-valuenow="1"><div id="progress"></div></div>
+<section class="screen" data-step="0">
+<div class="hero-icon" aria-hidden="true">🙏</div><h1>Welcome to NextStep Study!</h1><p class="namaste">नमस्ते! · ようこそ · Welcome</p>
+<p>Japanese पढ्ने, JLPT तयारी गर्ने र आफ्नो लक्ष्यअनुसार अभ्यास गर्ने एउटा ठाउँ।</p>
+<div class="hero-stats"><span>🈶 N5–N1</span><span>🧊 3D Kanji</span><span>📝 Practice Tests</span></div>
+<button type="button" id="welcomeNext" class="primary">Next →</button>
+</section>
+<section class="screen" data-step="1" hidden>
+<h1>🌍 Choose your language</h1><p>कुन भाषामा Japanese को अर्थ र Explanation पढ्न चाहन्छौ?</p>
+<label for="lang">Explanation language</label><select id="lang" required><option value="ne">नेपाली — Nepali</option><option value="ja">日本語 — Japanese</option><option value="en">English</option><option value="hi">हिन्दी — Hindi</option><option value="bn">বাংলা — Bengali</option><option value="ko">한국어 — Korean</option><option value="zh-CN">中文 — Chinese</option><option value="fr">Français — French</option><option value="es">Español — Spanish</option><option value="ar">العربية — Arabic</option></select>
+<p class="hint">Original Japanese पाठ सधैँ देखिनेछ। अन्य भाषाका अनुवादमा Internet र provider आवश्यक पर्न सक्छ।</p>
+<div class="actions"><button type="button" data-back>← Back</button><button type="button" id="languageNext" class="primary">Next →</button></div>
+</section>
+<section class="screen" data-step="2" hidden>
+<h1>🎓 Choose your level & study goals</h1><p>आफ्नो स्तर र आज के पढ्न चाहन्छौ छान।</p>
+<fieldset><legend>JLPT Level</legend><div class="choices levels">
+<label><input type="radio" name="level" value="N5"><span>N5</span></label>
+<label><input type="radio" name="level" value="N4"><span>N4</span></label>
+<label><input type="radio" name="level" value="N3"><span>N3</span></label>
+<label><input type="radio" name="level" value="N2" checked><span>N2</span></label>
+<label><input type="radio" name="level" value="N1"><span>N1</span></label>
+</div></fieldset>
+<fieldset><legend>What do you want to study?</legend><div class="choices goals">
+<label><input type="checkbox" name="goal" value="kanji" checked><span>🈶 Kanji</span></label>
+<label><input type="checkbox" name="goal" value="vocab" checked><span>📘 Vocabulary</span></label>
+<label><input type="checkbox" name="goal" value="grammar"><span>📝 Grammar</span></label>
+<label><input type="checkbox" name="goal" value="reading"><span>📖 Reading</span></label>
+<label><input type="checkbox" name="goal" value="listening"><span>🎧 Listening</span></label>
+<label><input type="checkbox" name="goal" value="papers"><span>⏱ Mock Exams</span></label>
+<label><input type="checkbox" name="goal" value="daily"><span>🧊 Daily 3D Cards</span></label>
+</div></fieldset>
+<label for="minutes">Daily study target</label><select id="minutes"><option value="15">15 minutes</option><option value="30" selected>30 minutes</option><option value="60">60 minutes</option><option value="90">90 minutes</option><option value="180">180 minutes</option></select>
+<div class="actions"><button type="button" data-back>← Back</button><button type="button" id="goalNext" class="primary">Next →</button></div>
+</section>
+<section class="screen" data-step="3" hidden>
+<h1>🔐 Private account or Guest</h1><p>Login गर्दा भविष्यमा आफ्नो Profile र अध्ययन जानकारी निजी Account सँग जोड्न सकिन्छ। Guest बाट पनि निःशुल्क अध्ययन सुरु गर्न सक्छौ।</p>
+<p id="authStatus" role="status" class="hint">Checking sign-in availability…</p>
+<div class="login-methods">
+<button type="button" id="google" disabled>🌐 Continue with Google / Gmail</button>
+<button type="button" id="facebook" disabled>f Continue with Facebook</button>
+<button type="button" id="phone" disabled>📱 Phone OTP — billing setup required</button>
+</div>
+<details id="emailBox"><summary>✉️ Sign in / Register with Email</summary><form id="emailForm"><label for="email">Email address</label><input id="email" type="email" autocomplete="email" required><label for="password">Password (min 8 characters)</label><input id="password" type="password" minlength="8" autocomplete="current-password" required><div class="actions"><button type="submit" id="emailLogin" disabled>Sign in</button><button type="button" id="emailRegister" disabled>Create account</button></div></form></details>
+<label class="consent"><input type="checkbox" id="activityConsent"> I agree that my signed-in account and latest use date can be visible to the NextStep administrator. My private profile will not be publicly listed.</label>
+<div class="actions"><button type="button" data-back>← Back</button><button type="button" id="guest" class="primary">Start learning as Guest →</button></div>
+<p class="hint">Google/Facebook/Email become available after the owner configures Firebase. Guest activity is not visible in an admin user list. Do not share passwords with the website owner.</p>
+</section>
+<footer>NextStep Study · <a href="../">Home</a> · <a href="../account/">Profile</a></footer>
+</main>
+<script src="../auth/firebase-config.js"></script><script src="../auth/client.js"></script><script src="./app.js?v=1" defer></script>
+</body></html>
