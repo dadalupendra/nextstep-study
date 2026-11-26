@@ -1,0 +1,19 @@
+{
+  "name": "NextStep Study Mobile",
+  "short_name": "NextStep",
+  "description": "Study planner, JLPT books, flashcards, timer and notes",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#FFF8EE",
+  "theme_color": "#FFF8EE",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
