@@ -16,7 +16,7 @@ function tokyoClock(date=new Date()){
  return{date:parts.year+'-'+parts.month+'-'+parts.day,time:parts.hour+':'+parts.minute};
 }
 function challengeURL(level){
- return new URL(level==='N1'?'N1/?section=daily':level+'/master.html?section=daily',ROOT).href;
+ return new URL('daily/?level='+encodeURIComponent(level),ROOT).href;
 }
 function canUseNotifications(){
  return typeof global.Notification!=='undefined'&&typeof Notification.requestPermission==='function'&&
@@ -37,8 +37,8 @@ function readPrefs(){
 function storePrefs(prefs){try{localStorage.setItem(PREF_KEY,JSON.stringify(prefs));return true;}catch(e){return false;}}
 function doneToday(level,date){
  try{
-  const v=JSON.parse(localStorage.getItem('nextstep-daily100-v1-'+level+'-'+date)||'null');
-  return !!v?.answers&&Object.keys(v.answers).length>=100;
+  const v=JSON.parse(localStorage.getItem('nextstep-3d-daily-v1-'+level+'-'+date)||'null');
+  return !!v&&Object.keys(v).length>=20;
  }catch(e){return false;}
 }
 function sentKey(day){return SENT_PREFIX+day;}
@@ -64,7 +64,7 @@ async function tick(){
  const prefs=readPrefs(),clock=tokyoClock();
  for(const root of nodes){
   const label=root.querySelector('[data-ns-today]');
-  if(label)label.textContent='📆 '+clock.date+' · Japan Time · '+prefs.level+' — 100 questions';
+  if(label)label.textContent='📆 '+clock.date+' · Japan Time · '+prefs.level+' — 20 3D cards';
   const link=root.querySelector('[data-ns-go]');
   if(link)link.href=challengeURL(prefs.level);
  }
@@ -73,11 +73,11 @@ async function tick(){
  busy=true;
  try{
   await show("🔔 Today's Challenge — NextStep Study",
-   'आजको '+prefs.level+' Daily Challenge तयार छ! 30 Kanji + 40 Vocabulary + 30 Grammar = 100 प्रश्न।',
+   'आजको '+prefs.level+' Daily Challenge तयार छ! 10 Kanji + 10 Vocabulary = 20 वटा 3D कार्ड।',
    challengeURL(prefs.level),'nextstep-daily-'+clock.date);
   recordSent(clock.date);
   report('✅ Today’s challenge reminder sent on this device. Next reminder on another Japan-calendar day.');
- }catch(e){report('⚠ Notification unavailable: '+e.message+' Your Daily 100 is still ready here.');}
+ }catch(e){report('⚠ Notification unavailable: '+e.message+' Your 3D Kanji and Vocabulary cards are still ready here.');}
  finally{busy=false;}
 }
 function statusMessage(){
@@ -94,8 +94,8 @@ function setup(root){
  root.innerHTML='<section class="ns-reminder-panel" aria-label="Daily Challenge reminders">'+
   '<div class="ns-reminder-copy"><span class="ns-reminder-tag">📅 DAILY CHALLENGE · N5–N1</span>'+
   '<h3>🔔 Today’s Challenge / 今日の挑戦</h3>'+
-  '<p class="ns-reminder-lead">आजको अभ्यास तयार छ! <b>100 Japanese questions every day</b> — 30 Kanji · 40 Vocabulary · 30 Grammar.</p>'+
-  '<p class="ns-reminder-date" data-ns-today>📆 '+safe(clock.date)+' · Japan Time · '+prefs.level+' — 100 questions</p>'+
+  '<p class="ns-reminder-lead">आजको अभ्यास तयार छ! <b>20 real 3D flashcards every day</b> — 10 Kanji · 10 Vocabulary.</p>'+
+  '<p class="ns-reminder-date" data-ns-today>📆 '+safe(clock.date)+' · Japan Time · '+prefs.level+' — 20 3D cards</p>'+
   '<a class="ns-reminder-link" data-ns-go href="'+safe(challengeURL(prefs.level))+'">🎯 Start Today’s Challenge →</a></div>'+
   '<div class="ns-reminder-settings"><div class="ns-reminder-controls">'+
   '<label>Level <select data-ns-level aria-label="JLPT reminder level">'+LEVELS.map(level=>'<option value="'+level+'"'+(level===prefs.level?' selected':'')+'>'+level+'</option>').join('')+'</select></label>'+
@@ -126,7 +126,7 @@ function setup(root){
  test.addEventListener('click',async()=>{
   if(!canUseNotifications()||Notification.permission!=='granted'){report('Enable reminders and grant notification permission first.');return;}
   try{await show('🔔 NextStep Study — Test Notification',
-   'Today’s Challenge is ready! Open '+readPrefs().level+' to practice 100 Japanese questions.',
+   'Today’s Challenge is ready! Open '+readPrefs().level+' to review 20 Kanji and Vocabulary cards.',
    challengeURL(readPrefs().level),'nextstep-daily-test-'+Date.now());
    report('✅ Test notification sent. Please check your device notification settings if it is not visible.');
   }catch(e){report('⚠ Test notification failed: '+e.message);}
@@ -146,7 +146,7 @@ function init(){
  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')tick();});
  global.addEventListener('focus',tick);
  global.addEventListener('storage',event=>{
-  if(event.key===PREF_KEY||event.key?.startsWith('nextstep-daily100-v1-')){
+  if(event.key===PREF_KEY||event.key?.startsWith('nextstep-3d-daily-v1-')){
    const p=readPrefs();for(const node of nodes){
     node.querySelector('[data-ns-level]').value=p.level;
     node.querySelector('[data-ns-time]').value=p.time;
