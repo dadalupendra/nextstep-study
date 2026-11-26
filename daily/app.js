@@ -1,6 +1,6 @@
 /* NextStep Daily 3D cards — no demo content, no quiz duplicates. */
 (()=>{'use strict';
-const API=window.NextStepDailySource,LEVELS=API.LEVELS;
+const API=window.NextStepDailySource,COMPOUNDS=window.NextStepKanjiCompounds,LEVELS=API.LEVELS;
 const CODES='ne en ja hi bn zh-CN ko fr es de ar th vi id pt ru it tr uk pl nl sv fi da no el he fa ur ta te mr gu pa ms sw fil my km lo af sq am hy az eu be bs bg ca hr cs et gl ka ht hu is ig ga jv kk ku ky lv lt mk mn ps ro sr sk sl so su tg uz cy zu yo xh si or as tk fy lb mt ny st sd yi ceb'.split(' ');
 const NAMES={ne:'नेपाली',en:'English',ja:'日本語',hi:'हिन्दी',bn:'বাংলা','zh-CN':'中文',ko:'한국어',ar:'العربية',ur:'اردو',ta:'தமிழ்',te:'తెలుగు'};
 const $=id=>document.getElementById(id),getName=x=>{try{return new Intl.DisplayNames(['en'],{type:'language'}).of(x)||x}catch{return x}};
@@ -10,7 +10,7 @@ const sharedKey='nextstep-unified-prefs',savedPrefs=safeStorage.read(sharedKey)|
 const url=new URL(location.href);
 let level=LEVELS.includes(url.searchParams.get('level'))?url.searchParams.get('level'):(LEVELS.includes(savedPrefs.level)?savedPrefs.level:'N2');
 let language=CODES.includes(savedPrefs.lang)?savedPrefs.lang:'ne';
-let dark=!!savedPrefs.dark,furigana=savedPrefs.furi!==false,filter='all',day=API.tokyoDay(),loaded=null,cards=[],progress={},current=null;
+let dark=!!savedPrefs.dark,furigana=savedPrefs.furi!==false,filter='all',day=API.tokyoDay(),loaded=null,cards=[],progress={},current=null,detailSerial=0;
 const text=(tag,str,cls)=>{const n=document.createElement(tag);if(cls)n.className=cls;n.textContent=str??'';return n};
 const brief=item=>API.getGloss(item);
 const reading=(item,type)=>type==='kanji'?[...(item.onyomi||[]),...(item.kunyomi||[])].join(' · '):item.reading||'';
@@ -37,7 +37,7 @@ function formatWordClass(value){
  return parts.map(x=>{const key=String(x).trim();return WORD_CLASS[key]||key}).filter(Boolean).join(', ')
 }
 function kanjiRelated(card){
- const related=API.relatedWords(card.item.character,loaded.vocab,12);
+ const related=COMPOUNDS.fromCurrent(card.item.character,level,loaded);
  return related
 }
 function showFurigana(node,item){
@@ -58,11 +58,13 @@ function flipCard(card){
  flip.setAttribute('aria-pressed','false');
  const inner=element('div','flip-inner');
  const front=element('div','face front '+card.type);
- front.append(text('small',card.type==='kanji'?'🈶 KANJI · '+level:'📘 VOCAB · '+level),text('div',entryName(card),'word'),text('small','Tap to flip in 3D ↻'));
+ front.append(text('small',card.type==='kanji'?'🈶 KANJI · '+level:'📘 VOCAB · '+level),text('div',entryName(card),'word'),text('small',card.type==='kanji'?'Tap Kanji for all related words →':'Tap to flip in 3D ↻'));
  const back=element('div','face back');back.append(text('small','読み方 · Reading'),text('div',reading(card.item,card.type),'meaning'),text('small',brief(card.item).slice(0,95)));
  inner.append(front,back);flip.append(inner);
- flip.onclick=()=>{wrap.classList.toggle('flipped');flip.setAttribute('aria-pressed',String(wrap.classList.contains('flipped')))};
- const actions=element('div','card-actions');const open=element('button','details');open.textContent='📖 Details';open.onclick=()=>openDetails(card);
+ const flipNow=()=>{wrap.classList.toggle('flipped');flip.setAttribute('aria-pressed',String(wrap.classList.contains('flipped')))};
+ flip.onclick=()=>{if(card.type==='kanji')openDetails(card);else flipNow()};
+ const actions=element('div','card-actions');const open=element('button','details');open.textContent=card.type==='kanji'?'📚 All Words':'📖 Details';open.onclick=()=>openDetails(card);
+ if(card.type==='kanji'){const turn=element('button','card-turn');turn.type='button';turn.textContent='↻ Flip';turn.setAttribute('aria-label','Flip '+entryName(card)+' kanji card');turn.onclick=flipNow;actions.append(turn)}
  const learn=element('button','learned'+(progress[marker(card)]?' active':''));learn.textContent=progress[marker(card)]?'✓ Learned':'＋ Learn';
  learn.setAttribute('aria-pressed',String(!!progress[marker(card)]));
  learn.onclick=()=>{if(progress[marker(card)])delete progress[marker(card)];else progress[marker(card)]=true;persist();render();};
@@ -116,8 +118,65 @@ function detailEnglish(card,related){
  }
  return parts.join('\n')
 }
+
+function appendCompoundExplorer(card,root,serial){
+ const title=text('h3','📚 Words containing 「'+card.item.character+'」 — all available JLPT levels');
+ root.append(title);
+ const status=text('p','Searching the existing N5–N1 vocabulary sources…','small');
+ status.setAttribute('role','status');root.append(status);
+ const list=element('div','compound-results');root.append(list);
+ const more=element('button','action light compound-more');more.type='button';more.hidden=true;
+ root.append(more);
+ const show=(words,checked,missing)=>{
+  if(serial!==detailSerial||!root.isConnected)return;
+  let visible=24;
+  const renderWords=()=>{
+   list.replaceChildren();
+   if(!words.length)list.append(text('p','No compound word is available in the checked source files. This is not a claim that the Kanji has no other Japanese compounds.','placeholder'));
+   for(const word of words.slice(0,visible)){
+    const row=element('article','compound-entry');
+    const head=element('div','compound-head');
+    const name=text('strong',word.word,'compound-word');
+    const kana=text('span',word.reading||'Reading unavailable','compound-reading');
+    const badge=text('span',(word.levels||[]).join(' · '),'compound-levels');
+    head.append(name,kana,badge);row.append(head);
+    if(API.getGloss(word))row.append(text('p',API.getGloss(word),'compound-meaning'));
+    const exampleList=API.validExamples(word).slice(0,2);
+    if(exampleList.length){
+      const box=element('div','compound-examples');
+      for(const example of exampleList){
+        const line=element('div','compound-example');
+        const jp=text('p','');jp.lang='ja';showFurigana(jp,example);line.append(jp);
+        if(example.en)line.append(text('p',example.en,'small'));
+        box.append(line);
+      }
+      row.append(box);
+    }else row.append(text('p','No verified complete example sentence in this source.','small'));
+    const action=element('button','action indigo compound-translate');action.type='button';
+    action.textContent='📖 Full details + '+(NAMES[language]||getName(language));
+    action.setAttribute('aria-label','Open full details and translate '+word.word);
+    action.onclick=()=>openDetails({type:'vocab',level,item:word,id:level+'-vocab-'+word.word+'|'+word.reading});
+    row.append(action);list.append(row);
+   }
+   more.hidden=visible>=words.length;
+   if(!more.hidden)more.textContent='Show more words ('+visible+'/'+words.length+') →';
+  };
+  more.onclick=()=>{visible=Math.min(words.length,visible+24);renderWords()};
+  status.textContent='Found '+words.length+' unique source-backed words · '+checked.join(', ')+(missing.length?' · Could not load: '+missing.join(', '):'')+'.';
+  renderWords();
+ };
+ // Display the current level immediately, then expand to all available levels.
+ show(COMPOUNDS.fromCurrent(card.item.character,level,loaded),[level],[]);
+ COMPOUNDS.all(card.item.character,level,loaded).then(result=>{
+  show(result.words,result.checked,result.unavailable);
+ }).catch(error=>{
+  if(serial===detailSerial&&status.isConnected)status.textContent='Could not load other levels: '+error.message+'. Current-level vocabulary remains available.';
+ });
+}
+
 function openDetails(card){
  current=card;
+ const serial=++detailSerial;
  const item=card.item,related=card.type==='kanji'?kanjiRelated(card):[];
  $('detailLabel').textContent=level+' · '+(card.type==='kanji'?'Kanji detail':'Vocabulary detail');
  const root=$('detailBody');root.replaceChildren();root.append(text('h2',entryName(card),'detail-main'));
@@ -144,13 +203,7 @@ function openDetails(card){
   const japanese=text('p','');japanese.lang='ja';showFurigana(japanese,ex);block.append(japanese);
   if(ex.en)block.append(text('p',ex.en));exRoot.append(block)
  });root.append(exRoot);
- if(related.length){
-  root.append(text('h3','🔗 Related real vocabulary containing '+item.character));
-  const chips=element('div','related-list');
-  for(const word of related){const b=element('button');b.type='button';b.textContent=word.word+' · '+word.reading;
-    b.onclick=()=>openDetails({type:'vocab',level,item:word,id:level+'-vocab-'+word.word+'|'+word.reading});chips.append(b)}
-  root.append(chips)
- }
+ if(card.type==='kanji')appendCompoundExplorer(card,root,serial);
  root.append(text('p','Source-backed details only. Translation is generated automatically and may need correction.','small'));
  $('translate').textContent='🌍 Explain everything in '+(NAMES[language]||getName(language));
  $('translated').hidden=true;$('translated').textContent='';
