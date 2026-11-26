@@ -1,0 +1,49 @@
+/* NextStep Full Test: visual treatment based on supplied reference screenshots.
+   Only original JLPT papers are bookable as tests; other exam categories are never faked. */
+:root{--fulltest-teal:#4dbbaa;--fulltest-ink:#303c43;--fulltest-muted:#67757c;--fulltest-bg:#f4f6f5}
+body.nextstep-fulltest{background:var(--fulltest-bg);color:var(--fulltest-ink);font-family:system-ui,"Noto Sans JP",sans-serif}
+body.nextstep-fulltest>header{background:linear-gradient(120deg,#61b9a9,#40bba9);color:white;max-width:none;border:0;padding:18px max(20px,calc((100vw - 1100px)/2));}
+body.nextstep-fulltest>header strong{color:white;font-size:19px}
+body.nextstep-fulltest>header a{color:#fff!important}
+body.nextstep-fulltest>main{max-width:960px;padding:0 16px 44px}
+body.nextstep-fulltest>main>h1{font-size:clamp(24px,5vw,32px);text-align:center;color:#234d49;margin:24px 0 12px}
+body.nextstep-fulltest #daily-reminder-root{margin:9px 0}
+.fulltest-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;overflow:auto;scrollbar-width:thin;background:white;border-radius:0 0 15px 15px;border-bottom:1px solid #dce8e4;margin:0 -16px 25px}
+.fulltest-tabs button{background:transparent;color:#6a777b;font-size:clamp(13px,3vw,17px);font-weight:600;min-height:65px;border-radius:0;border-bottom:3px solid transparent;padding:12px 7px;white-space:nowrap}
+.fulltest-tabs button[aria-selected=true]{color:#269d8e;border-bottom-color:#39b9a7}
+.fulltest-levels{display:grid;gap:14px;margin:18px 0 28px}
+.fulltest-level{display:grid;grid-template-columns:65px minmax(0,1fr);align-items:center;gap:15px;width:100%;background:#fff;color:var(--fulltest-ink);text-align:left;padding:20px 18px;border:1px solid #e6efeb;border-radius:18px;min-height:126px;box-shadow:0 2px 11px #14392c0a}
+.fulltest-level:hover,.fulltest-level:focus-visible{border-color:var(--fulltest-teal);box-shadow:0 5px 17px #2ea89526;outline:none}
+.fulltest-level-icon{height:70px;width:65px;border-radius:16px;background:#5bb9a9;color:white;font-weight:900;font-size:27px;display:flex;flex-direction:column;justify-content:center;align-items:center;line-height:1.2}
+.fulltest-level-icon:after{content:"☰";font-size:20px;font-weight:400;line-height:1}
+.fulltest-level-body{display:grid;gap:7px;min-width:0}
+.fulltest-level-name{font-size:clamp(17px,3.5vw,22px);font-weight:800;color:#374249}
+.fulltest-level-info{font-size:13px;color:#2d9e90;font-weight:650}
+.fulltest-level-info b{font-weight:850}
+.fulltest-level-meta{font-size:12px;color:#728081;line-height:1.4}
+.fulltest-level-arrow{margin-left:auto;color:#319f91;font-size:16px;font-weight:800}
+.fulltest-note{color:#566d72;font-size:13px;line-height:1.75;background:#e7f4ef;padding:14px 17px;border-radius:14px;margin:14px 0}
+.fulltest-empty{background:white;border:1px solid #dcece6;border-radius:20px;padding:26px 21px;margin:22px 0;line-height:1.7}
+.fulltest-empty h2{font-size:21px;color:#23453d;margin:0 0 12px}
+.fulltest-empty p{color:#53666a;font-size:14px}
+.fulltest-head{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:12px 0 20px}
+.fulltest-head h2{margin:0;font-size:clamp(19px,4vw,26px);color:#31514e}
+.fulltest-back{border:1px solid #b4d2c9;background:#fff;color:#277e74;padding:10px 13px;font-size:13px;min-height:44px}
+body.nextstep-fulltest #levels{display:none}
+body.nextstep-fulltest #paper-collection{background:transparent;border:0;padding:0;margin:0}
+body.nextstep-fulltest #paper-collection #current-description{font-size:13px;color:#637479}
+body.nextstep-fulltest #paper-collection #papers{display:grid;grid-template-columns:1fr;gap:12px;margin:20px 0}
+body.nextstep-fulltest #papers .studio-paper-card{background:#fff;border:1px solid #e7eeeb;border-radius:18px;color:#374448;box-shadow:0 3px 13px #23493b09;min-height:113px;padding:18px;display:grid;grid-template-columns:64px minmax(0,1fr) auto;grid-template-rows:auto auto auto;gap:4px 14px;align-items:center;text-align:left}
+body.nextstep-fulltest #papers .studio-paper-card:hover{border-color:#60c6b4;transform:translateY(-1px)}
+body.nextstep-fulltest #papers .studio-paper-card .fulltest-paper-icon{grid-column:1;grid-row:1/4;align-self:center;justify-self:center;width:62px;height:64px;border-radius:14px;display:flex;justify-content:center;align-items:center;background:#d8f1e9;color:#298d7f;font-size:31px}
+body.nextstep-fulltest #papers .studio-paper-card strong{grid-column:2;grid-row:1;color:#33424a;font-size:clamp(17px,3.4vw,21px)}
+body.nextstep-fulltest #papers .studio-paper-count{grid-column:2;grid-row:2;color:#388e83;font-weight:650;font-size:13px}
+body.nextstep-fulltest #papers .studio-paper-action{grid-column:3;grid-row:1/4;color:#36a997;font-size:22px}
+body.nextstep-fulltest #papers .studio-paper-progress{grid-column:2;grid-row:3;color:#a16e35;font-size:12px}
+body.nextstep-fulltest #exam-studio{margin:36px 0 20px}
+body.nextstep-fulltest #exam-studio .studio-banner h2{color:#f5fcfa}
+body.nextstep-fulltest #paper-collection[hidden],body.nextstep-fulltest .fulltest-levels[hidden],body.nextstep-fulltest .fulltest-empty[hidden],body.nextstep-fulltest .fulltest-head[hidden]{display:none!important}
+body.nextstep-fulltest #exam-studio[hidden]{display:none!important}
+body.nextstep-fulltest footer{color:#627378}
+@media(max-width:540px){.fulltest-tabs{margin:0 -16px 17px}.fulltest-tabs button{font-size:13px;padding:11px 3px}.fulltest-level{padding:15px 13px;gap:12px;grid-template-columns:57px minmax(0,1fr)}.fulltest-level-icon{height:63px;width:57px;font-size:23px}.fulltest-level-name{font-size:18px}.fulltest-level-meta{font-size:11px}body.nextstep-fulltest #papers .studio-paper-card{padding:13px;gap:4px 11px;grid-template-columns:55px minmax(0,1fr) 22px}body.nextstep-fulltest #papers .studio-paper-card .fulltest-paper-icon{width:51px;height:58px;font-size:26px}}
+@media print{.fulltest-tabs,.fulltest-levels,.fulltest-back{display:none!important}}
