@@ -19,6 +19,17 @@ let browser;
   await page.route('**/data/json/vocab/*.json',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(vocabulary)}));
   await page.route('**/data/json/grammar/*.json',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(grammar)}));
   await page.goto('http://127.0.0.1:'+PORT+'/exams/?level='+level,{waitUntil:'domcontentloaded'});
+  assert.equal(await page.locator('.fulltest-tabs button').count(),4,'FullTest needs Simulation/JLPT/NAT/JFT tabs');
+  assert.equal(await page.locator('#legacy-level-section').isVisible(),false,'Duplicate old level panel should be hidden');
+  assert.equal(await page.locator('#papers .studio-paper-card').count(),20,'Existing 20 papers stay available');
+  await page.locator('.fulltest-tabs button[data-category="NAT"]').click();
+  assert.equal(await page.locator('.fulltest-empty').isVisible(),true,'NAT must show honest not-yet-available message');
+  assert.equal(await page.locator('#paper-collection').isVisible(),false,'Never present JLPT papers as NAT');
+  await page.locator('.fulltest-tabs button[data-category="JFT"]').click();
+  assert.equal(await page.locator('.fulltest-empty').isVisible(),true,'JFT must not invent papers');
+  await page.locator('.fulltest-tabs button[data-category="JLPT"]').click();
+  await page.locator('#fulltest-levels .fulltest-level[data-level="'+level+'"]').click();
+  assert.equal(await page.locator('#paper-collection').isVisible(),true,'Level selection must reveal paper cards');
   assert.equal(await page.locator('#studio-level').inputValue(),level);
   // Clicking an EXISTING paper card must open the single-question exam view.
   assert.equal(await page.locator('#papers .studio-paper-card').count(),20);
