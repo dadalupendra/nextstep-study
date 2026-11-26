@@ -41,8 +41,14 @@
 <div class="login-methods">
 <button type="button" id="google" disabled>🌐 Continue with Google / Gmail</button>
 <button type="button" id="facebook" disabled>f Continue with Facebook</button>
-<button type="button" id="phone" disabled>📱 Phone OTP — billing setup required</button>
+<button type="button" id="phone" disabled>📱 Continue with phone</button>
 </div>
+<section id="phoneBox" hidden>
+<label for="number">Phone number with country code</label><input type="tel" id="number" autocomplete="tel" placeholder="+81…">
+<p class="hint">Google receives this number for authentication and abuse prevention. SMS charges may apply.</p>
+<div id="captcha"></div><button type="button" id="sendCode">Send verification code</button>
+<form id="verifyCode" hidden><label for="code">SMS verification code</label><input id="code" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" required><button>Verify and start learning</button></form>
+</section>
 <details id="emailBox"><summary>✉️ Sign in / Register with Email</summary><form id="emailForm"><label for="email">Email address</label><input id="email" type="email" autocomplete="email" required><label for="password">Password (min 8 characters)</label><input id="password" type="password" minlength="8" autocomplete="current-password" required><div class="actions"><button type="submit" id="emailLogin" disabled>Sign in</button><button type="button" id="emailRegister" disabled>Create account</button></div></form></details>
 <label class="consent"><input type="checkbox" id="activityConsent"> I agree that my signed-in account and latest use date can be visible to the NextStep administrator. My private profile will not be publicly listed.</label>
 <div class="actions"><button type="button" data-back>← Back</button><button type="button" id="guest" class="primary">Start learning as Guest →</button></div>

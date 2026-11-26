@@ -6,3 +6,5 @@
  */
 window.NEXTSTEP_FIREBASE_CONFIG = null;
 window.NEXTSTEP_FACEBOOK_LOGIN_READY = false;
+
+window.NEXTSTEP_PHONE_LOGIN_READY = false;

@@ -41,18 +41,44 @@ function error(e){$('authStatus').textContent=String(e?.message||e||'Sign-in err
 async function login(fn){
  if(!$('activityConsent').checked){$('authStatus').textContent='To create an online account, please consent to private account and last-use records. Or choose Guest without tracking.';return}
  $('authStatus').textContent='Secure sign-in…';
- try{await fn();finish('account')}catch(e){error(e)}
+ try{const user=await fn();localStorage.setItem('nextstep-consenting-uid',user.uid);finish('account')}catch(e){error(e)}
 }
 $('welcomeNext').onclick=()=>show(1);
 $('languageNext').onclick=()=>show(2);
 $('goalNext').onclick=()=>{const goals=[...document.querySelectorAll('input[name=goal]:checked')];if(!goals.length){alert('Please select at least one subject.');return}show(3)};
 document.querySelectorAll('[data-back]').forEach(x=>x.onclick=()=>show(step-1));
-$('guest').onclick=()=>finish('guest');
+$('guest').onclick=async()=>{
+ try{
+  if(Auth?.configured() && await Auth.waitForUser())await Auth.logout();
+  localStorage.removeItem('nextstep-consenting-uid');$('activityConsent').checked=false;finish('guest');
+ }catch(e){error(e)}
+};
 if(Auth?.configured()){
  $('authStatus').textContent='Secure online accounts are available. Your profile will be private; only you and the administrator can see it.';
  $('google').disabled=false;$('emailLogin').disabled=false;$('emailRegister').disabled=false;
  $('google').onclick=()=>login(()=>Auth.loginGoogle());
  if(window.NEXTSTEP_FACEBOOK_LOGIN_READY===true){$('facebook').disabled=false;$('facebook').onclick=()=>login(()=>Auth.loginFacebook())}
+ if(window.NEXTSTEP_PHONE_LOGIN_READY===true){
+  let verifier,confirmation;
+  $('phone').disabled=false;
+  $('phone').onclick=()=>{$('phoneBox').hidden=false;$('number').focus()};
+  $('sendCode').onclick=async()=>{
+   if(!$('activityConsent').checked){error('Please agree to private account activity records first.');return}
+   const number=$('number').value.trim();
+   if(!/^\+[1-9]\d{6,14}$/.test(number)){error('Include the country code, for example +81, followed by digits.');return}
+   $('sendCode').disabled=true;$('verifyCode').hidden=true;confirmation=null;
+   try{
+    const x=await Auth.sdk();
+    verifier=new x.auth.RecaptchaVerifier(x.authentication,'captcha',{size:'normal'});
+    confirmation=await x.auth.signInWithPhoneNumber(x.authentication,number,verifier);
+    $('code').value='';$('verifyCode').hidden=false;$('code').focus();$('authStatus').textContent='Check your SMS for the verification code.';
+   }catch(e){error(e)}finally{verifier?.clear();verifier=null;$('sendCode').disabled=false}
+  };
+  $('verifyCode').onsubmit=e=>{e.preventDefault();login(async()=>{
+   const result=await confirmation.confirm($('code').value.trim());
+   await Auth.touch(result.user,{signedIn:true});return result.user;
+  })};
+ }
  $('emailForm').onsubmit=e=>{e.preventDefault();login(()=>Auth.loginEmail($('email').value.trim(),$('password').value,false))};
  $('emailRegister').onclick=()=>login(()=>Auth.loginEmail($('email').value.trim(),$('password').value,true));
 }else{
