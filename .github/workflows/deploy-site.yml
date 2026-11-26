@@ -7,6 +7,7 @@ on:
       - 'index.html'
       - 'unified-theme.css'
       - 'mobile-app/**'
+      - 'native-privacy/**'
       - 'study-hub/**'
       - 'community-config.js'
       - 'feedback/**'
@@ -111,7 +112,7 @@ jobs:
           mkdir -p public-site/icons
           cp icons/icon.svg public-site/icons/
           cp -R install public-site/
-          cp -R mobile-app study-hub public-site/
+          cp -R mobile-app study-hub native-privacy public-site/
           test -s public-site/mobile-app/index.html
           test -s public-site/study-hub/index.html
           mkdir -p public-site/feedback/admin
