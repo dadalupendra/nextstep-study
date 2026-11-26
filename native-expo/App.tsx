@@ -122,7 +122,7 @@ export default function App() {
   const [fields,setFields]=useState({title:'',body:'',extra:'',due:toDay(),folder:'General',tags:''});
   const [search,setSearch]=useState('');
   const [mode,setMode]=useState<Mode>('focus');
-  const [remaining,setRemaining]=useState(MODES.focus);
+  const [remaining,setRemaining]=useState<number>(MODES.focus);
   const [running,setRunning]=useState(false);
   const [showAnswer,setShowAnswer]=useState(false);
   const [cardIndex,setCardIndex]=useState(0);
@@ -641,7 +641,7 @@ export default function App() {
     <Text style={{marginTop:14,color:PALETTE.ink}}>{labels.en.loading}</Text>
   </View>;
   return <View style={{flex:1,backgroundColor:theme.bg,paddingTop:Platform.OS==='android'?(NativeStatusBar.currentHeight||24):52}}>
-    <StatusBar style={data.dark?'light':'dark'} backgroundColor={theme.bg}/>
+    <StatusBar style={data.dark?'light':'dark'}/>
     {webLevel&&tab==='Study'?<View style={{flex:1,paddingBottom:83}}>
       <Pressable onPress={()=>setWebLevel(null)} accessibilityRole="button" accessibilityLabel="Return to JLPT levels" style={{minHeight:52,flexDirection:'row',alignItems:'center',gap:10,paddingHorizontal:18,backgroundColor:theme.card}}>
         <ArrowLeft size={20} color={theme.ink}/><Text style={font(14,'semi')}>JLPT {webLevel} · All subjects</Text>
