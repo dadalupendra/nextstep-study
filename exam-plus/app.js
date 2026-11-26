@@ -7,13 +7,13 @@ const params=new URLSearchParams(location.search);
 let exam=EXAMS.includes((params.get('exam')||'').toUpperCase())?params.get('exam').toUpperCase():'NAT';
 let level=LEVELS.includes((params.get('level')||'').toUpperCase())?params.get('level').toUpperCase():'5Q';
 let mode=['book','quiz'].includes(params.get('mode'))?params.get('mode'):'book';
-let lang=['ja','en','ne'].includes(params.get('lang'))?params.get('lang'):'ja';
-let books=null,bank=null,position=0,answers={},all=[],finished=false;
+let lang=params.get('lang')||localStorage.getItem('nextstep-exam-plus-language')||'ja';
+let books=null,bank=null,position=0,bookPage=0,answers={},all=[],finished=false;
 const make=(tag,className,value)=>{const x=document.createElement(tag);if(className)x.className=className;if(value!==undefined)x.textContent=String(value);return x};
 const key=()=>exam+'|'+(exam==='NAT'?level:'');
 const activeBooks=()=>books?.books?.[exam]?.filter(b=>exam!=='NAT'||b.level===level)||[];
 const activeQuestions=()=>bank?.questions?.filter(q=>q.exam===exam&&(exam!=='NAT'||q.level===level))||[];
-const explain=(data)=>data?.[lang]||data?.ja||'';
+const explain=(data)=>data?.[lang]||data?.en||data?.ja||'';
 const title=()=>exam==='NAT'?'NAT-TEST '+level:exam==='JFT'?'JFT-Basic':'BJT Business Japanese';
 function changeUrl(){
  const url=new URL(location.href);
@@ -33,7 +33,7 @@ function display(){
  changeUrl();
  document.querySelectorAll('#categories button').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.exam===exam)));
  $('levelRow').replaceChildren();$('levelRow').hidden=exam!=='NAT';
- if(exam==='NAT')for(const lv of LEVELS){const b=make('button',null,lv);b.setAttribute('aria-pressed',String(level===lv));b.onclick=()=>{level=lv;reset();display()};$('levelRow').append(b)}
+ if(exam==='NAT')for(const lv of LEVELS){const b=make('button',null,lv);b.setAttribute('aria-pressed',String(level===lv));b.onclick=()=>{level=lv;bookPage=0;reset();display()};$('levelRow').append(b)}
  $('bookTab').setAttribute('aria-selected',String(mode==='book'));$('quizTab').setAttribute('aria-selected',String(mode==='quiz'));
  $('book').hidden=mode!=='book';$('quiz').hidden=mode!=='quiz';$('language').value=lang;
  const info=$('intro');info.replaceChildren();
@@ -50,14 +50,19 @@ function display(){
  $('status').textContent='Ready: '+title()+'. Your answers are saved locally in this browser.';
  if(mode==='book')renderBook();else renderQuiz()
 }
-function chapterText(ch){return lang==='ja'?ch.text:lang==='en'?ch.en:ch.ne}
+function chapterText(ch){return lang==='ja'?ch.text:lang==='en'?ch.en:lang==='ne'?ch.ne:ch.text}
 function renderBook(){
  const chapters=activeBooks(),toc=$('contents'),list=$('chapters');toc.replaceChildren();list.replaceChildren();
+ bookPage=Math.max(0,Math.min(bookPage,Math.max(0,chapters.length-1)));
+ $('bookPageNumber').textContent='Chapter '+(chapters.length?bookPage+1:0)+' / '+chapters.length+' · Original content';
+ for(const id of ['bookPrev','bookPrevBottom'])$(id).disabled=bookPage===0;
+ for(const id of ['bookNext','bookNextBottom'])$(id).disabled=bookPage>=chapters.length-1;
  toc.append(make('h2',null,title()+' · 日本語学習テキスト'),make('p',null,'📚 Contents · '+chapters.length+' verified lesson chapters'));
  const links=make('ol');
- chapters.forEach((ch,i)=>{const li=make('li'),a=make('a',null,ch.title);a.href='#'+ch.id;li.append(a);links.append(li)});
+ chapters.forEach((ch,i)=>{const li=make('li'),a=make('a',null,ch.title);a.href='#'+ch.id;a.onclick=e=>{e.preventDefault();bookPage=i;renderBook();$('book').scrollIntoView({block:'start',behavior:'smooth'})};li.append(a);links.append(li)});
  toc.append(links);
  chapters.forEach((ch,i)=>{
+  if(i!==bookPage)return;
   const card=make('article','chapter');card.id=ch.id;
   const header=make('header');header.append(make('span','chapter-number',String(i+1).padStart(2,'0')),make('h3',null,ch.title));
   card.append(header,make('p',null,ch.sub));
@@ -71,7 +76,7 @@ function renderBook(){
   const translate=make('button',null,'🌍 Translate to another language');translate.type='button';
   const out=make('div','translated');out.setAttribute('role','status');out.setAttribute('aria-live','polite');
   translate.onclick=async()=>{
-   const target=prompt('Enter a language code (example: hi, fr, ko, zh-CN, ne)', 'hi');
+   const target=lang;
    if(!target)return;
    translate.disabled=true;out.textContent='Translating with an internet service…';
    try{
@@ -126,9 +131,19 @@ async function init(){
   if(!b.ok||!q.ok)throw Error('Could not download book or question materials');
   books=await b.json();bank=await q.json();
   if(!books.books?.NAT||!Array.isArray(bank.questions))throw Error('Invalid study data');
-  document.querySelectorAll('#categories button').forEach(btn=>btn.onclick=()=>{exam=btn.dataset.exam;reset();loadAnswers();display()});
+  const names={ja:'日本語',en:'English',ne:'नेपाली',hi:'हिन्दी',bn:'বাংলা',ur:'اردو',ko:'한국어','zh-CN':'中文'};
+  const codes='ja en ne hi bn zh-CN ko fr es de ar th vi id pt ru it tr uk pl nl sv fi da no el he fa ur ta te mr gu pa ms sw fil my km lo af sq am hy az eu be bs bg ca hr cs et gl ka ht hu is ig ga jv kk ku ky lv lt mk mn ps ro sr sk sl so su tg uz cy zu yo xh si or as tk fy lb mt ny st sd yi ceb'.split(' ');
+  const select=$('language');select.replaceChildren();
+  for(const code of codes){let name=names[code]||code;try{if(!names[code])name=new Intl.DisplayNames(['en'],{type:'language'}).of(code)||code}catch{}
+   const option=make('option',null,name+' ('+code+')');option.value=code;select.append(option)}
+  if(!codes.includes(lang))lang='ja';
+  document.querySelectorAll('#categories button').forEach(btn=>btn.onclick=()=>{exam=btn.dataset.exam;bookPage=0;reset();loadAnswers();display()});
   $('bookTab').onclick=()=>{mode='book';display()};$('quizTab').onclick=()=>{mode='quiz';loadAnswers();display()};
-  $('language').onchange=e=>{lang=e.target.value;display()};
+  $('language').onchange=e=>{lang=e.target.value;try{localStorage.setItem('nextstep-exam-plus-language',lang)}catch{}display()};
+  for(const [id,step] of [['bookPrev',-1],['bookPrevBottom',-1],['bookNext',1],['bookNextBottom',1]]){
+   $(id).onclick=()=>{bookPage=Math.max(0,Math.min(activeBooks().length-1,bookPage+step));renderBook();$('book').scrollIntoView({block:'start',behavior:'smooth'})};
+  }
+  $('translatePage').onclick=()=>{if(mode!=='book'){mode='book';display()}$('chapters .chapter-controls button:nth-child(2)')?.click()};
   $('saveBook').onclick=()=>{mode='book';display();window.print()};
   $('previous').onclick=()=>{if(position>0){position--;renderQuiz()}};
   $('next').onclick=()=>{if(position<all.length-1){position++;renderQuiz()}};
