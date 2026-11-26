@@ -155,6 +155,8 @@ function openDetails(card){
  $('translate').textContent='🌍 Explain everything in '+(NAMES[language]||getName(language));
  $('translated').hidden=true;$('translated').textContent='';
  if(!$('detail').open)$('detail').showModal();
+ // Tap a word and receive its explanation automatically in the chosen language.
+ if(language!=='en')translateCurrent();
 }
 async function translateCurrent(){
  if(!current)return;
