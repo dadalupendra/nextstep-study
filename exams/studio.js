@@ -38,10 +38,10 @@ function renderSheet(){
    if(selected)chip.classList.add('selected');
    if((state.submitted||(practiceMode&&state.answers[i]!==undefined))&&j===state.questions[i].answer)chip.classList.add('correct');
    if((state.submitted||practiceMode)&&selected&&j!==state.questions[i].answer)chip.classList.add('wrong');
-   chip.textContent=String(j+1);chip.setAttribute('role','button');chip.tabIndex=state.submitted?-1:0;
+   chip.textContent=String(j+1);chip.setAttribute('role','button');const locked=state.submitted||(practiceMode&&state.answers[i]!==undefined);chip.tabIndex=locked?-1:0;chip.setAttribute('aria-disabled',String(locked));
    chip.setAttribute('aria-label','Question '+(i+1)+' choice '+(j+1));
    chip.setAttribute('aria-pressed',String(selected));
-   if(!state.submitted){const select=()=>{state.answers[i]=j;save();position(i)};
+   if(!locked){const select=()=>{state.answers[i]=j;save();position(i)};
      chip.addEventListener('click',select);
      chip.addEventListener('keydown',ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();select()}});}
    row.append(chip);
