@@ -14,6 +14,10 @@ const server=spawn('python3',['-m','http.server',String(PORT),'--bind','127.0.0.
  try{
   for(const width of [390,1280]){
    const context=await browser.newContext({viewport:{width,height:850},serviceWorkers:'block'});
+   // Exercise the disconnected fallback explicitly, independent of live provider setup.
+   await context.route('**/auth/firebase-config.js', route=>route.fulfill({
+    contentType:'application/javascript',body:'window.NEXTSTEP_FIREBASE_CONFIG=null;'
+   }));
    const page=await context.newPage(),errors=[];
    page.on('pageerror',err=>errors.push(err.message));
    await page.goto('http://127.0.0.1:'+PORT+'/?welcome=1',{waitUntil:'domcontentloaded'});
