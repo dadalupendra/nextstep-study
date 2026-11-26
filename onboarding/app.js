@@ -10,6 +10,8 @@ for(const code of languageCodes){
  const option=document.createElement('option');option.value=code;option.textContent=label+' ('+code+')';
  picker.append(option)
 }
+const params=new URLSearchParams(location.search);
+const editing=params.get('edit')==='1' && localStorage.getItem('nextstep-onboarded')==='1';
 let step=0;
 let saved={};try{saved=JSON.parse(localStorage.getItem('nextstep-onboarding')||'{}')||{}}catch{}
 if(saved.lang&&[...$('lang').options].some(x=>x.value===saved.lang))$('lang').value=saved.lang;
@@ -20,7 +22,8 @@ function show(n){
  step=Math.min(3,Math.max(0,n));screens.forEach((x,i)=>x.hidden=i!==step);
  $('stepCount').textContent=(step+1)+' / 4';document.querySelector('.steps').setAttribute('aria-valuenow',String(step+1));
  $('progress').style.width=((step+1)/4*100)+'%';
- document.querySelector('h1').focus?.();
+ const heading=screens[step].querySelector('h1');
+ heading.tabIndex=-1;heading.focus({preventScroll:true});
  window.scrollTo({top:0,behavior:'instant'})
 }
 function preference(){
@@ -54,7 +57,7 @@ async function login(fn){
 }
 $('welcomeNext').onclick=()=>show(1);
 $('languageNext').onclick=()=>show(2);
-$('goalNext').onclick=()=>{const goals=[...document.querySelectorAll('input[name=goal]:checked')];if(!goals.length){alert('Please select at least one subject.');return}show(3)};
+$('goalNext').onclick=()=>{const goals=[...document.querySelectorAll('input[name=goal]:checked')];if(!goals.length){alert('Please select at least one subject.');return}if(editing){save();window.location.assign('../');return}show(3)};
 document.querySelectorAll('[data-back]').forEach(x=>x.onclick=()=>show(step-1));
 $('guest').onclick=async()=>{
  try{
@@ -93,5 +96,14 @@ if(Auth?.configured()){
 }else{
  $('authStatus').textContent='Online accounts are not connected yet. Guest Mode is available now; your study preferences are stored only in this browser.';
 }
-if(new URLSearchParams(location.search).get('step')==='signin')show(3);else show(0);
+for(const id of ['facebook','phone']){
+ const button=$(id);
+ if(button.disabled)button.append(' · सेटअप बाँकी / Unavailable');
+}
+if(editing){
+ $('goalNext').textContent='Save & start learning →';
+ show(1);
+}else{
+ show(params.get('step')==='signin'?3:0);
+}
 })();
