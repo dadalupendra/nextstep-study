@@ -164,6 +164,7 @@ function appendCompoundExplorer(card,root,serial){
   more.onclick=()=>{visible=Math.min(words.length,visible+24);renderWords()};
   status.textContent='Found '+words.length+' unique source-backed words · '+checked.join(', ')+(missing.length?' · Could not load: '+missing.join(', '):'')+'.';
   renderWords();
+  if(window.NextStepOfflineAI)window.NextStepOfflineAI.setRelated(words);
  };
  // Display the current level immediately, then expand to all available levels.
  show(COMPOUNDS.fromCurrent(card.item.character,level,loaded),[level],[]);
@@ -205,6 +206,7 @@ function openDetails(card){
  });root.append(exRoot);
  if(card.type==='kanji')appendCompoundExplorer(card,root,serial);
  root.append(text('p','Source-backed details only. Translation is generated automatically and may need correction.','small'));
+ if(window.NextStepOfflineAI)window.NextStepOfflineAI.select(card,{level,language,related,progress});
  $('translate').textContent='🌍 Explain everything in '+(NAMES[language]||getName(language));
  $('translated').hidden=true;$('translated').textContent='';
  if(!$('detail').open)$('detail').showModal();
@@ -247,7 +249,7 @@ function init(){
  for(const code of CODES){const opt=document.createElement('option');opt.value=code;opt.textContent=(NAMES[code]||getName(code))+' ('+code+')';$('lang').append(opt)}
  applyPrefs();
  $('level').onchange=e=>{level=e.target.value;savePrefs();load()};
- $('lang').onchange=e=>{language=e.target.value;savePrefs();$('translated').hidden=true;
+ $('lang').onchange=e=>{language=e.target.value;savePrefs();if(window.NextStepOfflineAI)window.NextStepOfflineAI.setLanguage(language);$('translated').hidden=true;
    if(current)$('translate').textContent='🌍 Explain everything in '+(NAMES[language]||getName(language))};
  $('filter').onchange=e=>{filter=e.target.value;render()};
  $('theme').onclick=()=>{dark=!dark;savePrefs();applyPrefs()};
@@ -255,6 +257,8 @@ function init(){
  $('close').onclick=()=>$('detail').close();
  $('detail').addEventListener('click',e=>{if(e.target===$('detail'))$('detail').close()});
  $('translate').onclick=translateCurrent;$('speak').onclick=speak;
+ if(window.NextStepOfflineAI)window.NextStepOfflineAI.initialize();
+ if('serviceWorker'in navigator)navigator.serviceWorker.register('../sw.js',{scope:'../'}).catch(()=>{});
  load()
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
