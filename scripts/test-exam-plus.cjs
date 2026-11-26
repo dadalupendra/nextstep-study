@@ -41,9 +41,9 @@ const server=spawn('python3',['-m','http.server',String(PORT),'--bind','127.0.0.
   assert.equal(await page.locator('.chapter .explain').first().innerText().then(x=>x.length>14),true);
   await page.locator('#refTab').click();
   await page.locator('.reference-word-page').first().waitFor({timeout:15000});
-  assert.equal(await page.locator('#referenceIndex').innerText(),'1 / 600','600 real unique vocabulary reference pages in source fixture');
+  assert.equal(await page.locator('#referenceIndex').innerText(),'1 / 600 study pages','600 real unique vocabulary reference pages in source fixture');
   await page.locator('#referenceNext').click();
-  assert.equal(await page.locator('#referenceIndex').innerText(),'2 / 600','Reference next-page navigation');
+  assert.equal(await page.locator('#referenceIndex').innerText(),'2 / 600 study pages','Reference next-page navigation');
   await page.locator('#bookTab').click();
   await page.locator('#quizTab').click();
   assert.equal(await page.locator('#quiz').isVisible(),true);
