@@ -7,6 +7,7 @@ import {
 import {StatusBar} from 'expo-status-bar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Svg, {Circle} from 'react-native-svg';
+import {WebView} from 'react-native-webview';
 import {useFonts, Poppins_400Regular, Poppins_600SemiBold, Poppins_700Bold} from '@expo-google-fonts/poppins';
 import {
   Home, BookOpen, CalendarDays, ChartColumn, UserRound, Timer, Layers3, NotebookPen,
@@ -132,6 +133,7 @@ export default function App() {
   const [subject,setSubject]=useState('Japanese · JLPT N2');
   const [folder,setFolder]=useState('All');
   const [showPolicy,setShowPolicy]=useState(false);
+  const [webLevel,setWebLevel]=useState<string|null>(null);
 
   useEffect(()=>{(async()=>{
     try{const value=await AsyncStorage.getItem(STORAGE);
@@ -169,7 +171,7 @@ export default function App() {
     a[s.subject]=(a[s.subject]||0)+s.minutes;return a
   },{} as Record<string,number>)).sort((a,b)=>b[1]-a[1]),[data.sessions]);
   const openUrl=(url:string)=>Linking.openURL(url).catch(()=>Alert.alert('Cannot open link','Please check your internet connection.'));
-  const openLevel=(lv:string)=>openUrl(studyUrl+lv);
+  const openLevel=(lv:string)=>{setWebLevel(lv);setTab('Study');setTool(null)};
   const section=(name:string)=> <Text style={[font(19,'bold'),{marginTop:5,marginBottom:12}]}>{name}</Text>;
   const button=(text:string,fn:()=>void,variant:'primary'|'yellow'|'outline'='primary',icon?:IconComponent)=> {
     const color=variant==='primary'?PALETTE.white:variant==='yellow'?PALETTE.ink:theme.ink;
@@ -624,15 +626,24 @@ export default function App() {
   </View>;
   return <View style={{flex:1,backgroundColor:theme.bg,paddingTop:Platform.OS==='android'?(NativeStatusBar.currentHeight||24):52}}>
     <StatusBar style={data.dark?'light':'dark'} backgroundColor={theme.bg}/>
-    <ScrollView key={tab+'-'+tool} keyboardShouldPersistTaps="handled" contentContainerStyle={{paddingHorizontal:17,paddingTop:13,paddingBottom:110,maxWidth:760,width:'100%',alignSelf:'center'}}>
+    {webLevel&&tab==='Study'?<View style={{flex:1,paddingBottom:83}}>
+      <Pressable onPress={()=>setWebLevel(null)} accessibilityRole="button" accessibilityLabel="Return to JLPT levels" style={{minHeight:52,flexDirection:'row',alignItems:'center',gap:10,paddingHorizontal:18,backgroundColor:theme.card}}>
+        <ArrowLeft size={20} color={theme.ink}/><Text style={font(14,'semi')}>JLPT {webLevel} · All subjects</Text>
+      </Pressable>
+      <WebView source={{uri:studyUrl+webLevel}} originWhitelist={['https://*']} startInLoadingState
+        renderLoading={()=> <ActivityIndicator style={{flex:1}} color={PALETTE.indigo}/>}
+        onShouldStartLoadWithRequest={(req)=>{if(req.url.startsWith('https://dadalupendra.github.io/nextstep-study/'))return true;
+          if(req.url==='about:blank')return true;openUrl(req.url);return false}}
+        onError={()=>notify('Could not open JLPT library. Check internet.')} />
+    </View>:<ScrollView key={tab+'-'+tool} keyboardShouldPersistTaps="handled" contentContainerStyle={{paddingHorizontal:17,paddingTop:13,paddingBottom:110,maxWidth:760,width:'100%',alignSelf:'center'}}>
       {tab==='Home'?HomeView():tab==='Study'?StudyView():tab==='Planner'?PlannerView():tab==='Stats'?StatsView():ProfileView()}
-    </ScrollView>
+    </ScrollView>}
     <View style={{flexDirection:'row',backgroundColor:theme.card,borderTopLeftRadius:27,borderTopRightRadius:27,
       paddingBottom:Platform.OS==='ios'?20:10,paddingTop:8,paddingHorizontal:5,position:'absolute',bottom:0,left:0,right:0,
       shadowColor:'#1B1740',shadowRadius:14,shadowOpacity:.12,elevation:10}}>
       {NAV.map(item=>{
         const Icon=item.icon,active=tab===item.key;
-        return <Pressable key={item.key} onPress={()=>{setTab(item.key);if(item.key!=='Study')setTool(null)}}
+        return <Pressable key={item.key} onPress={()=>{setTab(item.key);if(item.key!=='Study'){setTool(null);setWebLevel(null)}}}
           accessibilityLabel={'Go to '+item.label} accessibilityRole="tab"
           accessibilityState={{selected:active}} style={{flex:1,alignItems:'center',justifyContent:'center',minHeight:61,gap:4}}>
           <View style={{backgroundColor:active?PALETTE.pale:'transparent',paddingHorizontal:16,paddingVertical:5,borderRadius:15}}>
