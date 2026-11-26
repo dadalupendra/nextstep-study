@@ -1,5 +1,5 @@
 /* NextStep FullTest selector. UI-only redesign over the EXISTING 20 JLPT papers.
-   NAT/JFT are clearly unavailable until validated original materials are added.
+   NAT/JFT/BJT have their own independent original study books and starter quizzes.
    Never claim official pass scores or invent practice-paper IDs. */
 (function(){
 'use strict';
@@ -13,7 +13,7 @@ const root=$('fulltest-root'),paperCollection=$('paper-collection'),papers=$('pa
 if(!root||!papers||!paperCollection||!exam)return;
 document.body.classList.add('nextstep-fulltest');
 const tabs=create('nav','fulltest-tabs');tabs.setAttribute('aria-label','Exam test category');
-const allTabs=[['SIM','Simulation exam'],['JLPT','JLPT'],['NAT','NAT'],['JFT','JFT']];
+const allTabs=[['SIM','Simulation'],['JLPT','JLPT'],['NAT','NAT'],['JFT','JFT'],['BJT','BJT']];
 const chooser=create('div','fulltest-levels');chooser.id='fulltest-levels';
 const empty=create('section','fulltest-empty');empty.hidden=true;empty.setAttribute('role','status');
 const head=create('div','fulltest-head');head.hidden=true;
@@ -70,9 +70,13 @@ function showCategory(next){
  disclosure.hidden=!jlpt;
  if(!jlpt){
   empty.replaceChildren();
-  empty.append(create('h2',null,category==='NAT'?'NAT-TEST · 準備中':'JFT-Basic · 準備中'));
-  empty.append(create('p',null,'No verified '+(category==='NAT'?'NAT-TEST':'JFT-Basic')+' practice papers are installed yet. This tab does not use renamed JLPT papers or fabricated tests.'));
-  empty.append(create('p',null,'Select JLPT above to practise the existing N1–N5 mock papers.'));
+  const title=category==='NAT'?'NAT-TEST · 1Q–5Q':category==='JFT'?'JFT-Basic':'BJT · Business Japanese';
+  empty.append(create('h2',null,title+' · Original Study Books'));
+  empty.append(create('p',null,'Independent Japanese study chapters and short original practice sets with Japanese, English and Nepali explanations. Not official questions or complete mock tests.'));
+  const link=create('a','fulltest-study-link','📖 Open '+title+' Books & Practice →');
+  link.href='../exam-plus/?exam='+category;
+  empty.append(link);
+  empty.append(create('p',null,'Full official-format simulations require separately developed and verified complete question and audio material.'));
  }else if(selectedLevel){
   name.textContent=(category==='SIM'?'Simulation · ':'')+'JLPT '+selectedLevel+' · 20 Practice Papers';
  }else{
@@ -111,6 +115,6 @@ const directTest=params.get('view')==='exam'||params.get('view')==='classic';
 if(directTest){document.body.classList.add('fulltest-testing');exam.hidden=false}
 else{exam.hidden=true}
 const initial=params.get('category')?.toUpperCase();
-if(initial==='NAT'||initial==='JFT')category=initial;
+if(['NAT','JFT','BJT'].includes(initial))category=initial;
 renderChooser();showCategory(category);
 })();
