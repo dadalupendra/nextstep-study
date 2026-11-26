@@ -203,7 +203,7 @@ function applyLevelLayout(level){
       a.className='ns-external-translation';a.textContent='📖 Full vocabulary/grammar details ↗';
       a.target='_blank';a.rel='noopener noreferrer';exp.append(a);
    }
-   if(window.NextStepExamLanguage)exp.append(window.NextStepExamLanguage.translationSection(q,window.NextStepExamAPI,{includeQuestion:false}));}else if(window.NextStepExamLanguage){wrap.append(window.NextStepExamLanguage.translationSection(q,window.NextStepExamAPI,{includeReview:false}));}list.append(wrap);}
+   if(window.NextStepExamLanguage)wrap.append(window.NextStepExamLanguage.translationSection(q,window.NextStepExamAPI,{includeQuestion:false}));}else if(window.NextStepExamLanguage){wrap.append(window.NextStepExamLanguage.translationSection(q,window.NextStepExamAPI,{includeReview:false}));}list.append(wrap);}
   // Navigation appears ONLY after the final question on the current page.
   const pager=document.createElement('nav');pager.className='panel grid no-print';pager.setAttribute('aria-label','Question page navigation');
   const previous=document.createElement('button');previous.type='button';previous.textContent='← Previous 10';previous.disabled=page===0;
