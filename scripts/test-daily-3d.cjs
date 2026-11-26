@@ -30,7 +30,8 @@ const PORT=8797,server=spawn('python3',['-m','http.server',String(PORT),'--bind'
  const browser=await chromium.launch({headless:true,executablePath:CHROME,args:['--no-sandbox','--disable-dev-shm-usage']});
  try{
   for(const level of ['N5','N4','N3','N2','N1']){
-   const page=await browser.newPage({viewport:{width:390,height:844}});
+   const context=await browser.newContext({viewport:{width:390,height:844},serviceWorkers:'block'});
+   const page=await context.newPage();
    const errors=[];page.on('pageerror',e=>errors.push(e.message));
    const local=api.dayCards(level,'2026-11-26',source);
    await page.route('**/data/kanji.json',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(kanji)}));
@@ -66,7 +67,7 @@ const PORT=8797,server=spawn('python3',['-m','http.server',String(PORT),'--bind'
    assert.equal(errors.length,0,'Unexpected JavaScript errors: '+errors.join('; '));
    assert.equal(local.length,20);
    console.log('PASS '+level+' kanji compound explorer, source examples, word details, 3D flip, language and progress');
-   await page.close();
+   await page.close();await context.close();
   }
  }finally{await browser.close()}
 })().catch(error=>{console.error('DAILY 3D TEST FAILED:',error);process.exitCode=1}).finally(()=>server.kill());
