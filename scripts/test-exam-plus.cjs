@@ -28,6 +28,8 @@ const server=spawn('python3',['-m','http.server',String(PORT),'--bind','127.0.0.
  for(const [exam,level,expected] of [['NAT','5Q',6],['NAT','4Q',6],['NAT','3Q',6],['NAT','2Q',6],['NAT','1Q',6],['JFT',null,12],['BJT',null,12]]){
   const context=await browser.newContext({viewport:{width:390,height:844},serviceWorkers:'block'});
   const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
+  const vocabMock=Array.from({length:650},(_,i)=>({word:'語彙'+i,reading:'ごい'+i,meanings:['study vocabulary '+i],pos:['n'],examples:[{ja:'語彙を学びます。',en:'I study vocabulary.'}]}));
+  await page.route('**/data/vocab.json',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(vocabMock)}));
   await page.goto('http://127.0.0.1:'+PORT+'/exam-plus/?exam='+exam+(level?'&level='+level:''),{waitUntil:'domcontentloaded'});
   await page.locator('#status').getByText('Ready:',{exact:false}).waitFor({timeout:15000}).catch(()=>{});
   assert.equal(await page.locator('.chapter').count(),1,'Page-by-page textbook must show one actual chapter');
@@ -37,6 +39,12 @@ const server=spawn('python3',['-m','http.server',String(PORT),'--bind','127.0.0.
   assert.equal(await page.locator('#book').isVisible(),true);
   await page.locator('#language').selectOption('ne');
   assert.equal(await page.locator('.chapter .explain').first().innerText().then(x=>x.length>14),true);
+  await page.locator('#refTab').click();
+  await page.locator('.reference-word-page').first().waitFor({timeout:15000});
+  assert.equal(await page.locator('#referenceIndex').innerText(),'1 / 600','600 real unique vocabulary reference pages in source fixture');
+  await page.locator('#referenceNext').click();
+  assert.equal(await page.locator('#referenceIndex').innerText(),'2 / 600','Reference next-page navigation');
+  await page.locator('#bookTab').click();
   await page.locator('#quizTab').click();
   assert.equal(await page.locator('#quiz').isVisible(),true);
   assert((await page.locator('#quizCount').innerText()).includes('/ '+expected));
