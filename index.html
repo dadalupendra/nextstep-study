@@ -34,7 +34,7 @@ main{padding-top:10px;padding-bottom:56px}h1{font-size:clamp(27px,5vw,39px);line
 <section class="daily" aria-labelledby="dailyHeading">
 <h2 id="dailyHeading">🧊 Daily JLPT Challenge</h2>
 <div class="daily-wrap">
-<div class="daily-preview"><p id="dailyIntro">毎日、漢字10枚＋語彙10枚の3D学習カードを確認できます。</p><a class="daily-cta" id="dailyDeck" href="./daily/?level=N2">🧊 3Dカードを開く →</a></div>
+<div class="daily-preview"><p id="dailyIntro">毎日、漢字10枚＋語彙10枚の3D学習カードを確認できます。</p></div>
 <div id="daily-reminder-root"></div>
 </div>
 </section>
@@ -51,12 +51,10 @@ const strings={
 };
 let language=localStorage.getItem('nextstep-home-lang')||'ja';
 if(!strings[language])language='ja';
-let selectedLevel=localStorage.getItem('nextstep-selected-level')||'N2';
-if(!levels.includes(selectedLevel))selectedLevel='N2';
 function render(){
  const c=strings[language];document.documentElement.lang=language;$('lang').value=language;
- $('levelHeading').textContent=c[0];$('levelIntro').textContent=c[1];$('dailyHeading').textContent=c[2];$('dailyIntro').textContent=c[3];$('dailyDeck').textContent=c[5];
- $('dailyDeck').href='./daily/?level='+selectedLevel;
+ $('levelHeading').textContent=c[0];$('levelIntro').textContent=c[1];$('dailyHeading').textContent=c[2];$('dailyIntro').textContent=c[3];
+
  $('levels').replaceChildren();
  for(const level of levels){
   const a=document.createElement('a');a.className='level';a.href='./mobile-app/learn.html?level='+level;a.setAttribute('aria-label','Open all JLPT '+level+' learning material');
