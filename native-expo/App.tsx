@@ -8,6 +8,7 @@ import {StatusBar} from 'expo-status-bar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Svg, {Circle} from 'react-native-svg';
 import {WebView} from 'react-native-webview';
+import CloudAccount from './src/CloudAccount';
 import {useFonts, Poppins_400Regular, Poppins_600SemiBold, Poppins_700Bold} from '@expo-google-fonts/poppins';
 import {
   Home, BookOpen, CalendarDays, ChartColumn, UserRound, Timer, Layers3, NotebookPen,
@@ -236,6 +237,14 @@ export default function App() {
     setCardIndex(0);setShowAnswer(false);notify('✓ Review saved');
   };
   const finishQuiz=()=>{patch({tests:data.tests+1});setQuizRunning(false);setQIndex(0);setSelected(null);setSeconds(300);notify('✓ Quiz finished — +20 XP')};
+  const eraseLocal=async()=>{await AsyncStorage.removeItem(STORAGE);setData(initial)};
+  const restoreCloud=(value:Record<string,unknown>)=>{
+    if(!Array.isArray(value.notes)||!Array.isArray(value.tasks)||!Array.isArray(value.cards)||!Array.isArray(value.sessions))
+      throw new Error('Cloud backup has an invalid format.');
+    setData(d=>({...d,notes:value.notes as Note[],tasks:value.tasks as Task[],cards:value.cards as Flashcard[],
+      sessions:value.sessions as Session[],tests:typeof value.tests==='number'?value.tests:d.tests,
+      examDate:typeof value.examDate==='string'?value.examDate:d.examDate}));
+  };
   const resetAll=()=>Alert.alert('Delete local data','This permanently removes all notes, cards, tasks and study statistics saved on this device. No cloud account exists in this version.',
     [{text:'Cancel',style:'cancel'},{text:'Delete all',style:'destructive',onPress:async()=>{try{await AsyncStorage.removeItem(STORAGE);setData(initial);notify('Your local data was deleted')}catch{Alert.alert('Error','Could not delete the saved data.')}}}]);
 
@@ -580,6 +589,7 @@ export default function App() {
         {button(t.delete,resetAll,'yellow',Trash2)}
       </View>
     </View>
+    <CloudAccount theme={theme} data={data as unknown as Record<string,unknown>} onRestore={restoreCloud} onDelete={eraseLocal}/>
   </>;
 
   const FormView=()=> <Modal visible={!!form} animationType="slide" transparent onRequestClose={()=>setForm(null)}>
