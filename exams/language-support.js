@@ -47,6 +47,18 @@ function translationSection(q,api,{includeQuestion=true,includeReview=true}={}){
    finally{question.disabled=false}};
   actions.append(question);panel.append(actions,qout);
  }
+ if(includeReview&&q.type==='聴解'&&q.passage){
+  const transcriptBtn=document.createElement('button');transcriptBtn.type='button';
+  transcriptBtn.textContent='🎧 Translate full Listening Script';
+  const transcriptOut=document.createElement('div');transcriptOut.className='ns-translation-output';transcriptOut.setAttribute('aria-live','polite');
+  transcriptBtn.onclick=async()=>{
+    transcriptBtn.disabled=true;const target=lang;transcriptOut.textContent='⏳ Translating listening transcript…';
+    try{const result=await translate(q.passage,'ja',target);if(target===lang)transcriptOut.textContent=result}
+    catch(e){transcriptOut.textContent='Translation unavailable: '+e.message+'. ';transcriptOut.append(external(q.passage,'ja',target))}
+    finally{transcriptBtn.disabled=false}
+  };
+  actions.append(transcriptBtn);panel.append(transcriptOut);
+ }
  const review=document.createElement('button');review.type='button';review.textContent='✅ Explain ALL 4 answers in '+displayName(lang);
  const result=document.createElement('div');result.className='ns-translation-output';result.setAttribute('aria-live','polite');const correct=q.answer;
  review.onclick=async()=>{review.disabled=true;const target=lang;result.textContent='⏳ Translating why each choice is right or wrong…';
