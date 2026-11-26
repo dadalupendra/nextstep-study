@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#FFF8EE"><title>NextStep Study | JLPT N5–N1 3D Kanji Library</title>
+<meta name="description" content="Explore every available JLPT Kanji as interactive 3D study cards, with readings, real compounds, Japanese example sentences and explanations.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../daily/style.css?v=5"><link rel="stylesheet" href="./style.css?v=1">
+</head><body>
+<header class="header"><a class="logo" href="../">📚 NextStep Study</a><a class="navlink" id="backToLevel" href="../mobile-app/learn.html?level=N2">← Level Library</a></header>
+<main class="container">
+<section class="hero"><span class="eyebrow">📗 ALL-LEVEL KANJI · VISUAL LEARNING</span><h1>🧊 3D Kanji Library</h1><p>One Kanji at a time. Tap a card to explore real compound words, their readings, meanings, example sentences and explanations. Flip to review, or mark it learned.</p></section>
+<section class="controls" aria-label="Kanji learning settings">
+<label>🎓 JLPT Level<select id="level"><option>N5</option><option>N4</option><option>N3</option><option>N2</option><option>N1</option></select></label>
+<label>🌍 Explanation language<select id="lang" aria-label="Preferred explanation language"></select></label>
+<label>🔎 Kanji / Reading / Meaning<input type="search" id="search" placeholder="例: 学, まなぶ, study" autocomplete="off"></label>
+<button id="furi" class="action light" type="button" aria-pressed="true">ふりがな ON</button>
+<button id="theme" class="action light" type="button">🌙 Dark mode</button>
+</section>
+<div id="status" role="status" class="loader" aria-live="polite">Loading real Kanji sources…</div>
+<div id="library" hidden>
+<div class="summary"><span class="stat" id="total"></span><span class="stat" id="completed"></span><span class="stat" id="resultCount"></span></div>
+<div class="section-head"><h2>🈶 All Kanji · <span id="levelName">N2</span></h2><small>Tap a Kanji → all available related words</small></div>
+<div id="kanjiCards" class="tiles" aria-label="3D Kanji flashcards"></div>
+<div class="pagebar"><button id="prev" type="button" class="action light">← Previous</button><span id="pageCount" aria-live="polite"></span><button id="next" type="button" class="action light">Next →</button></div>
+<p class="note">Each card comes from the original level's source file. Compound words are searched across the existing N5–N1 vocabulary files; an entry is shown only if it exists in those files. Missing example sentences are not invented.</p>
+</div></main>
+<dialog id="detail" aria-label="Complete Kanji and related vocabulary details">
+<div class="detail-top"><strong id="detailLabel">Kanji details</strong><button class="action light" id="close" type="button">✕ Close</button></div>
+<div id="detailBody"></div>
+<div class="modal-actions"><button class="action indigo" id="translate" type="button">🌍 Translate details</button><button class="action light" id="speak" type="button">🔊 Japanese pronunciation</button></div>
+<div id="translated" class="translation-result" aria-live="polite" hidden></div>
+<section id="offlineAI" class="offline-ai" aria-labelledby="aiTitle">
+<h3 id="aiTitle">🧠 Offline AI Teacher</h3><p id="aiIntro">Explore the selected Kanji or word with the offline study guide.</p>
+<div class="ai-state"><span class="ai-dot" aria-hidden="true"></span><span id="aiStatus" role="status">Checking on-device AI availability…</span></div>
+<div class="ai-topic" id="aiTopic">Select Kanji</div>
+<div class="ai-quick" id="aiQuick"></div><label for="aiQuestion" class="ai-label">Ask a question</label>
+<div class="ai-question-row"><input id="aiQuestion" type="text" maxlength="400" autocomplete="off" placeholder="Explain this Kanji"><button class="action indigo" id="aiAsk" type="button">Ask offline</button></div>
+<button id="aiEnable" type="button" class="action" hidden>Enable on-device AI</button>
+<pre id="aiAnswer" class="ai-answer" role="status" aria-live="polite">Select a Kanji to begin.</pre><p class="small" id="aiPrivacy">Questions are not sent to an external AI API. Generative AI requires a compatible browser and a downloaded on-device model.</p>
+</section>
+</dialog>
+<footer class="footer">NextStep Study · Level-specific original lesson sources preserved.</footer>
+<script src="../daily/data.js?v=5" defer></script>
+<script src="../daily/compounds.js?v=5" defer></script>
+<script src="../mobile-app/translate.js?v=5" defer></script>
+<script src="../daily/offline-ai.js?v=5" defer></script>
+<script src="./app.js?v=1" defer></script></body></html>
