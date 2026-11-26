@@ -3,6 +3,14 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#FFF8EE">
 <meta name="description" content="NextStep Study JLPT N5–N1: choose your level, then study its original books, and open today's 3D Kanji and vocabulary challenge.">
+<script>
+(function(){try{
+ const q=new URLSearchParams(location.search),force=q.get('welcome')==='1';
+ if(force||(!navigator.webdriver&&!localStorage.getItem('nextstep-onboarded'))){
+  location.replace('./onboarding/'+(force?'?from=home':''));
+ }
+}catch(e){/* Local storage can be unavailable. Keep public study site accessible. */}})();
+</script>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="apple-touch-icon" href="./icons/icon-180.png">
 <link rel="stylesheet" href="./daily-reminder.css?v=20261126">
@@ -19,14 +27,17 @@ main{padding-top:10px;padding-bottom:56px}h1{font-size:clamp(27px,5vw,39px);line
 .daily{margin-top:26px}.daily h2{font-size:clamp(22px,4vw,27px);margin:0 0 10px}.daily-wrap{border:1px solid var(--border);background:var(--card);border-radius:24px;padding:16px;box-shadow:0 9px 24px #2A237013}.daily-note{font-size:13px;color:var(--muted);margin:0 0 12px}.daily-preview{display:flex;align-items:center;flex-wrap:wrap;justify-content:space-between;gap:10px;margin-bottom:12px}.daily-preview p{margin:0;font-size:13px;color:var(--muted)}.daily-cta{display:inline-flex;align-items:center;justify-content:center;background:var(--yellow);color:#1B1740;padding:10px 18px;border-radius:16px;font-size:14px;font-weight:700}.ns-reminder-panel{margin:0!important;box-shadow:none!important}
 @media(max-width:760px){.levels{grid-template-columns:repeat(3,minmax(0,1fr))}.level{min-height:142px}.header-actions{width:100%;justify-content:space-between}}@media(max-width:440px){header,main{padding-left:14px;padding-right:14px}.levels{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.level{padding:15px;min-height:138px}.daily-wrap{padding:10px}.language select{max-width:158px}}@media(prefers-reduced-motion:reduce){.level{transition:none}}
 .other-exams{margin-top:30px}.other-exams h2{font-size:clamp(22px,4vw,28px);margin:0 0 7px}.other-exams .other-intro{color:var(--muted);font-size:14px;margin:0 0 15px}.other-books{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.other-book{padding:20px 17px;min-height:174px;border-radius:22px;display:flex;flex-direction:column;gap:5px;background:#dff6ef;border:1px solid #a8daca;box-shadow:0 8px 22px #2a237012;transition:transform .2s}.other-book:hover{transform:translateY(-3px)}.other-book:nth-child(2){background:#dceaff;border-color:#b9d0fa}.other-book:nth-child(3){background:#fbe6d5;border-color:#efd3b1}.other-book .book-icon{font-size:28px;line-height:1.2}.other-book b{font-size:clamp(20px,3vw,25px)}.other-book small{font-size:12px;color:#3e435b}.other-book strong{font-size:14px;margin-top:auto}.other-note{font-size:12px;color:var(--muted);margin:10px 0 0}@media(max-width:690px){.other-books{grid-template-columns:1fr}.other-book{min-height:105px;padding:15px 16px;display:grid;grid-template-columns:38px 1fr;align-items:center;column-gap:13px}.other-book .book-icon{grid-row:1/4}.other-book b{font-size:22px}.other-book strong{margin:0}.other-book small{font-size:12px}}
+
+.learner-box{border:1px solid #cec5ef;border-radius:20px;background:#f0edff;padding:16px;margin:4px 0 22px;box-shadow:0 8px 18px #1d185014}.learner-box h2{font-size:20px;margin:0 0 6px}.learner-box p{color:var(--muted);font-size:13px;margin:0 0 12px}.learner-shortcuts{display:flex;flex-wrap:wrap;gap:8px}.learner-shortcuts a{display:inline-flex;align-items:center;min-height:44px;border:1px solid #a59be5;background:white;color:#29217c;border-radius:12px;padding:8px 12px;font-weight:750;font-size:13px}.profile-link{background:#fff;color:#30258b;border:1px solid #cbc3e6;padding:9px 13px;border-radius:13px;display:inline-flex;align-items:center;font-weight:800;font-size:13px}
 </style></head>
 <body>
 <header>
 <a class="brand" href="./" aria-label="NextStep Study Home">📚 NextStep <span>Study</span></a>
 <div class="header-actions"><label for="lang" class="language">🌐 Language
-<select id="lang" aria-label="Homepage language"><option value="ja">日本語</option><option value="ne">नेपाली</option><option value="en">English</option><option value="hi">हिन्दी</option></select></label><a class="feedback-link" href="./daily/?level=N2&ai=1" aria-label="Open free offline AI Japanese Teacher">🤖 AI Teacher</a></div>
+<select id="lang" aria-label="Homepage language"><option value="ja">日本語</option><option value="ne">नेपाली</option><option value="en">English</option><option value="hi">हिन्दी</option></select></label><a class="feedback-link" href="./daily/?level=N2&ai=1" aria-label="Open free offline AI Japanese Teacher">🤖 AI Teacher</a><a class="profile-link" href="./account/" aria-label="Open private account profile">👤 Profile</a></div>
 </header>
 <main>
+<section id="learnerHome" class="learner-box" hidden aria-label="Personal study plan"><h2 id="learnerWelcome">👋 Your study plan</h2><p id="learnerSummary"></p><nav class="learner-shortcuts" id="learnerShortcuts" aria-label="Start your selected study"></nav></section>
 <section aria-labelledby="levelHeading">
 <h1 id="levelHeading">🎓 JLPTレベルを選ぶ</h1>
 <p class="lead" id="levelIntro">自分のレベルを選択してください。漢字・語彙・文法・読解・聴解・模擬試験をレベル別にまとめています。</p>
@@ -62,6 +73,27 @@ const strings={
 };
 let language=localStorage.getItem('nextstep-home-lang')||'ja';
 if(!strings[language])language='ja';
+function renderLearner(){
+ let prefs;try{prefs=JSON.parse(localStorage.getItem('nextstep-onboarding')||'null')}catch{}
+ if(!prefs?.level||!localStorage.getItem('nextstep-onboarded'))return;
+ const level=['N1','N2','N3','N4','N5'].includes(prefs.level)?prefs.level:'N2';
+ $('learnerHome').hidden=false;
+ $('learnerWelcome').textContent='👋 Welcome back · JLPT '+level;
+ $('learnerSummary').textContent='Your goals: '+(prefs.goals||[]).join(' · ')+' · Daily target: '+(Number(prefs.minutes)||30)+' min';
+ const nav=$('learnerShortcuts');nav.replaceChildren();
+ const paths={kanji:'./mobile-app/learn.html?level='+level+'&section=kanji',
+  vocab:'./mobile-app/learn.html?level='+level+'&section=vocab',
+  grammar:'./mobile-app/learn.html?level='+level+'&section=grammar',
+  reading:'./mobile-app/learn.html?level='+level+'&section=reading',
+  listening:'./mobile-app/learn.html?level='+level+'&section=listening',
+  papers:'./exams/?level='+level,daily:'./daily/?level='+level};
+ const labels={kanji:'🧊 Kanji',vocab:'📘 Vocabulary',grammar:'📝 Grammar',reading:'📖 Reading',listening:'🎧 Listening',papers:'⏱ Exams',daily:'🧠 Daily Cards'};
+ for(const goal of new Set(prefs.goals||[])){
+  if(!paths[goal])continue;
+  const link=document.createElement('a');link.href=paths[goal];link.textContent=labels[goal];nav.append(link)
+ }
+ const edit=document.createElement('a');edit.href='./onboarding/?edit=1';edit.textContent='⚙ Change preferences';nav.append(edit);
+}
 function render(){
  const c=strings[language];document.documentElement.lang=language;$('lang').value=language;
  $('levelHeading').textContent=c[0];$('levelIntro').textContent=c[1];$('dailyHeading').textContent=c[2];$('dailyIntro').textContent=c[3];
@@ -84,9 +116,11 @@ function render(){
  }
 }
 $('lang').addEventListener('change',e=>{language=e.target.value;try{localStorage.setItem('nextstep-home-lang',language)}catch{}render()});
-render();
+render();renderLearner();
 if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
 })();
 </script>
+<script src="./auth/firebase-config.js"></script><script src="./auth/client.js"></script>
+<script defer src="./auth/usage.js?v=1"></script>
 <nav hidden aria-hidden="true" data-compatibility-links="study-source-preserved"><a href="N1/index.html?section=kanji">Source N1 Kanji</a><a href="N1/index.html?section=vocab">Source N1 Vocabulary</a><a href="N2/master.html?section=kanji">Source N2 Kanji</a><a href="N2/master.html?section=vocab">Source N2 Vocabulary</a><a href="N3/master.html?section=kanji">Source N3 Kanji</a><a href="N3/master.html?section=vocab">Source N3 Vocabulary</a><a href="N4/master.html?section=kanji">Source N4 Kanji</a><a href="N4/master.html?section=vocab">Source N4 Vocabulary</a><a href="N5/master.html?section=kanji">Source N5 Kanji</a><a href="N5/master.html?section=vocab">Source N5 Vocabulary</a></nav>
 </body></html>
