@@ -1,0 +1,23 @@
+/* Study dictionary appears beneath each question, without revealing solutions. */
+.ns-exam-glossary{margin:20px 0 24px;padding:16px 17px;background:#f3f9fc;color:#173044;border:1.5px solid #abcbd6;border-radius:18px}
+.ns-glossary-heading{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.ns-glossary-heading h3{color:#15374a;font-size:clamp(16px,2.4vw,20px);margin:0}
+.ns-glossary-note{font-size:13px;color:#39546a;margin:8px 0 14px;line-height:1.7}
+.ns-glossary-entries{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.ns-glossary-count,.ns-glossary-status{grid-column:1/-1;color:#39546a;font-size:13px;margin:4px 0}
+.ns-glossary-count{font-weight:700}
+.ns-glossary-entry{background:#fff;border:1px solid #c5d7e1;border-radius:15px;padding:12px;min-width:0;overflow-wrap:anywhere}
+.ns-glossary-entry-head{display:flex;align-items:center;flex-wrap:wrap;gap:7px 12px}
+.ns-glossary-word{font-size:clamp(19px,2.3vw,26px);line-height:1.3;color:#15354a}
+.ns-glossary-reading{font-size:13px;font-weight:600;color:#3b5365}
+.ns-glossary-type{border-radius:10px;padding:4px 8px;background:#d2f2e9;color:#134b3e;font-weight:700}
+.ns-glossary-meaning{margin:8px 0;color:#244154;font-weight:550;font-size:14px;line-height:1.6}
+.ns-glossary-buttons{display:flex;gap:7px;flex-wrap:wrap}
+.ns-glossary-action,.ns-glossary-more{border:1px solid #9fb6d0;background:#e9efff;color:#243471;font-weight:700;border-radius:11px;padding:8px 11px;min-height:44px;cursor:pointer;font-size:13px}
+.ns-glossary-action:disabled{opacity:.55;cursor:progress}
+.ns-glossary-translation:not(:empty){margin:10px 0 0;border-radius:12px;padding:10px;background:#f2f2fc;font-size:13px;color:#263452;white-space:pre-wrap;overflow-wrap:anywhere}
+.ns-glossary-more{grid-column:1/-1}
+.ns-glossary-info{margin-top:13px;font-size:12px;color:#39546a}
+.ns-glossary-info summary{cursor:pointer;min-height:38px;padding:6px 3px}
+.ns-glossary-info p{margin:5px 0}
+@media(max-width:600px){.ns-exam-glossary{padding:12px}.ns-glossary-entries{grid-template-columns:1fr}.ns-glossary-entry{padding:12px}}
