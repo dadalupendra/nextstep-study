@@ -47,3 +47,9 @@ body.nextstep-fulltest #exam-studio[hidden]{display:none!important}
 body.nextstep-fulltest footer{color:#627378}
 @media(max-width:540px){.fulltest-tabs{margin:0 -16px 17px}.fulltest-tabs button{font-size:13px;padding:11px 3px}.fulltest-level{padding:15px 13px;gap:12px;grid-template-columns:57px minmax(0,1fr)}.fulltest-level-icon{height:63px;width:57px;font-size:23px}.fulltest-level-name{font-size:18px}.fulltest-level-meta{font-size:11px}body.nextstep-fulltest #papers .studio-paper-card{padding:13px;gap:4px 11px;grid-template-columns:55px minmax(0,1fr) 22px}body.nextstep-fulltest #papers .studio-paper-card .fulltest-paper-icon{width:51px;height:58px;font-size:26px}}
 @media print{.fulltest-tabs,.fulltest-levels,.fulltest-back{display:none!important}}
+
+/* Original level-button DOM remains for backwards-compatible paper logic, not presentation. */
+body.nextstep-fulltest #legacy-level-section{display:none!important}
+body.nextstep-fulltest #paper-collection>p.muted:last-child{display:none}
+body.nextstep-fulltest #daily-reminder-root:empty{display:none}
+body.nextstep-fulltest #exam-studio[hidden]{display:none!important}
