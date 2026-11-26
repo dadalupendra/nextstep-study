@@ -9,6 +9,7 @@ on:
       - 'mobile-app/**'
       - 'daily/**'
       - 'kanji-3d/**'
+      - 'scripts/test-kanji-3d.cjs'
       - 'scripts/test-daily-3d.cjs'
       - 'native-privacy/**'
       - 'study-hub/**'
@@ -175,6 +176,9 @@ jobs:
 
       - name: Verify 100 unique daily questions for N1–N5 where sources are available
         run: node scripts/test-daily-100.cjs public-site
+
+      - name: Test 3D Kanji and source-backed compounds across N5–N1
+        run: node scripts/test-kanji-3d.cjs public-site
 
       - name: Test new 3D daily Kanji/Vocabulary decks and source fidelity
         run: node scripts/test-daily-3d.cjs public-site
