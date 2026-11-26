@@ -53,13 +53,21 @@ async function getProfile(){
  const x=await sdk(),doc=await x.store.getDoc(x.store.doc(x.db,'profiles',user.uid));
  return {user,profile:doc.exists()?doc.data():null}
 }
-async function watchProfiles(onChange,onError){
+async function listProfiles(){
  const x=await sdk(),user=await waitForUser();if(!user)throw Error('Sign in first.');
  const admin=await x.store.getDoc(x.store.doc(x.db,'admins',user.uid));
  if(!admin.exists()||admin.data().enabled!==true)throw Error('Administrator access not granted.');
- return x.store.onSnapshot(x.store.collection(x.db,'profiles'), {includeMetadataChanges:true}, snapshot=>{
-  if(!snapshot.metadata.fromCache)onChange(snapshot.docs.map(doc=>({id:doc.id,...doc.data()})));
- },onError)
+ const snapshot=await x.store.getDocs(x.store.collection(x.db,'profiles'));
+ return snapshot.docs.map(doc=>({id:doc.id,...doc.data()}))
+}
+async function watchProfiles(onData,onError){
+ const x=await sdk(),user=await waitForUser();
+ if(!user)throw Error('Sign in first.');
+ const admin=await x.store.getDoc(x.store.doc(x.db,'admins',user.uid));
+ if(!admin.exists()||admin.data().enabled!==true)throw Error('Administrator access not granted.');
+ return x.store.onSnapshot(x.store.collection(x.db,'profiles'),snapshot=>{
+  onData(snapshot.docs.map(doc=>({id:doc.id,...doc.data()})))
+ },error=>onError?.(error))
 }
 function consent(){return localStorage.getItem('nextstep-profile-activity-consent')==='yes'}
 async function markActivity(){
@@ -69,5 +77,5 @@ async function markActivity(){
  if(now-Number(localStorage.getItem(key)||0)<12*60*60*1000)return;
  await touch(user);localStorage.setItem(key,String(now))
 }
-global.NextStepAuth={configured,sdk,waitForUser,touch,loginGoogle,loginFacebook,loginEmail,logout,getProfile,watchProfiles,markActivity};
+global.NextStepAuth={configured,sdk,waitForUser,touch,loginGoogle,loginFacebook,loginEmail,logout,getProfile,listProfiles,watchProfiles,markActivity};
 })(window);

@@ -20,6 +20,7 @@ const server=spawn('python3',['-m','http.server',String(PORT),'--bind','127.0.0.
    await page.waitForURL(url=>url.pathname.endsWith('/onboarding/'),{timeout:11000});
    assert.equal(await page.locator('.screen:not([hidden])').count(),1);
    await page.locator('#welcomeNext').click();
+   assert((await page.locator('#lang option').count())>=90,'Onboarding must offer 90+ language options');
    await page.locator('#lang').selectOption('ne');
    await page.locator('#languageNext').click();
    await page.locator('input[name=level][value=N3]').check();
