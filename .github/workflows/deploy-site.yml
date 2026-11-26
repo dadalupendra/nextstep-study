@@ -11,6 +11,7 @@ on:
       - 'kanji-3d/**'
       - 'scripts/test-kanji-3d.cjs'
       - 'scripts/test-library-kanji-3d.cjs'
+      - 'scripts/test-library-vocabulary-3d.cjs'
       - 'scripts/test-daily-3d.cjs'
       - 'native-privacy/**'
       - 'study-hub/**'
@@ -177,6 +178,9 @@ jobs:
 
       - name: Verify 100 unique daily questions for N1–N5 where sources are available
         run: node scripts/test-daily-100.cjs public-site
+
+      - name: Test 3D vocabulary POS categories and related words in all five Library levels
+        run: node scripts/test-library-vocabulary-3d.cjs public-site
 
       - name: Test 3D Kanji INSIDE Library for all five levels
         run: node scripts/test-library-kanji-3d.cjs public-site
