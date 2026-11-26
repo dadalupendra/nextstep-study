@@ -26,19 +26,47 @@ function renderOverview(){const c=$('content');c.innerHTML='<div class="section-
 function renderSpecial(){let title=sections.find(x=>x[0]===section)?.[1]||section;const target=realPath(section),t=$('content');const isExam=['papers','reading','listening'].includes(section);t.innerHTML='<h2>'+esc(title)+' · '+level+'</h2><p>'+((isExam)?'The existing JLPT exam studio keeps all 20 papers together for this level. Choose Reading or Listening inside the studio.':'Your original lessons and saved progress are available here.')+'</p><a class="btn" href="'+esc(target)+'">Open '+esc(title)+' →</a><div class="summary">Level: '+level+' · '+(isExam?'20 papers':'Existing lessons')+'</div><p class="hint">Use the language selector above and Translate this entire page to request a translated version of any existing reader or exam page.</p>'}
 function viewItem(x,index){const title=section==='kanji'?x.character||x.kanji||x.word:section==='grammar'?x.pattern||x.grammar:x.word||x.vocabulary||x.expression||x.kanji||x.text||x.term;const meaning=(Array.isArray(x.meanings)?x.meanings.join(', '):x.meaning||x.meaning_en||x.english||x.definition||'');const read=[...(Array.isArray(x.onyomi)?x.onyomi:[]),...(Array.isArray(x.kunyomi)?x.kunyomi:[])].join(' · ')||x.reading||x.kana||x.furigana||'';const examples=Array.isArray(x.examples)?x.examples.slice(0,2):[];const full=[title,read,meaning,x.formation,...examples.map(y=>(typeof y==='string'?y:(y.ja||'')+' '+(y.en||'')))].filter(Boolean).join('\\n');const english=[meaning,x.formation,...examples.map(y=>typeof y==='string'?'':y.en||'')].filter(Boolean).join('. ');const cardSource=english||full;const cardSourceLang=english?'en':'ja';return '<article class="entry" data-translatable="1" data-source="'+encodeURIComponent(cardSource)+'" data-source-lang="'+cardSourceLang+'"><div class="pills"><span class="pill">'+level+'</span><span class="pill sky">'+esc(section)+'</span></div><h3 class="jp">'+esc(title||'Japanese study item')+'</h3>'+(read?'<div class="word">'+esc(read)+'</div>':'')+(meaning?'<p><b>Meaning:</b> '+esc(meaning)+'</p>':'')+(x.formation?'<p><b>Pattern:</b> '+esc(x.formation)+'</p>':'')+examples.map(y=>'<p class="word"><span lang="ja">'+(typeof y==='string'?esc(y):sanitizeText(y.furigana||y.ja||''))+'</span>'+(y.en?'<br><small>'+esc(y.en)+'</small>':'')+'</p>').join('')+'<footer><button data-detail="'+index+'" type="button">📖 Complete details</button><button data-translate-inline="1" type="button">🌐 Translate here</button><button data-text="'+encodeURIComponent(full)+'">Translate externally ↗</button><button data-copy="'+encodeURIComponent(full)+'">⧉ Copy</button></footer><div class="translation-result" role="status" aria-live="polite"></div></article>'}
 
+const wordClasses={
+ 'n':'Noun / 名詞', 'n-adv':'Adverbial noun / 副詞的名詞','n-t':'Temporal noun / 時間名詞',
+ 'n-pr':'Proper noun / 固有名詞','pron':'Pronoun / 代名詞',
+ 'v1':'Ichidan verb / 一段動詞','v5u':'Godan verb (u) / 五段動詞',
+ 'v5r':'Godan verb (ru) / 五段動詞','v5k':'Godan verb (ku) / 五段動詞',
+ 'v5s':'Godan verb (su) / 五段動詞','v5m':'Godan verb (mu) / 五段動詞',
+ 'v5t':'Godan verb (tsu) / 五段動詞','vs':'Suru verb / サ変動詞',
+ 'adj-i':'I-adjective / イ形容詞','adj-na':'Na-adjective / ナ形容詞',
+ 'adv':'Adverb / 副詞','adv-to':'Adverb with と / 副詞',
+ 'prt':'Particle / 助詞','conj':'Conjunction / 接続詞','int':'Interjection / 感動詞',
+ 'ctr':'Counter / 助数詞','exp':'Expression / 表現','suf':'Suffix / 接尾辞',
+ 'pref':'Prefix / 接頭辞','num':'Number / 数詞','aux':'Auxiliary / 助動詞'
+};
+function describeWordClass(value){
+ const parts=Array.isArray(value)?value:String(value||'').split(',');
+ return parts.map(part=>{const key=String(part).trim();return wordClasses[key]||key}).filter(Boolean).join(' · ')
+}
 function itemDetail(idx){
  const x=items[idx];if(!x)return;
  const word=x.word||x.character||x.pattern||x.kanji||x.expression||'Japanese study item';
  const meaning=Array.isArray(x.meanings)?x.meanings.join('; '):x.meaning||x.meaning_en||x.english||'';
  const read=x.reading||(Array.isArray(x.onyomi)?x.onyomi.join(' · '):'');
  const examples=Array.isArray(x.examples)?x.examples:[];
- const enLines=[meaning,x.notes||'',x.formation||'',...examples.map(y=>typeof y==='object'?y.en||'':'')].filter(Boolean);
+ const pos=describeWordClass(x.pos||x.part_of_speech);
+ const enLines=[
+ 'Japanese word: '+word,
+ read?'Reading: '+read:'',
+ pos?'Part of speech: '+pos:'',
+ meaning?'Dictionary meaning: '+meaning:'',
+ x.formation?'Grammar formation: '+x.formation:'',
+ x.notes?'Usage notes: '+x.notes:'',
+ x.radical?'Kanji radical: '+x.radical:'',
+ x.strokes?'Number of strokes: '+x.strokes:'',
+ ...examples.map((y,i)=>typeof y==='object'&&y.en?'Example '+(i+1)+': '+y.en:'')
+ ].filter(Boolean);
  const enText=enLines.join('\n');
  const line=(label,value)=>value?'<div class="detail-section"><strong>'+esc(label)+'</strong><p>'+esc(Array.isArray(value)?value.join(' · '):value)+'</p></div>':'';
  const exHtml=examples.map((ex,i)=>typeof ex==='string'?'<div class="detail-section"><b>Example '+(i+1)+'</b><p lang="ja">'+esc(ex)+'</p></div>':
    '<div class="detail-section"><b>Example '+(i+1)+'</b><p lang="ja">'+sanitizeText(ex.furigana||ex.ja||'')+'</p><p>'+esc(ex.en||'No English sentence supplied')+'</p></div>').join('');
  const content='<div class="pills"><span class="pill">'+level+'</span><span class="pill sky">'+esc(section)+'</span></div><h2 lang="ja">'+esc(word)+'</h2>'+
- line('Reading / よみかた',read)+line('Romaji',x.romaji)+line('Part of speech / 品詞',x.pos||x.part_of_speech)+
+ line('Reading / よみかた',read)+line('Romaji',x.romaji)+line('Part of speech / 品詞',pos)+
  line('Meaning / 意味',meaning)+line('Grammar formation / 接続',x.formation)+line('Grammar notes',x.notes)+
  line('On-yomi / 音読み',x.onyomi)+line('Kun-yomi / 訓読み',x.kunyomi)+
  line('Radical / 部首',x.radical)+line('Number of strokes / 画数',x.strokes)+
