@@ -5,6 +5,8 @@ on:
     branches: [main]
     paths:
       - 'index.html'
+      - 'mobile-app/**'
+      - 'study-hub/**'
       - 'community-config.js'
       - 'feedback/**'
       - 'scripts/test-feedback.cjs'
@@ -108,6 +110,9 @@ jobs:
           mkdir -p public-site/icons
           cp icons/icon.svg public-site/icons/
           cp -R install public-site/
+          cp -R mobile-app study-hub public-site/
+          test -s public-site/mobile-app/index.html
+          test -s public-site/study-hub/index.html
           mkdir -p public-site/feedback/admin
           cp feedback/index.html feedback/feedback.css feedback/feedback.js feedback/feedback-upgrade.js feedback/feedback-buttons.js public-site/feedback/
           cp feedback/admin/index.html feedback/admin/admin.js public-site/feedback/admin/
