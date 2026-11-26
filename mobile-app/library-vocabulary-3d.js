@@ -113,7 +113,7 @@ function related(item){
  const shared=[...item.word].filter(c=>/[\u3400-\u9fff]/u.test(c));
  const same=state.items.filter(x=>token(x)!==token(item)&&
  (shared.some(c=>x.word.includes(c))||(shared.length===0&&classify(x).some(c=>classify(item).includes(c))&&x.word[0]===item.word[0])));
- const unique=new Set();return same.filter(x=>{const k=token(x);if(unique.has(k))return false;unique.add(k);return true}).slice(0,100)
+ const unique=new Set();return same.filter(x=>{const k=token(x);if(unique.has(k))return false;unique.add(k);return true})
 }
 function open(item){
  state.chosen=item;const version=++state.request,body=$('detailBody');body.replaceChildren();
