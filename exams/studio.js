@@ -84,6 +84,9 @@ function renderQuestion(){
   button.disabled=state.submitted||(practiceMode&&state.answers[state.index]!==undefined);
   button.addEventListener('click',()=>{state.answers[state.index]=j;save();renderQuestion();renderSheet();});options.append(button);
  });container.append(options);
+ // Show source-backed Kanji/word meanings directly under the same question.
+ // During the exam, never mine answer choices or a hidden listening script.
+ if(window.NextStepExamGlossary){container.append(window.NextStepExamGlossary.mount(q,state.level,{review:state.submitted||(practiceMode&&state.answers[state.index]!==undefined)}));}
  if(state.submitted||(practiceMode&&state.answers[state.index]!==undefined)){
   const explanation=document.createElement('div');explanation.className='studio-explanation';
   const h=document.createElement('h3');h.textContent='解説 / व्याख्या / Explanation';explanation.append(h);
