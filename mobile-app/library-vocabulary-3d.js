@@ -48,7 +48,7 @@ function readWord(text){
  global.speechSynthesis.cancel();const utterance=new SpeechSynthesisUtterance(text);utterance.lang='ja-JP';utterance.rate=.78;
  const v=global.speechSynthesis.getVoices().find(x=>x.lang.toLowerCase().startsWith('ja'));if(v)utterance.voice=v;global.speechSynthesis.speak(utterance);return true
 }
-const state={level:'N2',items:[],lang:'ne',furigana:true,category:'all',query:'',page:0,chosen:null,request:0,learned:{},host:null};
+const state={level:'N2',items:[],lang:'ne',furigana:true,category:'all',reviewMode:'all',query:'',page:0,chosen:null,request:0,learned:{},host:null};
 const key=()=> 'nextstep-library-vocab-3d-v1-'+state.level;
 const loadProgress=()=>{try{state.learned=JSON.parse(localStorage.getItem(key())||'{}')||{}}catch{state.learned={}}};
 const saveProgress=()=>{try{localStorage.setItem(key(),JSON.stringify(state.learned))}catch{}};
@@ -62,7 +62,8 @@ const safeItems=arr=>{
 };
 function filtered(){
  const q=state.query.toLocaleLowerCase().trim();
- return state.items.filter(item=>(state.category==='all'||classify(item).includes(state.category))&&
+ const candidates=global.NextStepSRS?.candidates(state.level,'vocab',state.items,token,state.reviewMode)||state.items;
+ return candidates.filter(item=>(state.category==='all'||classify(item).includes(state.category))&&
  (!q||[item.word,item.reading,item.romaji,srcGloss(item),...pos(item)].join(' ').toLocaleLowerCase().includes(q)))
 }
 function preview(item){
@@ -79,12 +80,37 @@ function preview(item){
  learned.onclick=()=>{if(state.learned[token(item)])delete state.learned[token(item)];else state.learned[token(item)]=true;saveProgress();draw()};
  actions.append(turn,detail,learned);outer.append(flip,actions);return outer
 }
+function addReviewControls(root){
+ const S=global.NextStepSRS;if(!S)return;
+ const stats=S.status(state.level,'vocab',state.items,token);
+ const group=dom('section','ns-smart-review');
+ group.append(dom('strong',null,'🧠 Smart Review · vocabulary'));
+ group.append(dom('p',null,'📅 '+stats.due+' due · 🆕 '+stats.new+' new · 🔁 '+stats.weak+' hard/again · '+stats.scheduled+' scheduled'));
+ const tabs=dom('div','ns-review-filters');
+ for(const [mode,label] of [['all','All words'],['due','Due now'],['new','New'],['weak','Hard / Again']]){
+  const btn=dom('button',null,label);btn.type='button';btn.setAttribute('aria-pressed',String(state.reviewMode===mode));
+  btn.onclick=()=>{state.reviewMode=mode;state.page=0;draw()};tabs.append(btn)
+ }
+ group.append(tabs);root.append(group)
+}
+function addRating(body,item){
+ const S=global.NextStepSRS;if(!S)return;
+ const section=dom('section','ns-review-rating');section.append(dom('strong',null,'🧠 How well did you remember '+item.word+'?'));
+ const buttons=dom('div','ns-review-grade-buttons');
+ for(const [grade,label] of [['again','↻ Again · 10 min'],['hard','😅 Hard · 1 day'],['good','✓ Good · 3 days'],['easy','⭐ Easy · 7 days']]){
+  const btn=dom('button',null,label);btn.type='button';btn.dataset.grade=grade;
+  btn.onclick=()=>{const entry=S.rate(state.level,'vocab',token(item),grade);message.textContent='Saved on this device. '+S.printable(entry);draw()};buttons.append(btn)
+ }
+ const message=dom('p','ns-review-message',S.printable(S.get(state.level,'vocab',token(item))));
+ section.append(buttons,message);body.append(section)
+}
 function draw(){
  const host=$('content');if(!host)return;
  state.host=host;const matches=filtered(),pages=Math.max(1,Math.ceil(matches.length/24));state.page=Math.min(state.page,pages-1);
  host.replaceChildren();
  const heading=dom('div','section-head');heading.append(dom('h2',null,'🧊 '+state.level+' 3D Vocabulary'),dom('span','pill',state.items.length+' unique words'));host.append(heading);
  host.append(dom('p','v3-intro','Categories are based on source part-of-speech tags. Tap a word for readings, detailed examples, related real words, translation and pronunciation.'));
+ addReviewControls(host);
  const controls=dom('div','v3-controls');
  const categoryLabel=dom('label','field','📚 Word class / 品詞');
  const category=dom('select');category.id='v3Class';
@@ -123,7 +149,7 @@ function open(item){
  detailField(meta,'Meaning (source English)',srcGloss(item));
  detailField(meta,'Part of speech / 品詞',pos(item).map(labelFor).join(' · ')||'Not classified in source');
  detailField(meta,'Categories',classify(item).map(x=>parsed.find(k=>k.id===x)?.label).filter(Boolean).join(' · '));
- body.append(meta);
+ body.append(meta);addRating(body,item);
  const buttons=dom('div','v3-detail-actions');
  const play=dom('button','btn soft','🔊 Japanese reading');play.onclick=()=>readWord(item.word);
  const speakReading=dom('button','btn soft','🔉 Kana reading');speakReading.onclick=()=>readWord(item.reading);
