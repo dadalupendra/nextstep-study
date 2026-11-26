@@ -33,7 +33,7 @@ const server=spawn('python3',['-m','http.server',String(PORT),'--bind','127.0.0.
    assert.equal(await page.locator('.library-kanji-card.flipped').count(),1);
    await page.locator('.library-kanji-card .library-kanji-actions button').nth(2).click();
    assert.equal(await page.locator('.library-kanji-card.mastered').count(),1);
-   await page.locator('#next').click();
+   await page.locator('#content .pagebar button').last().click();
    assert.equal(await page.locator('#content .library-kanji-card').count(),16);
    await page.locator('#libraryKanjiSearch').fill('一');
    assert.equal(await page.locator('#content .library-kanji-card').count()>=1,true);
