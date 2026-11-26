@@ -4,7 +4,7 @@
 const doc=document,API=global.NextStepDailySource,COMPOUNDS=global.NextStepKanjiCompounds;
 const node=(tag,cls,label)=>{const e=doc.createElement(tag);if(cls)e.className=cls;if(label!==undefined)e.textContent=String(label);return e};
 const getGloss=x=>API.getGloss(x||{}),getRead=x=>[...(x.onyomi||[]),...(x.kunyomi||[])].join(' · ');
-const state={level:'N2',items:[],lang:'ne',furigana:true,page:0,query:'',current:null,related:[],request:0,learned:{}};
+const state={level:'N2',items:[],lang:'ne',furigana:true,page:0,query:'',reviewMode:'all',current:null,related:[],request:0,learned:{}};
 function key(){return 'nextstep-kanji-3d-progress-v1-'+state.level}
 function getProgress(){try{state.learned=JSON.parse(localStorage.getItem(key())||'{}')||{}}catch{state.learned={}}}
 function saveProgress(){try{localStorage.setItem(key(),JSON.stringify(state.learned))}catch{}}
@@ -39,14 +39,41 @@ function card(x){
  learn.onclick=()=>{if(state.learned[x.character])delete state.learned[x.character];else state.learned[x.character]=true;saveProgress();draw()};
  actions.append(flip,full,learn);article.append(button,actions);return article
 }
+function addReviewControls(root){
+ const S=global.NextStepSRS;if(!S)return;
+ const stats=S.status(state.level,'kanji',state.items,x=>x.character);
+ const wrap=node('section','ns-smart-review');
+ wrap.append(node('strong',null,'🧠 Smart Review · spaced learning'));
+ wrap.append(node('p',null,'📅 '+stats.due+' due · 🆕 '+stats.new+' new · 🔁 '+stats.weak+' hard/again · '+stats.scheduled+' scheduled'));
+ const tabs=node('div','ns-review-filters');
+ for(const [value,label] of [['all','All Kanji'],['due','Due now'],['new','New'],['weak','Hard / Again']]){
+  const btn=node('button',null,label);btn.type='button';btn.setAttribute('aria-pressed',String(state.reviewMode===value));
+  btn.onclick=()=>{state.reviewMode=value;state.page=0;draw()};tabs.append(btn)
+ }
+ wrap.append(tabs);root.append(wrap)
+}
+function addRating(body,item){
+ const S=global.NextStepSRS;if(!S)return;
+ const group=node('section','ns-review-rating');
+ group.append(node('strong',null,'🧠 How well did you remember '+item.character+'?'));
+ const buttons=node('div','ns-review-grade-buttons');
+ for(const [grade,label] of [['again','↻ Again · 10 min'],['hard','😅 Hard · 1 day'],['good','✓ Good · 3 days'],['easy','⭐ Easy · 7 days']]){
+  const btn=node('button',null,label);btn.type='button';btn.dataset.grade=grade;
+  btn.onclick=()=>{const entry=S.rate(state.level,'kanji',item.character,grade);message.textContent='Saved on this device. '+S.printable(entry);draw()};buttons.append(btn)
+ }
+ const message=node('p','ns-review-message',S.printable(S.get(state.level,'kanji',item.character)));
+ group.append(buttons,message);body.append(group)
+}
 function draw(){
  const root=doc.getElementById('content');if(!root)return;
- const matches=state.items.filter(x=>!state.query||[x.character,getGloss(x),getRead(x)].join(' ').toLowerCase().includes(state.query.toLowerCase()));
+ const candidates=global.NextStepSRS?.candidates(state.level,'kanji',state.items,x=>x.character,state.reviewMode)||state.items;
+ const matches=candidates.filter(x=>!state.query||[x.character,getGloss(x),getRead(x)].join(' ').toLowerCase().includes(state.query.toLowerCase()));
  const pages=Math.max(1,Math.ceil(matches.length/24));
  state.page=Math.min(state.page,pages-1);root.replaceChildren();
  const head=node('div','section-head');head.append(node('h2',null,'🧊 '+state.level+' Kanji · 3D Study'));
  head.append(node('span','pill',state.items.length+' unique Kanji'));root.append(head);
  root.append(node('p','library-kanji-note','Tap a Kanji to explore real compound words, Japanese example sentences, readings and meanings. Flip cards to review, and save what you learned.'));
+ addReviewControls(root);
  const searchLabel=node('label','field','🔍 Search Kanji, meaning or reading');
  const search=node('input');search.type='search';search.placeholder='例: 学、まなぶ、study';search.value=state.query;search.setAttribute('aria-label','Search this JLPT Kanji collection');
  search.oninput=event=>{const cursor=event.target.selectionStart;state.query=event.target.value;state.page=0;draw();const next=doc.getElementById('libraryKanjiSearch');if(next){next.focus();next.setSelectionRange(cursor,cursor)}};
@@ -106,7 +133,7 @@ function openWord(item){
 }
 function openKanji(item){
  const version=++state.request;state.current={type:'kanji',item};state.related=[];
- const body=prepareDetail(item,'kanji');
+ const body=prepareDetail(item,'kanji');addRating(body,item);
  const heading=node('h3',null,'📚 '+item.character+' — Related compounds / 関連語');body.append(heading);
  const notice=node('p','hint','Searching the existing N5–N1 vocabulary files…');body.append(notice);
  const area=node('div','library-kanji-compounds');body.append(area);
