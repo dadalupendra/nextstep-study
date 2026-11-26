@@ -33,6 +33,9 @@ try{for(const level of ['N5','N4','N3','N2','N1']){
  await page.locator('#v3Class').selectOption('noun');
  await page.locator('#content .v3-flip').first().click();
  assert.equal(await page.locator('#detailDialog[open]').count(),1);
+ assert.equal(await page.locator('.ns-review-filters button').count(),4,'Spaced review filter available');
+ await page.locator('#detailBody .ns-review-grade-buttons button[data-grade="hard"]').click();
+ assert.equal(await page.locator('.ns-smart-review').innerText().then(x=>x.includes('hard/again')),true);
  assert((await page.locator('#detailBody').innerText()).includes('Noun'),'POS details required');
  assert.equal(await page.locator('#detailBody .v3-example .v3-japanese').count()>0,true);
  await page.locator('#detailBody .v3-related-item').first().click();
