@@ -26,10 +26,24 @@ async function getJson(url){const response=await fetch(url,{cache:'force-cache'}
 async function load(level){
  if(!LEVELS.includes(level))throw Error('Unknown JLPT level');
  if(CACHE.has(level))return CACHE.get(level);
- const files=Promise.all([
-  getJson('../'+level+'/data/kanji.json'),
-  getJson('../'+level+'/data/vocab.json')
- ]);
+ const vocabSource=async()=>{
+   try{return await getJson('../'+level+'/data/vocab.json')}
+   catch(error){
+     if(level!=='N2')throw error;
+     // N2 has a separately licensed, compact source pack in data.js.
+     if(!global.NEXTSTEP_N2_DATA?.words){
+       await new Promise((resolve,reject)=>{
+         const script=document.createElement('script');script.src='../N2/data.js';
+         script.onload=resolve;script.onerror=()=>reject(new Error('N2 vocabulary source unavailable'));document.head.append(script);
+       });
+     }
+     const words=global.NEXTSTEP_N2_DATA?.words;
+     if(!Array.isArray(words))throw Error('N2 source pack is invalid');
+     return words.map(w=>({word:w[0],reading:w[1],meanings:[w[2]],id:w[3],pos:String(w[4]||'').split(', '),
+       examples:[{ja:w[5],en:w[6],furigana:w[9]},{ja:w[7],en:w[8],furigana:w[10]}].filter(x=>x.ja)}))
+   }
+ };
+ const files=Promise.all([getJson('../'+level+'/data/kanji.json'),vocabSource()]);
  const promise=files.then(([kanji,vocab])=>{
   const data={kanji:normalizeKanji(kanji),vocab:normalizeVocab(vocab)};
   if(data.kanji.length<10||data.vocab.length<10)throw Error('Not enough verified '+level+' study source entries. No demo cards inserted.');
