@@ -15,11 +15,11 @@ function showProfiles(profiles){
   }
   $('users').append(tr);
  }
- $('count').textContent=profiles.length+' verified profiles in Firebase';
+ $('count').textContent=profiles.length+' signed-in profiles in Firebase';
  status.textContent='Authorized account directory · '+(newlyRegistered?newlyRegistered+' new registration(s) since last update.':'Live account list up to date.');
  $('directory').hidden=false;
  if(newlyRegistered&&'Notification'in window&&Notification.permission==='granted'){
-  try{new Notification('NextStep Study: new registration',{body:newlyRegistered+' new verified account(s) registered.'})}catch{}
+  try{new Notification('NextStep Study: new registration',{body:newlyRegistered+' new signed-in account(s) registered.'})}catch{}
  }
 }
 async function reload(){
