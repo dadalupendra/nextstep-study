@@ -138,17 +138,52 @@ function applyLevelLayout(level){
   return sections;
  }
  function explanation(q,j){
-  if(q.sourceType){const good=j===q.answer;return '<strong>'+escText(q.options[j])+(good?' ✅':' ❌')+'</strong><br>🇯🇵 '+(good?'正解。':'不正解。')+escText(q.explanation.ja)+'<br>🇳🇵 '+(good?'सही उत्तर। ':'गलत उत्तर। ')+escText(q.explanation.ne)+'<br>🇬🇧 '+(good?'Correct. ':'Incorrect. ')+escText(q.explanation.en);}
-
-  if(q.grammarSource){const good=j===q.answer,item=q.grammarTarget,option=q.grammarOptions[j];return '<strong>'+escText(option.form)+(good?' ✅':' ❌')+'</strong><br>🇯🇵 '+(good?'正解です。':'不正解です。')+'教材の原文は「'+escText(item.sentence)+'」で、文法表現は「'+escText(item.form)+'」です。<br>🇳🇵 '+(good?'सही विकल्प। ':'गलत विकल्प। ')+'मूल उदाहरणमा प्रयोग भएको व्याकरण '+escText(item.form)+' हो।<br>🇬🇧 '+(good?'Correct. ':'Incorrect. ')+'The source sentence uses '+escText(item.form)+' ('+escText(item.meaning)+').';}
-
-  if(q.scenario){const good=j===q.answer,choice=q.options[j];return '<strong>'+escText(choice)+(good?' ✅':' ❌')+'</strong><br>🇯🇵 '+(good?'正解です。':'不正解です。')+'案内の答えは「'+escText(q.correctValue)+'」です。'+(good?'':'この選択肢は案内された開始時間ではありません。')+'<br>🇳🇵 '+(good?'सही उत्तर हो।':'गलत उत्तर हो।')+' सूचनाअनुसार सही विकल्प '+escText(q.correctValue)+' हो।'+'<br>🇬🇧 '+(good?'Correct. ':'Incorrect. ')+'The announcement identifies the correct answer as '+escText(q.correctValue)+'.';}
-  if(!q.generated){const opt=q.original[3][j],good=j===q.answer;return '<strong>'+escText(opt[0])+(good?' ✅':' ❌')+'</strong><br>🇯🇵 '+escText(opt[1])+'. '+(good?escText(q.original[4]):'この設問の正答ではありません。')+'<br>🇳🇵 '+escText(opt[2])+'। '+(good?escText(q.original[5]):'यस प्रश्नमा यो विकल्प सही होइन।')+'<br>🇬🇧 '+escText(opt[3])+'. '+(good?escText(q.original[6]):'This is not the correct option here.');}
-  const item=q.source[j],right=item.correct,target=q.word;const english=target.meaning?' / Meaning: '+target.meaning:'';
-  return '<strong>'+escText(item.text)+(right?' ✅':' ❌')+'</strong><br>'+
-    '🇯🇵 '+(right?'正解です。':'不正解です。')+'「'+escText(target.word)+'」の読みは「'+escText(target.reading)+'」です。'+(right?'':'この選択肢は「'+escText(item.word.word)+'」（'+escText(item.word.reading)+'）に対応します。')+
-    '<br>🇳🇵 '+(right?'यो सही विकल्प हो। ':'यो गलत विकल्प हो। ')+'「'+escText(target.word)+'」 को पढाइ 「'+escText(target.reading)+'」 हो।'+(right?'':' यो विकल्प 「'+escText(item.word.word)+'」（'+escText(item.word.reading)+'）सँग सम्बन्धित छ।')+
-    '<br>🇬🇧 '+(right?'Correct. ':'Incorrect. ')+'The reading of '+escText(target.word)+' is '+escText(target.reading)+escText(english)+'.'+(right?'':' This option is associated with '+escText(item.word.word)+' ('+escText(item.word.reading)+').');
+  const good=j===q.answer,selected=String(q.options[j]||''),correct=String(q.options[q.answer]||'');
+  const mark=good?' ✅':' ❌';
+  const jp=good?'正解です。':'不正解です。';
+  const ne=good?'यो विकल्प सही हो। ':'यो विकल्प सही होइन। ';
+  const en=good?'Correct. ':'Incorrect. ';
+  const fmt=(ja,np,english)=>'<strong>'+escText(selected)+mark+'</strong><br>🇯🇵 '+escText(jp+ja)+'<br>🇳🇵 '+escText(ne+np)+'<br>🇬🇧 '+escText(en+english);
+  if(q.sourceType){
+    const actual=String(q.correctValue??correct);
+    const reason=q.explanation||{};
+    return fmt(
+      good?String(reason.ja||'本文の根拠に合っています。'):
+        '選択肢「'+selected+'」は質問「'+String(q.question||'')+'」への正答ではありません。本文に書かれた答えは「'+actual+'」です。本文に出てきた情報でも、質問に合うとは限りません。',
+      good?String(reason.ne||'यसको समर्थन मूल पाठले गर्छ।'):
+        '「'+selected+'」 प्रश्नको सही उत्तर होइन। पाठ र प्रश्न मिलाउँदा सही उत्तर 「'+actual+'」 हुन्छ। पाठमा उल्लेख भएको हरेक विवरण उत्तर हुँदैन।',
+      good?String(reason.en||'The original passage supports this choice.'):
+        'Choice "'+selected+'" does not correctly answer the question "'+String(q.question||'')+'". The supported answer is "'+actual+'". A detail appearing in the passage may still be irrelevant or refer to an earlier plan.'
+    );
+  }
+  if(q.grammarSource){
+    const item=q.grammarTarget,option=q.grammarOptions[j],otherMeaning=String(option?.meaning||'');
+    return fmt(
+      '教材の全文「'+item.sentence+'」では「'+item.form+'」が使われます。'+(good?'':'「'+selected+'」は他の文法表現であり、この教材の原文に使われた形ではありません。'),
+      'मूल पूरा वाक्य 「'+item.sentence+'」 मा 「'+item.form+'」 प्रयोग भएको छ।'+(good?'':' 「'+selected+'」 यस स्रोत वाक्यमा प्रयोग भएको मूल रूप होइन।'),
+      'The complete source sentence is "'+item.sentence+'". It uses "'+item.form+'" ('+item.meaning+').'+(good?'':' The distractor "'+selected+'" may be valid in other contexts ('+otherMeaning+'), but is not the expression used in this original source sentence.')
+    );
+  }
+  if(q.scenario){
+    const original=String(q.correctValue||correct);
+    return fmt(
+      '案内で尋ねられた内容は「'+original+'」です。'+(good?'':'選択肢「'+selected+'」は問われた変更後の正しい情報ではありません。'),
+      'सूचनामा सोधिएको सही विवरण 「'+original+'」 हो।'+(good?'':' 「'+selected+'」 सोधिएको सही नयाँ जानकारी होइन।'),
+      'The announcement identifies "'+original+'" as the answer.'+(good?'':' "'+selected+'" is not the correct information for this question.')
+    );
+  }
+  if(!q.generated){
+    const opt=q.original[3][j];
+    return '<strong>'+escText(opt[0])+mark+'</strong><br>🇯🇵 '+escText(opt[1])+'. '+(good?escText(q.original[4]):'この設問の正答は「'+escText(correct)+'」です。')+
+      '<br>🇳🇵 '+escText(opt[2])+'। '+(good?escText(q.original[5]):'यस प्रश्नको सही विकल्प 「'+escText(correct)+'」 हो।')+
+      '<br>🇬🇧 '+escText(opt[3])+'. '+(good?escText(q.original[6]):'The correct answer to this question is "'+escText(correct)+'".');
+  }
+  const other=q.source[j]?.word||{},target=q.word;
+  return fmt(
+    '「'+target.word+'」の正しい読みは「'+target.reading+'」です。'+(good?'':'「'+selected+'」は「'+String(other.word||'')+'」（'+String(other.reading||'')+'）の表記・読みであり、質問の単語と一致しません。'),
+    '「'+target.word+'」 को सही पढाइ 「'+target.reading+'」 हो।'+(good?'':' 「'+selected+'」 अर्को शब्द 「'+String(other.word||'')+'」（'+String(other.reading||'')+'）सँग सम्बन्धित छ।'),
+    'The target word "'+target.word+'" reads "'+target.reading+'" and means "'+String(target.meaning||'')+'".'+(good?'':' Choice "'+selected+'" belongs to a different word: "'+String(other.word||'')+'" ('+String(other.reading||'')+'), meaning "'+String(other.meaning||'')+'".')
+  );
  }
  function playJapanese(script,rate){
   if(!('speechSynthesis' in window)||typeof SpeechSynthesisUtterance==='undefined'){window.alert('Japanese Text-to-Speech is not available on this device. Try Chrome, Edge or Safari with a Japanese voice installed.');return;}
