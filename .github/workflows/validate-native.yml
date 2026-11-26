@@ -1,0 +1,31 @@
+name: Validate native NextStep Study (Expo)
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'native-expo/**'
+      - '.github/workflows/validate-native.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: native-expo
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: native-expo/package-lock.json
+      - name: Install project packages
+        run: npm install --no-audit --no-fund
+      - name: TypeScript type check
+        run: npx tsc --noEmit
+      - name: Expo project diagnostics
+        run: npx expo install --check
