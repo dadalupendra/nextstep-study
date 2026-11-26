@@ -17,8 +17,9 @@ toolbar.append(create('p','ns-book-subtitle','原文の日本語を残したま�
 const actions=create('div','ns-book-actions');
 const selectLabel=create('label',null,'🌍 Explanation: ');
 const langSelect=create('select');langSelect.id='nsBookLanguage';langSelect.setAttribute('aria-label','Select textbook explanation language');
-const sourceOptions=control?.options;
-const offered=sourceOptions?Array.from(sourceOptions).filter(x=>x.value&&x.value!=='custom').map(x=>[x.value,x.textContent]):[['ne','नेपाली'],['en','English'],['ja','日本語']];
+const codes='ne en ja hi bn zh-CN ko fr es de ar th vi id pt ru it tr uk pl nl sv fi da no el he fa ur ta te mr gu pa ms sw fil my km lo af sq am hy az eu be bs bg ca hr cs et gl ka ht hu is ig ga jv kk ku ky lv lt mk mn ps ro sr sk sl so su tg uz cy zu yo xh si or as tk fy lb mt ny st sd yi ceb'.split(' ');
+const nativeNames={ne:'नेपाली',en:'English',ja:'日本語',hi:'हिन्दी','zh-CN':'中文',ko:'한국어',bn:'বাংলা',ar:'العربية',ur:'اردو',ta:'தமிழ்'};
+const offered=codes.map(code=>{let name=nativeNames[code]||code;try{if(!nativeNames[code])name=new Intl.DisplayNames(['en'],{type:'language'}).of(code)||code}catch{}return [code,name+' ('+code+')']});
 for(const [code,name] of offered){const option=create('option',null,name);option.value=code;langSelect.append(option)}
 let prefs={};try{prefs=JSON.parse(localStorage.getItem('nextstep-unified-prefs')||'{}')||{}}catch{}
 const saved=localStorage.getItem('ns-book-lang')||prefs.lang||control?.value||'ne';
