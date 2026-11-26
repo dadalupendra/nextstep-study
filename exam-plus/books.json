@@ -1,0 +1,275 @@
+{
+  "meta": {
+    "version": 1,
+    "title": "NextStep Original Practice Books",
+    "disclaimer": "Independent original study materials, not official past papers. No reproduced copyrighted items. Listening-like questions use device TTS, not original exam audio.",
+    "official": {
+      "NAT": "https://nat-test.jp/en/level.html",
+      "JFT": "https://www.jpf.go.jp/jft-basic/e/about/",
+      "BJT": "https://www.kanken.or.jp/bjt/english/about/feature.html"
+    }
+  },
+  "books": {
+    "NAT": [
+      {
+        "id": "nat5",
+        "title": "5Q · 初級のことば",
+        "sub": "NAT 5Q · 基礎",
+        "level": "5Q",
+        "topics": [
+          "あいさつ",
+          "時刻・数字",
+          "助詞",
+          "短い文",
+          "基本の聴解"
+        ],
+        "text": "「〜は〜です」で紹介します。「〜に」は到着する時間・場所、「〜で」は動作する場所を表します。",
+        "en": "Introduce yourself with 〜は〜です. に marks a destination or time; で marks where an action takes place.",
+        "ne": "「〜は〜です」 परिचय दिन प्रयोग हुन्छ। に ले गन्तव्य/समय र で ले काम हुने स्थान देखाउँछ।",
+        "examples": [
+          "私はネパール人です。",
+          "七時に起きます。",
+          "図書館で勉強します。"
+        ]
+      },
+      {
+        "id": "nat4",
+        "title": "4Q · 生活の日本語",
+        "sub": "NAT 4Q · 日常",
+        "level": "4Q",
+        "topics": [
+          "理由・依頼",
+          "て形",
+          "比較",
+          "経験",
+          "生活の読解"
+        ],
+        "text": "「〜てください」は丁寧な依頼。「〜たことがあります」は経験。「〜より」は比較を表します。",
+        "en": "Use 〜てください for polite requests, 〜たことがあります for experience, and 〜より for comparison.",
+        "ne": "〜てください विनम्र अनुरोध; 〜たことがあります अनुभव; 〜より तुलना गर्न प्रयोग हुन्छ।",
+        "examples": [
+          "ここに名前を書いてください。",
+          "京都に行ったことがあります。",
+          "電車はバスより速いです。"
+        ]
+      },
+      {
+        "id": "nat3",
+        "title": "3Q · 理由と状況",
+        "sub": "NAT 3Q · 中級",
+        "level": "3Q",
+        "topics": [
+          "ようになる",
+          "おかげで",
+          "条件",
+          "案内文",
+          "意見と理由"
+        ],
+        "text": "「〜ようになる」は能力や習慣の変化。「〜おかげで」はよい結果の理由。「〜ば」は条件です。",
+        "en": "〜ようになる expresses change in ability or habit; 〜おかげで gives a favorable cause; 〜ば expresses a condition.",
+        "ne": "〜ようになる क्षमता वा बानी परिवर्तन, 〜おかげで सकारात्मक कारण, 〜ば सर्त हो।",
+        "examples": [
+          "日本語が読めるようになりました。",
+          "先生のおかげで合格できました。",
+          "時間があれば参加します。"
+        ]
+      },
+      {
+        "id": "nat2",
+        "title": "2Q · ニュースと議論",
+        "sub": "NAT 2Q · 上級",
+        "level": "2Q",
+        "topics": [
+          "にもかかわらず",
+          "に伴って",
+          "情報の要点",
+          "案内と意見",
+          "長めの文章"
+        ],
+        "text": "「〜にもかかわらず」は逆接。「〜に伴って」は連動する変化を表します。文章では筆者の主張と根拠を区別します。",
+        "en": "〜にもかかわらず expresses contrast; 〜に伴って expresses correlated change. Separate the author's claim from supporting evidence.",
+        "ne": "〜にもかかわらず विपरीत अवस्था, 〜に伴って सँगसँगै हुने परिवर्तन। मुख्य तर्क र प्रमाण छुट्याउनुहोस्।",
+        "examples": [
+          "雨にもかかわらず試合は行われた。",
+          "人口の増加に伴って住宅が不足している。",
+          "その意見には根拠が必要だ。"
+        ]
+      },
+      {
+        "id": "nat1",
+        "title": "1Q · 高度な文章表現",
+        "sub": "NAT 1Q · 高度",
+        "level": "1Q",
+        "topics": [
+          "いかんにかかわらず",
+          "を余儀なくされる",
+          "文章の論理",
+          "抽象的議論",
+          "敬意とニュアンス"
+        ],
+        "text": "「〜いかんにかかわらず」は結果が条件によって変わらないこと。「〜を余儀なくされる」は避けられない事情により行動せざるを得ないことを表します。",
+        "en": "〜いかんにかかわらず means regardless of an outcome/condition; 〜を余儀なくされる means to be compelled by circumstances.",
+        "ne": "〜いかんにかかわらず परिणाम/अवस्था जेसुकै भए पनि। 〜を余儀なくされる परिस्थितिले बाध्य पारिनु।",
+        "examples": [
+          "理由のいかんにかかわらず、期限を守ってください。",
+          "災害で計画の変更を余儀なくされた。",
+          "この主張には検討の余地がある。"
+        ]
+      }
+    ],
+    "JFT": [
+      {
+        "id": "jft1",
+        "title": "文字と語彙 · 生活の基本",
+        "sub": "Script & Vocabulary",
+        "topics": [
+          "標識・掲示",
+          "日用品",
+          "ひらがな・カタカナ",
+          "店・時間"
+        ],
+        "text": "生活で見ることばを、標識・買い物・交通などの場面で読みます。",
+        "en": "Recognize everyday signs, shopping words, transport terms and schedules.",
+        "ne": "दैनिक संकेत, पसल, यातायात र समयतालिकाका शब्द चिन्ने अभ्यास।",
+        "examples": [
+          "入口はこちらです。",
+          "今日は定休日です。",
+          "切符を買ってください。"
+        ]
+      },
+      {
+        "id": "jft2",
+        "title": "会話と表現 · 依頼と相談",
+        "sub": "Conversation & Expression",
+        "topics": [
+          "依頼",
+          "謝罪",
+          "相談",
+          "返事の選択"
+        ],
+        "text": "相手や場面に合った自然な表現を選びます。「もう一度お願いします」は聞き直すときに使えます。",
+        "en": "Choose expressions suited to the person and situation; もう一度お願いします politely asks for repetition.",
+        "ne": "व्यक्ति र अवस्थाअनुसार उपयुक्त जापानी बोल्ने अभ्यास।",
+        "examples": [
+          "もう一度言ってください。",
+          "少し遅れます。申し訳ありません。",
+          "この書類を確認していただけますか。"
+        ]
+      },
+      {
+        "id": "jft3",
+        "title": "聴解 · 指示を理解する",
+        "sub": "Listening Comprehension",
+        "topics": [
+          "短い指示",
+          "時刻と場所",
+          "約束",
+          "職場の連絡"
+        ],
+        "text": "聞いた内容から、誰が・いつ・どこで・何をするのかを整理します。この教材では台本の読み上げで練習します。",
+        "en": "Identify who, when, where and what from spoken directions. This book uses optional device text-to-speech, not official recordings.",
+        "ne": "निर्देशन सुनेर को, कहिले, कहाँ, के गर्ने भन्ने बुझ्ने। यो सामग्रीमा फोनको आवाज प्रयोग हुन्छ, आधिकारिक अडियो होइन।",
+        "examples": [
+          "午後三時に受付へ来てください。",
+          "会議は二階の部屋です。"
+        ]
+      },
+      {
+        "id": "jft4",
+        "title": "読解 · お知らせを読む",
+        "sub": "Reading Comprehension",
+        "topics": [
+          "短いお知らせ",
+          "日程",
+          "ルール",
+          "必要な手続き"
+        ],
+        "text": "お知らせの日時、対象者、例外、必要な行動を確認します。",
+        "en": "Identify dates, eligible people, exceptions and required actions in short notices.",
+        "ne": "सूचना पढ्दा मिति, कसका लागि हो, अपवाद र गर्नुपर्ने काम पहिचान गर्नुहोस्।",
+        "examples": [
+          "図書館は月曜日が休みです。",
+          "申込書は金曜日までに出してください。"
+        ]
+      }
+    ],
+    "BJT": [
+      {
+        "id": "bjt1",
+        "title": "敬語 · 社内と社外",
+        "sub": "Business Communication",
+        "topics": [
+          "尊敬語・謙譲語",
+          "依頼",
+          "謝罪",
+          "電話応対"
+        ],
+        "text": "社外の相手に「承知いたしました」「かしこまりました」などを使い分けます。自分の行為には謙譲表現を使います。",
+        "en": "Use polite acknowledgements such as 承知いたしました appropriately. Distinguish honorific and humble forms.",
+        "ne": "व्यापारिक जापानीमा विनम्र स्वीकारोक्ति र सम्मानसूचक/नम्र क्रिया छुट्याउनुहोस्।",
+        "examples": [
+          "承知いたしました。確認してご連絡いたします。",
+          "資料を拝見しました。",
+          "少々お待ちいただけますか。"
+        ]
+      },
+      {
+        "id": "bjt2",
+        "title": "メールと予定調整",
+        "sub": "Business Emails & Scheduling",
+        "topics": [
+          "件名",
+          "期限",
+          "添付",
+          "日程変更",
+          "返信"
+        ],
+        "text": "ビジネスメールでは目的、期限、必要な対応を簡潔に書きます。「ご確認のほどお願いいたします」は確認を依頼する表現です。",
+        "en": "State purpose, deadline and required action clearly in business emails; use concise, respectful language.",
+        "ne": "इमेलमा उद्देश्य, अन्तिम मिति र आवश्यक काम स्पष्ट लेख्ने।",
+        "examples": [
+          "資料を添付いたしました。",
+          "明日までにご回答ください。",
+          "日程の再調整をお願いできますでしょうか。"
+        ]
+      },
+      {
+        "id": "bjt3",
+        "title": "報告・連絡・相談",
+        "sub": "Business Situations",
+        "topics": [
+          "報連相",
+          "納期",
+          "クレーム",
+          "優先順位"
+        ],
+        "text": "問題が起きたら、事実、影響、対応案を整理して速やかに報告します。曖昧な約束は避けます。",
+        "en": "When a problem arises, report facts, impact and a proposed response promptly; avoid unverified promises.",
+        "ne": "समस्या आए तथ्य, असर र समाधान प्रस्ताव तुरुन्त जानकारी गराउनुहोस्।",
+        "examples": [
+          "納期に遅れる見込みです。",
+          "原因を確認してからご報告いたします。",
+          "至急、担当者に連絡してください。"
+        ]
+      },
+      {
+        "id": "bjt4",
+        "title": "資料読解 · 数字と条件",
+        "sub": "Business Reading",
+        "topics": [
+          "表・予定表",
+          "売上",
+          "条件",
+          "結論と根拠"
+        ],
+        "text": "表や社内通知から数値、対象期間、条件を正確に読み取り、推測と事実を区別します。",
+        "en": "Read tables, periods and conditions accurately; separate facts from unsupported assumptions.",
+        "ne": "तालिका, मिति र सर्त पढेर तथ्य र अनुमान छुट्याउने।",
+        "examples": [
+          "今月の売上は前月を上回りました。",
+          "対象は全社員です。ただし、新入社員は除きます。"
+        ]
+      }
+    ]
+  }
+}
