@@ -32,6 +32,8 @@ on:
       - 'install/**'
       - 'scripts/build-app-icons.py'
       - 'exams/**'
+      - 'exam-plus/**'
+      - 'scripts/test-exam-plus.cjs'
       - '.nojekyll'
       - 'N1/**'
       - 'N2/**'
@@ -86,6 +88,11 @@ jobs:
           done
           test -s N5/data/vocab.json
           test -s N4/data/vocab.json
+          test -s exam-plus/index.html
+          test -s exam-plus/books.json
+          test -s exam-plus/questions.json
+          node --check exam-plus/app.js
+          node --check exams/fulltest-ui.js
           test -s exams/index.html
           test -s exams/app.js
           test -s exams/full-papers.js
@@ -130,7 +137,8 @@ jobs:
           mkdir -p public-site/feedback/admin
           cp feedback/index.html feedback/feedback.css feedback/feedback.js feedback/feedback-upgrade.js feedback/feedback-buttons.js public-site/feedback/
           cp feedback/admin/index.html feedback/admin/admin.js public-site/feedback/admin/
-          cp -R exams public-site/
+          cp -R exams exam-plus public-site/
+          test -s public-site/exam-plus/app.js
           cp .nojekyll public-site/
           for level in N1 N2 N3 N4 N5; do
             cp -R "$level" public-site/
@@ -206,6 +214,9 @@ jobs:
 
       - name: Test clickable Kanji and compound words on N1–N5 readers
         run: node scripts/test-kanji-compounds.cjs public-site
+
+      - name: Verify independent NAT, JFT and BJT books, 54 questions and mobile quiz flows
+        run: node scripts/test-exam-plus.cjs public-site
 
       - name: Test timed one-question exam studio and answer review on every JLPT level
         run: node scripts/test-exam-studio.cjs public-site
