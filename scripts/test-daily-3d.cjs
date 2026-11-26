@@ -44,6 +44,11 @@ const PORT=8797,server=spawn('python3',['-m','http.server',String(PORT),'--bind'
    await page.locator('#kanjiCards .flip-button').first().click();
    assert.equal(await page.locator('dialog[open]').count(),1,'Tapping a kanji directly opens related vocabulary');
    await page.locator('.compound-entry').first().waitFor({timeout:14000});
+   assert.equal(await page.locator('#offlineAI').count(),1,'Offline tutor should be available in card details');
+   await page.locator('#aiQuick button').first().click();
+   await page.waitForFunction(()=>document.querySelector('#aiAnswer')?.textContent?.includes('毎日')||document.querySelector('#aiAnswer')?.textContent?.includes('Example'),null,{timeout:9000});
+   assert.equal(await page.locator('#aiAnswer').innerText().then(x=>x.length>20),true,'Offline tutor returns useful source-backed answer');
+
    assert.equal(await page.locator('.compound-entry').count()>=1,true,'Related compounds must come from source data');
    assert.equal(await page.locator('.compound-example p:lang(ja)').count()>=1,true,'Full Japanese source examples are shown');
    await page.locator('.compound-translate').first().click();
