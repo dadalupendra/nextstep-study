@@ -154,7 +154,7 @@ function openDetails(card){
  root.append(text('p','Source-backed details only. Translation is generated automatically and may need correction.','small'));
  $('translate').textContent='🌍 Explain everything in '+(NAMES[language]||getName(language));
  $('translated').hidden=true;$('translated').textContent='';
- $('detail').showModal();
+ if(!$('detail').open)$('detail').showModal();
 }
 async function translateCurrent(){
  if(!current)return;
