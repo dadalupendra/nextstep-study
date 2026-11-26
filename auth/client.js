@@ -60,6 +60,15 @@ async function listProfiles(){
  const snapshot=await x.store.getDocs(x.store.collection(x.db,'profiles'));
  return snapshot.docs.map(doc=>({id:doc.id,...doc.data()}))
 }
+async function watchProfiles(onData,onError){
+ const x=await sdk(),user=await waitForUser();
+ if(!user)throw Error('Sign in first.');
+ const admin=await x.store.getDoc(x.store.doc(x.db,'admins',user.uid));
+ if(!admin.exists()||admin.data().enabled!==true)throw Error('Administrator access not granted.');
+ return x.store.onSnapshot(x.store.collection(x.db,'profiles'),snapshot=>{
+  onData(snapshot.docs.map(doc=>({id:doc.id,...doc.data()})))
+ },error=>onError?.(error))
+}
 function consent(){return localStorage.getItem('nextstep-profile-activity-consent')==='yes'}
 async function markActivity(){
  if(!configured()||!consent())return;
@@ -68,5 +77,5 @@ async function markActivity(){
  const user=await waitForUser();if(!user)return;
  await touch(user);localStorage.setItem(key,String(now))
 }
-global.NextStepAuth={configured,sdk,waitForUser,touch,loginGoogle,loginFacebook,loginEmail,logout,getProfile,listProfiles,markActivity};
+global.NextStepAuth={configured,sdk,waitForUser,touch,loginGoogle,loginFacebook,loginEmail,logout,getProfile,listProfiles,watchProfiles,markActivity};
 })(window);
