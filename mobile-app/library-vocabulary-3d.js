@@ -3,6 +3,7 @@
  * No synthetic vocabulary or machine-generated example sentences. */
 (function(global){'use strict';
 const $=id=>document.getElementById(id),API=global.NextStepDailySource;
+const mark=global.NextStepMeanings.mark;
 const CLASSES=[
  ['noun','Nouns · 名詞','n n-adv n-t n-pr n-suf n-pref n-unc n-adv n-t n-suf n-pr num'],
  ['pronoun','Pronouns · 代名詞','pn pron'],
@@ -41,7 +42,7 @@ function jp(node,example,showFuri){
   p.append(document.createTextNode(f.slice(last)))
  }else p.textContent=example.ja||'';
  node.append(p);
- if(example.en)node.append(dom('p','v3-example-en',example.en));
+ if(example.en)node.append(mark(dom('p','v3-example-en',example.en),{ja:example.ja,ne:example.ne}));
 }
 function readWord(text){
  if(!('speechSynthesis'in global))return false;
@@ -71,7 +72,7 @@ function preview(item){
  const flip=dom('button','v3-flip');flip.type='button';flip.setAttribute('aria-label','Read details and related vocabulary for '+item.word);
  const inner=dom('span','v3-inner');
  const front=dom('span','v3-front');front.append(dom('small',null,state.level+' · '+classify(item).join(', ')),dom('strong',null,item.word),dom('small',null,'Tap → details / examples'));
- const back=dom('span','v3-back');back.append(dom('small',null,'読み方'),dom('strong',null,item.reading),dom('small',null,srcGloss(item).slice(0,100)));
+ const back=dom('span','v3-back');back.append(dom('small',null,'読み方'),dom('strong',null,item.reading),mark(dom('small',null,srcGloss(item))));
  inner.append(front,back);flip.append(inner);flip.onclick=()=>open(item);
  const actions=dom('div','v3-actions');
  const turn=dom('button',null,'↻ Flip');turn.onclick=()=>outer.classList.toggle('flipped');
@@ -131,9 +132,9 @@ function draw(){
  const next=dom('button',null,'Next →');next.disabled=state.page+1>=pages;next.onclick=()=>{state.page++;draw()};
  pager.append(prev,dom('strong',null,(state.page+1)+' / '+pages),next);host.append(pager)
 }
-function detailField(parent,label,value){
+function detailField(parent,label,value,isMeaning=false){
  if(value===undefined||value===null||value===''||(Array.isArray(value)&&value.length===0))return;
- const row=dom('div','v3-info');row.append(dom('strong',null,label),dom('span',null,Array.isArray(value)?value.join(' · '):value));parent.append(row)
+ const row=dom('div','v3-info');const content=dom('span',null,Array.isArray(value)?value.join(' · '):value);row.append(dom('strong',null,label),isMeaning?mark(content):content);parent.append(row)
 }
 function related(item){
  const shared=[...item.word].filter(c=>/[\u3400-\u9fff]/u.test(c));
@@ -146,7 +147,7 @@ function open(item){
  const close=$('detailDialog');if(!close.open)close.showModal();
  body.append(dom('h2',null,item.word));const meta=dom('div','v3-metadata');
  detailField(meta,'読み方 / Reading',item.reading);detailField(meta,'Romaji',item.romaji);
- detailField(meta,'Meaning (source English)',srcGloss(item));
+ detailField(meta,'Meaning / 意味',srcGloss(item),true);
  detailField(meta,'Part of speech / 品詞',pos(item).map(labelFor).join(' · ')||'Not classified in source');
  detailField(meta,'Categories',classify(item).map(x=>parsed.find(k=>k.id===x)?.label).filter(Boolean).join(' · '));
  body.append(meta);addRating(body,item);
@@ -185,7 +186,7 @@ function open(item){
   grid.replaceChildren();
   words.slice(0,visible).forEach(x=>{
    const b=dom('button','v3-related-item');
-   b.append(dom('strong',null,x.word),dom('span',null,x.reading),dom('small',null,srcGloss(x).slice(0,100)));
+   b.append(dom('strong',null,x.word),dom('span',null,x.reading),mark(dom('small',null,srcGloss(x))));
    b.onclick=()=>open(x);grid.append(b)
   });
   if(!words.length)grid.append(dom('p','hint','No related word was found in the current level dictionary.'));
@@ -197,5 +198,6 @@ function show({level,items,language,furigana}){
  const changing=level!==state.level;state.level=level;state.lang=language||'ne';state.furigana=furigana!==false;state.items=safeItems(items);
  if(changing){state.page=0;state.category='all';state.query=''}loadProgress();draw()
 }
+window.addEventListener(global.NextStepLanguages.event,e=>{state.lang=e.detail});
 global.NextStepLibraryVocabulary3D={show,classify,classes:parsed};
 })(window);

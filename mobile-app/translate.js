@@ -2,30 +2,30 @@
    Uses MyMemory public API (https://mymemory.translated.net/doc/spec.php).
    This is best-effort, opt-in translation; original Japanese remains authoritative. */
 (()=>{'use strict';
-const CACHE_KEY='nextstep-inapp-translations-v2',MAX_CACHE=120;
+const CACHE_KEY='nextstep-inapp-translations-v2',MAX_CACHE=600;
 let cache={};try{cache=JSON.parse(localStorage.getItem(CACHE_KEY)||'{}')||{}}catch{cache={}}
 const $=id=>document.getElementById(id);
 const decodeHtml=text=>{const e=document.createElement('textarea');e.innerHTML=String(text);return e.value};
 const utf8Bytes=text=>new TextEncoder().encode(text).length;
 function chunks(text,maxBytes=450){
- const sentences=String(text).split(/(?<=[.!?。！？\n])\s*/u).filter(Boolean);
- const all=[];let current='';
- for(const sentence of sentences){
-   for(const character of sentence){
-     if(utf8Bytes(current+character)>maxBytes){if(current)all.push(current);current=''}
-     current+=character
-   }
+ const all=[];let current='',bytes=0;
+ for(const char of String(text)){
+   const size=utf8Bytes(char);
+   if(bytes+size>maxBytes){all.push(current);current='';bytes=0}
+   current+=char;bytes+=size;
  }
- if(current.trim())all.push(current.trim());return all
+ if(current.trim())all.push(current);return all
 }
+const pending=new Map();
 let last=0;
-async function requestTranslation(text,source,target){
+async function fetchTranslation(text,source,target){
  if(!text.trim()||source===target)return text;
  const parts=chunks(text);
  if(parts.length>6)throw new Error('Text too long for free translation. Select a smaller passage.');
  const output=[];
  for(const part of parts){
-   const delay=Math.max(0,400-(Date.now()-last));if(delay)await new Promise(r=>setTimeout(r,delay));last=Date.now();
+   const now=Date.now();last=Math.max(now,last+400);
+   if(last>now)await new Promise(r=>setTimeout(r,last-now));
    const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),11000);
    try{
      const url='https://api.mymemory.translated.net/get?'+new URLSearchParams({q:part,langpair:source+'|'+target,mt:'1'});
@@ -39,6 +39,17 @@ async function requestTranslation(text,source,target){
    } finally{clearTimeout(timer)}
  }
  return output.join(' ');
+}
+function cached(text,source,target){return cache[source+'|'+target+'|'+text]||''}
+function requestTranslation(text,source,target){
+ if(source===target || !text.trim())return Promise.resolve(text);
+ const key=source+'|'+target+'|'+text;
+ if(cache[key])return Promise.resolve(cache[key]);
+ if(!pending.has(key)){
+   const request=fetchTranslation(text,source,target).then(result=>{storeCache(key,result);return result});
+   pending.set(key,request.finally(()=>pending.delete(key)));
+ }
+ return pending.get(key)
 }
 function currentLanguage(){return $('lang')?.value||'ne'}
 function externalUrl(text,source,target){return 'https://translate.google.com/?'+new URLSearchParams({sl:source,tl:target,text:text.slice(0,4500),op:'translate'})}
@@ -57,10 +68,10 @@ async function translateCard(article){
  status(output,'⏳ Translating inside NextStep Study…');
  try{
    const translation=await requestTranslation(source,sourceLang,target);
-   if(article.isConnected&&target===currentLanguage()){storeCache(key,translation);show(output,translation,target)}
+   if(article.isConnected&&target===currentLanguage()){show(output,translation,target)}
    return true;
  }catch(error){
-   if(!article.isConnected)return false;
+   if(!article.isConnected||target!==currentLanguage())return false;
    status(output,'Translation unavailable: '+(error?.message||'Network error')+'. Try a different language or use the external translation option.',true);
    const a=document.createElement('a');a.className='translation-external';a.href=externalUrl(source,sourceLang,target);a.target='_blank';a.rel='noopener noreferrer';a.textContent='🌐 Open Google Translate ↗';output.append(a);return false
  }
@@ -78,5 +89,5 @@ document.addEventListener('click',async event=>{
  }
 });
 document.addEventListener('change',e=>{if(e.target.id==='lang')clearOnLanguageChange()});
-window.NextStepTranslate={requestTranslation,clearOnLanguageChange};
+window.NextStepTranslate={cached,requestTranslation,clearOnLanguageChange};
 })();

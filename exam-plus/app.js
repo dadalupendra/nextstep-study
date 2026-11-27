@@ -7,7 +7,8 @@ const params=new URLSearchParams(location.search);
 let exam=EXAMS.includes((params.get('exam')||'').toUpperCase())?params.get('exam').toUpperCase():'NAT';
 let level=LEVELS.includes((params.get('level')||'').toUpperCase())?params.get('level').toUpperCase():'5Q';
 let mode=['book','quiz'].includes(params.get('mode'))?params.get('mode'):'book';
-let lang=params.get('lang')||localStorage.getItem('nextstep-exam-plus-language')||'ja';
+const languages=window.NextStepLanguages;
+let lang=languages.normalize(params.get('lang'))||languages.get(languages.normalize(localStorage.getItem('nextstep-exam-plus-language'))||'ja');
 let books=null,bank=null,position=0,bookPage=0,answers={},all=[],finished=false;
 const make=(tag,className,value)=>{const x=document.createElement(tag);if(className)x.className=className;if(value!==undefined)x.textContent=String(value);return x};
 const key=()=>exam+'|'+(exam==='NAT'?level:'');
@@ -52,7 +53,6 @@ function display(){
  $('status').textContent='Ready: '+title()+'. Your answers are saved locally in this browser.';
  if(mode==='book')renderBook();else renderQuiz()
 }
-function chapterText(ch){return lang==='ja'?ch.text:lang==='en'?ch.en:lang==='ne'?ch.ne:ch.text}
 function renderBook(){
  const chapters=activeBooks(),toc=$('contents'),list=$('chapters');toc.replaceChildren();list.replaceChildren();
  bookPage=Math.max(0,Math.min(bookPage,Math.max(0,chapters.length-1)));
@@ -70,7 +70,8 @@ function renderBook(){
   card.append(header,make('p',null,ch.sub));
   const tags=make('div','topic-list');ch.topics.forEach(t=>tags.append(make('span','topic',t)));card.append(tags);
   card.append(make('p','chapter-ja',ch.text));
-  const def=make('div','explain',chapterText(ch));def.lang=lang;card.append(def);
+  const def=make('div','explain',ch.en);
+  card.append(window.NextStepMeanings.mark(def,{ja:ch.text,ne:ch.ne}));
   card.append(make('h4',null,'例文 · Japanese Examples'));
   const examples=make('ul');ch.examples.forEach(jp=>{const li=make('li');li.lang='ja';li.textContent=jp;examples.append(li)});card.append(examples);
   const ctr=make('div','chapter-controls');
@@ -133,15 +134,11 @@ async function init(){
   if(!b.ok||!q.ok)throw Error('Could not download book or question materials');
   books=await b.json();bank=await q.json();
   if(!books.books?.NAT||!Array.isArray(bank.questions))throw Error('Invalid study data');
-  const names={ja:'日本語',en:'English',ne:'नेपाली',hi:'हिन्दी',bn:'বাংলা',ur:'اردو',ko:'한국어','zh-CN':'中文'};
-  const codes='ja en ne hi bn zh-CN ko fr es de ar th vi id pt ru it tr uk pl nl sv fi da no el he fa ur ta te mr gu pa ms sw fil my km lo af sq am hy az eu be bs bg ca hr cs et gl ka ht hu is ig ga jv kk ku ky lv lt mk mn ps ro sr sk sl so su tg uz cy zu yo xh si or as tk fy lb mt ny st sd yi ceb'.split(' ');
-  const select=$('language');select.replaceChildren();
-  for(const code of codes){let name=names[code]||code;try{if(!names[code])name=new Intl.DisplayNames(['en'],{type:'language'}).of(code)||code}catch{}
-   const option=make('option',null,name+' ('+code+')');option.value=code;select.append(option)}
-  if(!codes.includes(lang))lang='ja';
+  languages.fill($('language'),lang);
   // Exam category is fixed by the home card; never show a different exam inside this book.
   $('bookTab').onclick=()=>{mode='book';display()};$('quizTab').onclick=()=>{mode='quiz';loadAnswers();display()};
-  $('language').onchange=e=>{lang=e.target.value;try{localStorage.setItem('nextstep-exam-plus-language',lang)}catch{}display()};
+  $('language').onchange=e=>languages.set(e.target.value);
+  window.addEventListener(languages.event,e=>{lang=e.detail;display()});
   for(const [id,step] of [['bookPrev',-1],['bookPrevBottom',-1],['bookNext',1],['bookNextBottom',1]]){
    $(id).onclick=()=>{bookPage=Math.max(0,Math.min(activeBooks().length-1,bookPage+step));renderBook();$('book').scrollIntoView({block:'start',behavior:'smooth'})};
   }

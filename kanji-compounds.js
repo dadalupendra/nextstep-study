@@ -134,7 +134,7 @@ function drawHeader(){
  const rootEl=ensure(),i=current.item;
  rootEl.querySelector('#ns-compound-heading').textContent=i.character+' — '+current.level+' Kanji';
  rootEl.querySelector('#ns-compound-info').innerHTML='<div><b>音読み:</b> '+esc((i.onyomi||[]).join('・')||'—')+'　<b>訓読み:</b> '+esc((i.kunyomi||[]).join('・')||'—')+'</div>'+
- '<div><b>English:</b> '+esc((i.meanings||[]).join('; ')||'—')+'　<b>部首:</b> '+esc(i.radical||'—')+'　<b>画数:</b> '+esc(i.strokes??'—')+'</div>';
+ '<div><b>Meaning:</b> <span data-book-meaning>'+esc((i.meanings||[]).join('; ')||'—')+'</span>'+'　<b>部首:</b> '+esc(i.radical||'—')+'　<b>画数:</b> '+esc(i.strokes??'—')+'</div>';
 }
 function renderList(){
  if(!current)return;
@@ -153,12 +153,12 @@ function renderList(){
    'この熟語の読み方・意味は、現在の語彙データにありません。';
   const sentence=item.examples.find(x=>x?.ja);
   return '<details class="ns-compound-item" data-word="'+esc(item.word)+'"><summary><span class="ns-compound-word" lang="ja">'+esc(item.word)+'</span><span class="ns-compound-reading" lang="ja">'+esc(item.reading||'読み未収録')+'</span>'+
-  '<span class="ns-compound-gloss">'+esc(mean||'Meaning not in source')+'</span></summary>'+
+  '<span class="ns-compound-gloss" '+(mean?'data-book-meaning':'')+'>'+esc(mean||'Meaning not in source')+'</span></summary>'+
   '<div class="ns-compound-details"><p>🇯🇵 '+esc(description)+'</p>'+
   '<p>🇬🇧 '+esc(item.word)+': '+esc(mean||'English meaning not supplied by dataset.')+'</p>'+
   '<p>🇳🇵 「'+esc(item.word)+'」 को पढाइ '+esc(item.reading||'स्रोतमा छैन')+' हो। '+(mean?'English अर्थ: '+esc(mean)+'।':'यस शब्दको अर्थ स्रोतमा छैन।')+'</p>'+
   '<p><b>JLPT source level(s):</b> '+esc([...item.levels].join(', ')||'Kanji examples only')+'</p>'+
-  (sentence?'<div class="ns-compound-example"><b>例文:</b><div lang="ja">'+(hasFurigana&&sentence.furigana?furigana(sentence.furigana):esc(sentence.ja))+'</div>'+(sentence.en?'<div>'+esc(sentence.en)+'</div>':'')+'</div>':'<p class="ns-compounds-note">Example sentence not provided in source.</p>')+
+  (sentence?'<div class="ns-compound-example"><b>例文:</b><div lang="ja">'+(hasFurigana&&sentence.furigana?furigana(sentence.furigana):esc(sentence.ja))+'</div>'+(sentence.en?'<div data-book-meaning data-ja="'+esc(sentence.ja)+'">'+esc(sentence.en)+'</div>':'')+'</div>':'<p class="ns-compounds-note">Example sentence not provided in source.</p>')+
   '<div class="ns-compound-actions"><button type="button" data-ns-speak="'+esc(item.word)+'">🔊 Japanese</button><button type="button" data-ns-translate="'+id+'">🌐 नेपाली・日本語 Meaning</button></div><div class="ns-compound-translations" hidden></div></div></details>';
  }).join(''):'<p>यो खोजमा शब्द भेटिएन। 該当する語が見つかりませんでした。</p>';
  for(const el of list.querySelectorAll('details[data-word]'))if(expanded.has(el.dataset.word))el.open=true;

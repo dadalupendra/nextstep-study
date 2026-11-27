@@ -15,32 +15,29 @@ toolbar.setAttribute('aria-label','Japanese textbook reading and language option
 toolbar.append(create('h2','ns-book-title','📖 '+level+' 日本語教科書 · Complete Book'));
 toolbar.append(create('p','ns-book-subtitle','原文の日本語を残したまま、章ごとに学習できます。 Read Kanji, Vocabulary, Grammar, examples and lessons in a familiar Japanese textbook layout.'));
 const actions=create('div','ns-book-actions');
-const selectLabel=create('label',null,'🌍 Explanation: ');
+const selectLabel=create('label',null,'🌐 Meaning language / अर्थको भाषा ');
 const langSelect=create('select');langSelect.id='nsBookLanguage';langSelect.setAttribute('aria-label','Select textbook explanation language');
-const codes='ne en ja hi bn zh-CN ko fr es de ar th vi id pt ru it tr uk pl nl sv fi da no el he fa ur ta te mr gu pa ms sw fil my km lo af sq am hy az eu be bs bg ca hr cs et gl ka ht hu is ig ga jv kk ku ky lv lt mk mn ps ro sr sk sl so su tg uz cy zu yo xh si or as tk fy lb mt ny st sd yi ceb'.split(' ');
-const nativeNames={ne:'नेपाली',en:'English',ja:'日本語',hi:'हिन्दी','zh-CN':'中文',ko:'한국어',bn:'বাংলা',ar:'العربية',ur:'اردو',ta:'தமிழ்'};
-const offered=codes.map(code=>{let name=nativeNames[code]||code;try{if(!nativeNames[code])name=new Intl.DisplayNames(['en'],{type:'language'}).of(code)||code}catch{}return [code,name+' ('+code+')']});
-for(const [code,name] of offered){const option=create('option',null,name);option.value=code;langSelect.append(option)}
-let prefs={};try{prefs=JSON.parse(localStorage.getItem('nextstep-unified-prefs')||'{}')||{}}catch{}
-const saved=localStorage.getItem('ns-book-lang')||prefs.lang||control?.value||'ne';
-langSelect.value=[...langSelect.options].some(o=>o.value===saved)?saved:'en';
-if(control&&[...control.options].some(o=>o.value===langSelect.value))control.value=langSelect.value;
+const languages=window.NextStepLanguages;
+languages.fill(langSelect);
+if(control)languages.fill(control);
 selectLabel.append(langSelect);actions.append(selectLabel);
 const translateChapter=create('button','ns-book-primary','🌐 Translate visible lesson');translateChapter.type='button';
 const stop=create('button',null,'■ Stop');stop.type='button';stop.hidden=true;
 const focusBtn=create('button',null,'📄 Reading mode ON');focusBtn.type='button';focusBtn.setAttribute('aria-pressed','true');
-const status=create('p','ns-book-state','Japanese is kept as the original. Translate each study item or the current chapter on request; internet and provider limits apply.');
+const status=create('p','ns-book-state','Choose a language for meanings and example translations. Missing translations use MyMemory online.');
 status.id='nsBookStatus';status.setAttribute('role','status');status.setAttribute('aria-live','polite');
 actions.append(translateChapter,stop,focusBtn);
 toolbar.append(actions,status);
 study.insertBefore(toolbar,$('itemsView'));
-langSelect.onchange=()=>{
- try{localStorage.setItem('ns-book-lang',langSelect.value);const old=JSON.parse(localStorage.getItem('nextstep-unified-prefs')||'{}');localStorage.setItem('nextstep-unified-prefs',JSON.stringify({...old,lang:langSelect.value}))}catch{}
- if(control&&[...control.options].some(o=>o.value===langSelect.value)){control.value=langSelect.value;control.dispatchEvent(new Event('change',{bubbles:true}))}
- status.textContent='Selected '+langSelect.options[langSelect.selectedIndex].textContent+'. Press Translate to view a lesson explanation in this language.';
-};
-control?.addEventListener('change',()=>{
- if([...langSelect.options].some(o=>o.value===control.value)){langSelect.value=control.value}
+langSelect.onchange=()=>languages.set(langSelect.value);
+control?.addEventListener('change',()=>languages.set(control.value));
+window.addEventListener(languages.event,({detail:code})=>{
+ langSelect.value=code;
+ if(control)control.value=code;
+ generation++;
+ status.textContent='Meaning language: '+languages.names[code];
+ book.querySelectorAll('.ns-lesson-translation').forEach(block=>{block.hidden=true;block.replaceChildren()});
+ book.querySelectorAll('.ns-chapter-trans-btn').forEach(button=>{button.textContent='🌐 Translate full item · '+code});
 });
 focusBtn.onclick=()=>{
  const on=!document.body.classList.toggle('ns-japanese-book');
@@ -50,7 +47,9 @@ function selectedEnglish(card){
  const source=[...card.querySelectorAll('h3,.meaning,.card-info,.field,.en,.small,.badge')];
  const out=[],seen=new Set();
  for(const x of source){
-  const text=String(x.textContent||'').replace(/\s+/g,' ').trim();
+  const original=x.cloneNode(true);
+  for(const field of original.querySelectorAll('[data-source-en]'))field.textContent=field.dataset.sourceEn;
+  const text=String(original.dataset.sourceEn||original.textContent||'').replace(/\s+/g,' ').trim();
   if(!text||seen.has(text))continue;
   seen.add(text);out.push(text)
  }
@@ -84,8 +83,10 @@ async function translateCard(card){
   const answers=[];
   if(english)answers.push(await request(english,'en',language));
   if(japanese)answers.push(await request(japanese,'ja',language));
+  if(language!==langSelect.value)return;
   block.textContent=answers.filter(Boolean).join('\n\n')||'No translatable detail was available.';
  }catch(e){
+  if(language!==langSelect.value)return;
   block.replaceChildren(create('span',null,'Machine translation unavailable: '+String(e.message||e)+'. Original text remains above. '));
   const text=[english,japanese].filter(Boolean).join('\n').slice(0,3800);
   if(text){const link=create('a',null,'Open Google Translate ↗');link.href='https://translate.google.com/?'+new URLSearchParams({sl:'auto',tl:language,text,op:'translate'});link.target='_blank';link.rel='noopener noreferrer';block.append(link)}

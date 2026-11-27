@@ -11,7 +11,7 @@
 <button id="bookTab" type="button" role="tab" aria-selected="true">📚 Study Book</button>
 <button id="quizTab" type="button" role="tab" aria-selected="false">📝 Practice Questions</button>
 </div>
-<div class="tools"><label for="language">🌐 Explanation language</label><select id="language" aria-label="Choose explanation language"><option value="ja">日本語</option><option value="en">English</option><option value="ne">नेपाली</option></select><button type="button" id="translatePage">🌍 Translate current chapter</button>
+<div class="tools"><label for="language">🌐 Meaning language</label><select id="language" data-meaning-language aria-label="Choose explanation language"><option value="ja">日本語</option><option value="en">English</option><option value="ne">नेपाली</option></select><button type="button" id="translatePage">🌍 Translate current chapter</button>
 <button type="button" id="saveBook">🖨 Print / Save PDF</button></div>
 <div id="status" role="status" aria-live="polite">Loading original study materials…</div>
 <section id="book" class="book" aria-label="Japanese textbook"><div id="contents" class="contents"></div><nav class="book-pager" aria-label="Textbook chapter pages"><button id="bookPrev" type="button">← Previous chapter</button><span id="bookPageNumber" role="status" aria-live="polite"></span><button id="bookNext" type="button">Next chapter →</button></nav><div id="chapters" class="chapters"></div><nav class="book-pager" aria-label="Next textbook chapter"><button id="bookPrevBottom" type="button">← Previous</button><button id="bookNextBottom" type="button">Next chapter →</button></nav></section>
@@ -25,4 +25,4 @@
 <p class="disclaimer">This is independently written practice, not an official exam paper. Questions are short starter sets, not full NAT/JFT/BJT simulations. Listening-style practice uses optional device speech, not original recordings. Results are local practice accuracy, never official scaled scores or pass predictions. Some language pairs and device voices may not be supported.</p>
 </main>
 <footer>NextStep Study · Independent Japanese learning · <a href="../">Home</a></footer>
-<script src="../mobile-app/translate.js" defer></script><script src="./app.js?v=3" defer></script></body></html>
+<script src="../mobile-app/shared-languages.js" defer></script><script src="../mobile-app/translate.js" defer></script><script src="../mobile-app/book-meanings.js" defer></script><script src="./app.js?v=3" defer></script></body></html>

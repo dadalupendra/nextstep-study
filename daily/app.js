@@ -1,15 +1,14 @@
 /* NextStep Daily 3D cards — no demo content, no quiz duplicates. */
 (()=>{'use strict';
 const API=window.NextStepDailySource,COMPOUNDS=window.NextStepKanjiCompounds,LEVELS=API.LEVELS;
-const CODES='ne en ja hi bn zh-CN ko fr es de ar th vi id pt ru it tr uk pl nl sv fi da no el he fa ur ta te mr gu pa ms sw fil my km lo af sq am hy az eu be bs bg ca hr cs et gl ka ht hu is ig ga jv kk ku ky lv lt mk mn ps ro sr sk sl so su tg uz cy zu yo xh si or as tk fy lb mt ny st sd yi ceb'.split(' ');
-const NAMES={ne:'नेपाली',en:'English',ja:'日本語',hi:'हिन्दी',bn:'বাংলা','zh-CN':'中文',ko:'한국어',ar:'العربية',ur:'اردو',ta:'தமிழ்',te:'తెలుగు'};
+const languages=window.NextStepLanguages, NAMES=languages.names, mark=window.NextStepMeanings.mark;
 const $=id=>document.getElementById(id),getName=x=>{try{return new Intl.DisplayNames(['en'],{type:'language'}).of(x)||x}catch{return x}};
 const WORD_CLASS={'n':'Noun / 名詞','n-adv':'Adverbial noun','n-pr':'Proper noun','n-t':'Temporal noun','pron':'Pronoun / 代名詞','adv':'Adverb / 副詞','adj-i':'I-adjective / イ形容詞','adj-na':'Na-adjective / ナ形容詞','v1':'Ichidan verb / 一段動詞','vs':'Suru verb','v5u':'Godan verb','v5r':'Godan verb','v5k':'Godan verb','v5s':'Godan verb','v5m':'Godan verb','v5t':'Godan verb','v5g':'Godan verb','vi':'Intransitive verb','vt':'Transitive verb','prt':'Particle / 助詞','conj':'Conjunction / 接続詞','int':'Interjection / 感動詞','exp':'Expression / 表現','ctr':'Counter / 助数詞','num':'Number','suf':'Suffix','pref':'Prefix'};
 const safeStorage={read(k){try{return JSON.parse(localStorage.getItem(k)||'null')}catch{return null}},write(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}};
 const sharedKey='nextstep-unified-prefs',savedPrefs=safeStorage.read(sharedKey)||{};
 const url=new URL(location.href);
 let level=LEVELS.includes(url.searchParams.get('level'))?url.searchParams.get('level'):(LEVELS.includes(savedPrefs.level)?savedPrefs.level:'N2');
-let language=CODES.includes(savedPrefs.lang)?savedPrefs.lang:'ne';
+let language=languages.get();
 let dark=!!savedPrefs.dark,furigana=savedPrefs.furi!==false,filter='all',day=API.tokyoDay(),loaded=null,cards=[],progress={},current=null,detailSerial=0;
 const text=(tag,str,cls)=>{const n=document.createElement(tag);if(cls)n.className=cls;n.textContent=str??'';return n};
 const brief=item=>API.getGloss(item);
@@ -28,9 +27,9 @@ function applyPrefs(){
  $('lang').value=language;$('level').value=level;$('filter').value=filter;
 }
 function element(tag,cls){const x=document.createElement(tag);if(cls)x.className=cls;return x}
-function appendRow(container,label,value){
+function appendRow(container,label,value,isMeaning=false){
  if(value===null||value===undefined||value===''||(Array.isArray(value)&&!value.length))return;
- const wrap=element('div','detail-group');wrap.append(text('strong',label),text('span',Array.isArray(value)?value.join(' · '):String(value)));container.append(wrap)
+ const wrap=element('div','detail-group');const field=text('span',Array.isArray(value)?value.join(' · '):String(value));wrap.append(text('strong',label),isMeaning?mark(field):field);container.append(wrap)
 }
 function formatWordClass(value){
  const parts=Array.isArray(value)?value:String(value||'').split(',');
@@ -59,7 +58,7 @@ function flipCard(card){
  const inner=element('div','flip-inner');
  const front=element('div','face front '+card.type);
  front.append(text('small',card.type==='kanji'?'🈶 KANJI · '+level:'📘 VOCAB · '+level),text('div',entryName(card),'word'),text('small',card.type==='kanji'?'Tap Kanji for all related words →':'Tap to flip in 3D ↻'));
- const back=element('div','face back');back.append(text('small','読み方 · Reading'),text('div',reading(card.item,card.type),'meaning'),text('small',brief(card.item).slice(0,95)));
+ const back=element('div','face back');back.append(text('small','読み方 · Reading'),text('div',reading(card.item,card.type),'meaning'),mark(text('small',brief(card.item))));
  inner.append(front,back);flip.append(inner);
  const flipNow=()=>{wrap.classList.toggle('flipped');flip.setAttribute('aria-pressed',String(wrap.classList.contains('flipped')))};
  flip.onclick=()=>{if(card.type==='kanji')openDetails(card);else flipNow()};
@@ -140,14 +139,14 @@ function appendCompoundExplorer(card,root,serial){
     const kana=text('span',word.reading||'Reading unavailable','compound-reading');
     const badge=text('span',(word.levels||[]).join(' · '),'compound-levels');
     head.append(name,kana,badge);row.append(head);
-    if(API.getGloss(word))row.append(text('p',API.getGloss(word),'compound-meaning'));
+    if(API.getGloss(word))row.append(mark(text('p',API.getGloss(word),'compound-meaning')));
     const exampleList=API.validExamples(word).slice(0,2);
     if(exampleList.length){
       const box=element('div','compound-examples');
       for(const example of exampleList){
         const line=element('div','compound-example');
         const jp=text('p','');jp.lang='ja';showFurigana(jp,example);line.append(jp);
-        if(example.en)line.append(text('p',example.en,'small'));
+        if(example.en)line.append(mark(text('p',example.en,'small'),{ja:example.ja}));
         box.append(line);
       }
       row.append(box);
@@ -183,7 +182,7 @@ function openDetails(card){
  const root=$('detailBody');root.replaceChildren();root.append(text('h2',entryName(card),'detail-main'));
  const grid=element('div','detail-grid');
  appendRow(grid,'読み方 / Reading',reading(item,card.type));
- appendRow(grid,'English meaning / 意味',brief(item));
+ appendRow(grid,'Meaning / 意味',brief(item),true);
  if(card.type==='vocab'){
   appendRow(grid,'Part of speech / 品詞',formatWordClass(item.pos||item.part_of_speech));
   appendRow(grid,'Romaji',item.romaji);
@@ -202,7 +201,7 @@ function openDetails(card){
  examples.forEach((ex,i)=>{
   const block=element('div','detail-group');block.append(text('strong','Example '+(i+1)+' / 例文'));
   const japanese=text('p','');japanese.lang='ja';showFurigana(japanese,ex);block.append(japanese);
-  if(ex.en)block.append(text('p',ex.en));exRoot.append(block)
+  if(ex.en)block.append(mark(text('p',ex.en),{ja:ex.ja}));exRoot.append(block)
  });root.append(exRoot);
  if(card.type==='kanji')appendCompoundExplorer(card,root,serial);
  root.append(text('p','Source-backed details only. Translation is generated automatically and may need correction.','small'));
@@ -290,11 +289,12 @@ async function prepareOffline(){
 }
 
 function init(){
- for(const code of CODES){const opt=document.createElement('option');opt.value=code;opt.textContent=(NAMES[code]||getName(code))+' ('+code+')';$('lang').append(opt)}
+ languages.fill($('lang'),language);
  applyPrefs();
  $('level').onchange=e=>{level=e.target.value;savePrefs();load()};
- $('lang').onchange=e=>{language=e.target.value;savePrefs();if(window.NextStepOfflineAI)window.NextStepOfflineAI.setLanguage(language);$('translated').hidden=true;
-   if(current)$('translate').textContent='🌍 Explain everything in '+(NAMES[language]||getName(language))};
+ $('lang').onchange=e=>languages.set(e.target.value);
+ window.addEventListener(languages.event,e=>{language=e.detail;$('lang').value=language;if(window.NextStepOfflineAI)window.NextStepOfflineAI.setLanguage(language);$('translated').hidden=true;
+   if(current)$('translate').textContent='🌍 Explain everything in '+NAMES[language]});
  $('filter').onchange=e=>{filter=e.target.value;render()};
  $('theme').onclick=()=>{dark=!dark;savePrefs();applyPrefs()};
  $('furigana').onclick=()=>{furigana=!furigana;savePrefs();applyPrefs();if(current)openDetails(current)};

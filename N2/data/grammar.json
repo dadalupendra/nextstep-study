@@ -6,6 +6,7 @@
     "romaji": "ni saishite",
     "level": "N2",
     "meaning": "on the occasion of; when; at the time of",
+    "meaning_ne": "विशेष अवसरमा",
     "formation": "Noun + に際して / Verb-dict + に際して / Noun + に際しての + Noun",
     "examples": [
       {
@@ -37,6 +38,7 @@
     "romaji": "ni tomonatte",
     "level": "N2",
     "meaning": "along with; as; accompanying",
+    "meaning_ne": "सँगसँगै परिवर्तन हुँदा",
     "formation": "Noun + に伴って / Verb-dict + の + に伴って / Noun + に伴う + Noun",
     "examples": [
       {
@@ -69,6 +71,7 @@
     "romaji": "ni oujite",
     "level": "N2",
     "meaning": "according to; depending on; in response to",
+    "meaning_ne": "अवस्थाअनुसार वा मागअनुसार",
     "formation": "Noun + に応じて / Noun + に応じた + Noun",
     "examples": [
       {
@@ -100,6 +103,7 @@
     "romaji": "ni hanshite",
     "level": "N2",
     "meaning": "contrary to; against; in violation of",
+    "meaning_ne": "अपेक्षाको विपरीत",
     "formation": "Noun + に反して / Noun + に反する + Noun / Noun + に反した + Noun",
     "examples": [
       {
@@ -131,6 +135,7 @@
     "romaji": "ni motozuite",
     "level": "N2",
     "meaning": "based on; on the basis of",
+    "meaning_ne": "तथ्य वा आधारअनुसार",
     "formation": "Noun + に基づいて / Noun + に基づく + Noun / Noun + に基づいた + Noun",
     "examples": [
       {
@@ -161,6 +166,7 @@
     "romaji": "ni watatte",
     "level": "N2",
     "meaning": "over; throughout; spanning (a whole period or area)",
+    "meaning_ne": "लामो अवधि वा ठूलो क्षेत्रभर",
     "formation": "Noun + にわたって / Noun + にわたる + Noun",
     "examples": [
       {
@@ -193,6 +199,7 @@
     "romaji": "ni sotte",
     "level": "N2",
     "meaning": "along; in line with; following",
+    "meaning_ne": "अनुरूप, मार्ग वा दिशाअनुसार",
     "formation": "Noun + に沿って / Noun + に沿った + Noun",
     "examples": [
       {
@@ -224,6 +231,7 @@
     "romaji": "ni kuwaete",
     "level": "N2",
     "meaning": "in addition to; on top of",
+    "meaning_ne": "यसका अतिरिक्त",
     "formation": "Noun + に加えて",
     "examples": [
       {
@@ -249,6 +257,7 @@
     "romaji": "o megutte",
     "level": "N2",
     "meaning": "over; concerning; surrounding (an issue of dispute)",
+    "meaning_ne": "सम्बन्धमा बहस हुँदा",
     "formation": "Noun + をめぐって / Noun + をめぐる + Noun",
     "examples": [
       {
@@ -280,6 +289,7 @@
     "romaji": "o tsuujite / o tooshite",
     "level": "N2",
     "meaning": "through; via; by way of; throughout (a period)",
+    "meaning_ne": "कुनै माध्यमबाट वा सम्पूर्ण अवधिभर",
     "formation": "Noun + を通じて / Noun + を通して",
     "examples": [
       {
@@ -310,17 +320,20 @@
     "romaji": "o kikkake ni",
     "level": "N2",
     "meaning": "taking the opportunity of; triggered by; with ... as the start",
+    "meaning_ne": "कुनै घटनालाई अवसर बनाएर",
     "formation": "Noun + をきっかけに / Noun + をきっかけとして / Verb-plain + の + をきっかけに",
     "examples": [
       {
         "ja": "大学時代の留学をきっかけに、国際協力の仕事に興味を持つようになった。",
         "furigana": "{大学|だいがく}{時代|じだい}の{留学|りゅうがく}をきっかけに、{国際|こくさい}{協力|きょうりょく}の{仕事|しごと}に{興味|きょうみ}を{持|も}つようになった。",
-        "en": "Studying abroad in college got me interested in international cooperation work."
+        "en": "Studying abroad in college got me interested in international cooperation work.",
+        "ne": "कलेजमा पढ्दा विदेशमा अध्ययन गरेको अनुभवले मलाई अन्तर्राष्ट्रिय सहकार्यको कामतर्फ आकर्षित गर्‍यो।"
       },
       {
         "ja": "引っ越したのをきっかけに、家具をすべて買い替えた。",
         "furigana": "{引|ひ}っ{越|こ}したのをきっかけに、{家具|かぐ}をすべて{買|か}い{替|か}えた。",
-        "en": "I took the move as a chance to replace all my furniture."
+        "en": "I took the move as a chance to replace all my furniture.",
+        "ne": "बसाइँ सरेको मौका पारेर मैले सबै फर्निचर फेरेँ।"
       }
     ],
     "tags": [
@@ -336,6 +349,7 @@
     "romaji": "o nozoite",
     "level": "N2",
     "meaning": "except; excluding; apart from",
+    "meaning_ne": "बाहेक",
     "formation": "Noun + を除いて / Noun + を除き / Noun + を除く + Noun",
     "examples": [
       {
@@ -366,6 +380,7 @@
     "romaji": "ka no you da",
     "level": "N2",
     "meaning": "as if; as though (when it isn't really so)",
+    "meaning_ne": "मानौँ त्यस्तै भएजस्तो देखिनु",
     "formation": "Verb-plain / i-Adj + かのようだ / na-Adj + である + かのようだ / Noun + である + かのようだ",
     "examples": [
       {
@@ -396,6 +411,7 @@
     "romaji": "kanenai",
     "level": "N2",
     "meaning": "could well; might (lead to something bad)",
+    "meaning_ne": "नराम्रो नतिजा हुन पनि सक्छ",
     "formation": "Verb-stem + かねない",
     "examples": [
       {
@@ -426,6 +442,7 @@
     "romaji": "kaneru",
     "level": "N2",
     "meaning": "cannot; be unable to (polite refusal); find it hard to",
+    "meaning_ne": "विनम्र रूपमा गर्न नसक्नु",
     "formation": "Verb-stem + かねる",
     "examples": [
       {
@@ -457,6 +474,7 @@
     "romaji": "zu ni wa irarenai",
     "level": "N2",
     "meaning": "can't help doing; can't resist doing",
+    "meaning_ne": "नगरी बस्न नसक्नु",
     "formation": "Verb-nai stem + ずにはいられない",
     "examples": [
       {
@@ -488,6 +506,7 @@
     "romaji": "zaru o enai",
     "level": "N2",
     "meaning": "have no choice but to; cannot help but",
+    "meaning_ne": "गर्नैपर्ने बाध्यता हुनु",
     "formation": "Verb-nai stem + ざるを得ない",
     "examples": [
       {
@@ -518,6 +537,7 @@
     "romaji": "te wa irarenai",
     "level": "N2",
     "meaning": "can't afford to (keep) doing; can't just",
+    "meaning_ne": "यस्तो गरिरहन सकिँदैन; तुरुन्त केही गर्नुपर्ने अवस्था",
     "formation": "Verb-te + はいられない",
     "examples": [
       {
@@ -543,6 +563,7 @@
     "romaji": "mono ka",
     "level": "N2",
     "meaning": "no way (will I); as if; I'll never",
+    "meaning_ne": "कुनै हालतमा गर्ने छैन वा हुनै सक्दैन",
     "formation": "Verb-dict / i-Adj / na-Adj + な + ものか",
     "examples": [
       {
@@ -574,6 +595,7 @@
     "romaji": "mono no",
     "level": "N2",
     "meaning": "although; even though (but the expected result doesn't follow)",
+    "meaning_ne": "भए तापनि",
     "formation": "Verb-plain / i-Adj / na-Adj + な / na-Adj + である / Noun + である + ものの",
     "examples": [
       {
@@ -604,6 +626,7 @@
     "romaji": "mono nara",
     "level": "N2",
     "meaning": "if (it were possible); if only one could",
+    "meaning_ne": "सम्भव भए त; यस्तो गर्न सके",
     "formation": "Verb-dict (potential form) + ものなら",
     "examples": [
       {
@@ -634,6 +657,7 @@
     "romaji": "kurai nara / gurai nara",
     "level": "N2",
     "meaning": "rather than; if it comes to (doing that), I'd rather",
+    "meaning_ne": "त्यो गर्नुको सट्टा यो गर्नु राम्रो",
     "formation": "Verb-dict + くらいなら / Verb-dict + ぐらいなら",
     "examples": [
       {
@@ -659,6 +683,7 @@
     "romaji": "mono ga aru",
     "level": "N2",
     "meaning": "there is something (about it that is) ...; it really is",
+    "meaning_ne": "महसुस गर्नुपर्ने विशेष गुण वा प्रभाव हुनु",
     "formation": "Verb-dict / i-Adj / na-Adj + な + ものがある",
     "examples": [
       {
@@ -689,6 +714,7 @@
     "romaji": "koto ka",
     "level": "N2",
     "meaning": "how ...!; how much ...!",
+    "meaning_ne": "कति धेरै! तीव्र भावना व्यक्त गर्ने",
     "formation": "Question word + … + Verb-plain / i-Adj / na-Adj + な + ことか",
     "examples": [
       {
@@ -720,6 +746,7 @@
     "romaji": "koto ni wa",
     "level": "N2",
     "meaning": "(emotion)-ly; what is (surprising, sad, etc.) is that",
+    "meaning_ne": "आश्चर्य वा दुःखको कुरा के हो भने",
     "formation": "Verb-ta / i-Adj / na-Adj + な + ことに（は）",
     "examples": [
       {
@@ -750,6 +777,7 @@
     "romaji": "koto dakara",
     "level": "N2",
     "meaning": "knowing (someone); since it's (someone), surely",
+    "meaning_ne": "व्यक्तिको स्वभावका कारण अनुमान गर्दा",
     "formation": "Noun + の + ことだから",
     "examples": [
       {
@@ -775,6 +803,7 @@
     "romaji": "koto naku",
     "level": "N2",
     "meaning": "without (doing); without ever",
+    "meaning_ne": "काम नगरीकन",
     "formation": "Verb-dict + ことなく",
     "examples": [
       {
@@ -801,6 +830,7 @@
     "romaji": "koto kara",
     "level": "N2",
     "meaning": "from the fact that; because; judging from",
+    "meaning_ne": "त्यो तथ्यका कारण वा त्यसबाट थाहा भएर",
     "formation": "Verb-plain / i-Adj / na-Adj + な / na-Adj + である / Noun + である + ことから",
     "examples": [
       {
@@ -826,6 +856,7 @@
     "romaji": "nai koto ni wa",
     "level": "N2",
     "meaning": "unless; if ... not (then it can't happen)",
+    "meaning_ne": "नगरेसम्म सम्भव हुँदैन",
     "formation": "Verb-nai / i-Adj-ku + ない / na-Adj + でない / Noun + でない + ことには",
     "examples": [
       {
@@ -851,6 +882,7 @@
     "romaji": "koto wa ... ga",
     "level": "N2",
     "meaning": "it's true that ..., but; (I) do ..., but",
+    "meaning_ne": "त्यसो त हो, तर अर्को पक्ष पनि छ",
     "formation": "Verb-plain + ことは + Verb-plain + が / i-Adj + ことは + i-Adj + が / na-Adj + な + ことは + na-Adj + だ + が",
     "examples": [
       {
@@ -881,6 +913,7 @@
     "romaji": "ageku",
     "level": "N2",
     "meaning": "after (a long, troublesome process); in the end",
+    "meaning_ne": "लामो प्रयासपछि अन्ततः (प्रायः अप्रिय नतिजा)",
     "formation": "Verb-ta + あげく / Noun + の + あげく",
     "examples": [
       {
@@ -911,6 +944,7 @@
     "romaji": "amari ni",
     "level": "N2",
     "meaning": "so much that; out of excessive; because of too much",
+    "meaning_ne": "अत्यधिक भाव वा अवस्थाका कारण",
     "formation": "Verb-dict / Verb-ta / na-Adj + な / Noun + の + あまり（に）",
     "examples": [
       {
@@ -943,6 +977,7 @@
     "romaji": "ue ni",
     "level": "N2",
     "meaning": "besides; on top of; in addition to",
+    "meaning_ne": "त्यति मात्र होइन, थप रूपमा",
     "formation": "Verb-plain / i-Adj / na-Adj + な / Noun + である + 上（に）",
     "examples": [
       {
@@ -973,6 +1008,7 @@
     "romaji": "ue de",
     "level": "N2",
     "meaning": "after (doing), upon; in (doing), when it comes to",
+    "meaning_ne": "काम गरेपछि; काम गर्ने क्रममा विचार गर्दा",
     "formation": "Verb-ta + 上で / Noun + の + 上で / Verb-dict + 上で",
     "examples": [
       {
@@ -1004,6 +1040,7 @@
     "romaji": "ijou wa",
     "level": "N2",
     "meaning": "since; now that; as long as",
+    "meaning_ne": "एकपटक निर्णय वा स्थिति भएपछि जिम्मेवारी लिनु",
     "formation": "Verb-plain / na-Adj + である / Noun + である + 以上（は）",
     "examples": [
       {
@@ -1034,6 +1071,7 @@
     "romaji": "kara ni wa",
     "level": "N2",
     "meaning": "now that; since (having done/being ..., one must)",
+    "meaning_ne": "एकपटक निर्णय गरिसकेपछि जिम्मेवारी लिनु",
     "formation": "Verb-plain / Noun + である + からには",
     "examples": [
       {
@@ -1059,6 +1097,7 @@
     "romaji": "kara koso",
     "level": "N2",
     "meaning": "precisely because; it is because ... that",
+    "meaning_ne": "ठ्याक्कै त्यही कारणले",
     "formation": "Verb-plain / i-Adj / na-Adj + だ / Noun + だ + からこそ",
     "examples": [
       {
@@ -1089,6 +1128,7 @@
     "romaji": "kara shite",
     "level": "N2",
     "meaning": "judging from; (starting) even with; to begin with",
+    "meaning_ne": "सामान्य गुण पनि एउटा संकेतबाट देखिनु",
     "formation": "Noun + からして",
     "examples": [
       {
@@ -1119,6 +1159,7 @@
     "romaji": "kara suru to / kara sureba",
     "level": "N2",
     "meaning": "judging from; from the standpoint of",
+    "meaning_ne": "बाट अनुमान गर्दा वा त्यही दृष्टिकोणबाट",
     "formation": "Noun + からすると / Noun + からすれば",
     "examples": [
       {
@@ -1145,6 +1186,7 @@
     "romaji": "kara miru to / kara mireba",
     "level": "N2",
     "meaning": "from the point of view of; judging from; seen from",
+    "meaning_ne": "दृष्टिकोणबाट हेर्दा",
     "formation": "Noun + から見ると / Noun + から見れば",
     "examples": [
       {
@@ -1169,6 +1211,7 @@
     "romaji": "kara iu to / kara itte",
     "level": "N2",
     "meaning": "in terms of; from the standpoint of; judging by",
+    "meaning_ne": "को दृष्टिले वा आधारमा भन्दा",
     "formation": "Noun + からいうと / Noun + からいって",
     "examples": [
       {
@@ -1194,6 +1237,7 @@
     "romaji": "sai ni",
     "level": "N2",
     "meaning": "when; at the time of; on the occasion of",
+    "meaning_ne": "त्यस अवसरमा वा समयमा",
     "formation": "Verb-dict / Verb-ta / Noun + の + 際（に）",
     "examples": [
       {
@@ -1225,6 +1269,7 @@
     "romaji": "shidai",
     "level": "N2",
     "meaning": "as soon as (then immediately)",
+    "meaning_ne": "काम पूरा हुनेबित्तिकै",
     "formation": "Verb-stem + 次第 / Noun + 次第",
     "examples": [
       {
@@ -1257,6 +1302,7 @@
     "romaji": "shidai da / shidai de",
     "level": "N2",
     "meaning": "depending on; it depends on",
+    "meaning_ne": "नतिजा कुनै अवस्था वा निर्णयमा निर्भर हुनु",
     "formation": "Noun + 次第だ / Noun + 次第で / Noun + 次第では",
     "examples": [
       {
@@ -1288,6 +1334,7 @@
     "romaji": "sue ni",
     "level": "N2",
     "meaning": "after (a long process of); finally, at the end of",
+    "meaning_ne": "लामो प्रक्रियाको अन्त्यमा",
     "formation": "Verb-ta + 末（に） / Noun + の + 末（に）",
     "examples": [
       {
@@ -1319,6 +1366,7 @@
     "romaji": "ta tokoro de",
     "level": "N2",
     "meaning": "even if (it would be no use); no matter how much",
+    "meaning_ne": "गरे पनि नतिजा परिवर्तन नहुनु",
     "formation": "Verb-ta + ところで",
     "examples": [
       {
@@ -1349,6 +1397,7 @@
     "romaji": "ta tokoro",
     "level": "N2",
     "meaning": "when (I) did ..., (I found that); upon doing",
+    "meaning_ne": "गरेपछि थाहा भयो कि",
     "formation": "Verb-ta + ところ",
     "examples": [
       {
@@ -1374,6 +1423,7 @@
     "romaji": "bakari ka",
     "level": "N2",
     "meaning": "not only ... but also",
+    "meaning_ne": "मात्र होइन, थप पनि",
     "formation": "Verb-plain / i-Adj / na-Adj + な / Noun + ばかりか",
     "examples": [
       {
@@ -1404,6 +1454,7 @@
     "romaji": "bakari ni",
     "level": "N2",
     "meaning": "simply because; just because (with a bad result)",
+    "meaning_ne": "त्यही कारणले दुर्भाग्यवश",
     "formation": "Verb-plain / i-Adj / na-Adj + な / na-Adj + である / Noun + である + ばかりに",
     "examples": [
       {
@@ -1435,6 +1486,7 @@
     "romaji": "bakari da",
     "level": "N2",
     "meaning": "keep (getting worse); only continue to",
+    "meaning_ne": "दिनदिनै एउटै दिशामा परिवर्तन हुनु",
     "formation": "Verb-dict + ばかりだ",
     "examples": [
       {
@@ -1460,6 +1512,7 @@
     "romaji": "wa mochiron / wa motoyori",
     "level": "N2",
     "meaning": "not to mention; of course ... and also",
+    "meaning_ne": "यति त पक्कै, त्यसमाथि अर्को कुरा पनि",
     "formation": "Noun + はもちろん / Noun + はもとより",
     "examples": [
       {
@@ -1490,6 +1543,7 @@
     "romaji": "wa tomokaku",
     "level": "N2",
     "meaning": "setting aside; regardless of; whatever about",
+    "meaning_ne": "एक विषय अलग राख्दा",
     "formation": "Noun + はともかく / Noun + はともかくとして",
     "examples": [
       {
@@ -1515,6 +1569,7 @@
     "romaji": "wa sateoki",
     "level": "N2",
     "meaning": "leaving aside; putting aside (for now)",
+    "meaning_ne": "एक कुरा केही समयका लागि अलग राखेर",
     "formation": "Noun + はさておき",
     "examples": [
       {
@@ -1541,6 +1596,7 @@
     "romaji": "hanmen",
     "level": "N2",
     "meaning": "on the other hand; while (it is ...)",
+    "meaning_ne": "एक पक्षमा यस्तो, अर्कोतिर विपरीत",
     "formation": "Verb-plain / i-Adj / na-Adj + な / na-Adj + である / Noun + である + 反面",
     "examples": [
       {
@@ -1570,6 +1626,7 @@
     "romaji": "nagara mo",
     "level": "N2",
     "meaning": "although; despite; while (contrary to expectation)",
+    "meaning_ne": "भए पनि; हुँदाहुँदै",
     "formation": "Verb-stem / Verb-nai / i-Adj / na-Adj / Noun + ながら（も）",
     "examples": [
       {
@@ -1600,6 +1657,7 @@
     "romaji": "tsutsu / tsutsu mo",
     "level": "N2",
     "meaning": "while (doing); although, even while",
+    "meaning_ne": "गर्दैगर्दा वा भए पनि",
     "formation": "Verb-stem + つつ / Verb-stem + つつも",
     "examples": [
       {
@@ -1631,6 +1689,7 @@
     "romaji": "tsutsu aru",
     "level": "N2",
     "meaning": "be in the process of; be gradually (changing)",
+    "meaning_ne": "बिस्तारै परिवर्तन हुँदै जानु",
     "formation": "Verb-stem + つつある",
     "examples": [
       {
@@ -1656,6 +1715,7 @@
     "romaji": "ppanashi",
     "level": "N2",
     "meaning": "leaving (something) as is; keep (doing) without a break",
+    "meaning_ne": "काम गरेकै अवस्थामा छोड्नु वा रोकिएन",
     "formation": "Verb-stem + っぱなし",
     "examples": [
       {
@@ -1688,6 +1748,7 @@
     "romaji": "nuku",
     "level": "N2",
     "meaning": "do to the very end; see through; do thoroughly",
+    "meaning_ne": "अन्त्यसम्म दृढतापूर्वक पूरा गर्नु",
     "formation": "Verb-stem + 抜く",
     "examples": [
       {
@@ -1719,6 +1780,7 @@
     "romaji": "uru / enai",
     "level": "N2",
     "meaning": "can; be possible / cannot; be impossible",
+    "meaning_ne": "हुन सक्नु वा हुन नसक्नु",
     "formation": "Verb-stem + 得る / Verb-stem + 得ない",
     "examples": [
       {
@@ -1749,6 +1811,7 @@
     "romaji": "gatai",
     "level": "N2",
     "meaning": "hard to; almost impossible to (emotionally)",
+    "meaning_ne": "गर्न वा विश्वास गर्न निकै कठिन",
     "formation": "Verb-stem + がたい",
     "examples": [
       {
@@ -1780,6 +1843,7 @@
     "romaji": "you ga nai",
     "level": "N2",
     "meaning": "there's no way to; cannot possibly (no means available)",
+    "meaning_ne": "गर्ने उपाय छैन",
     "formation": "Verb-stem + ようがない / Noun + の + しようがない",
     "examples": [
       {
@@ -1811,6 +1875,7 @@
     "romaji": "you de wa",
     "level": "N2",
     "meaning": "if (you are like this / keep doing this), (it's no good)",
+    "meaning_ne": "यस्तै अवस्था भएमा",
     "formation": "Verb-plain + ようでは",
     "examples": [
       {
@@ -1836,6 +1901,7 @@
     "romaji": "te naranai",
     "level": "N2",
     "meaning": "can't help (feeling); feel terribly; extremely",
+    "meaning_ne": "भावनालाई रोक्न नसक्नु",
     "formation": "Verb-te + ならない / i-Adj-ku + てならない / na-Adj + でならない",
     "examples": [
       {
@@ -1866,6 +1932,7 @@
     "romaji": "te koso",
     "level": "N2",
     "meaning": "only by (doing); only when",
+    "meaning_ne": "त्यसो गरेपछि मात्र वास्तविक परिणाम आउनु",
     "formation": "Verb-te + こそ",
     "examples": [
       {
@@ -1891,6 +1958,7 @@
     "romaji": "te kara de nai to",
     "level": "N2",
     "meaning": "not until (after doing); only after",
+    "meaning_ne": "त्यो काम नगरुन्जेल अर्को काम सम्भव नहुनु",
     "formation": "Verb-te + からでないと / Verb-te + からでなければ",
     "examples": [
       {
@@ -1917,6 +1985,7 @@
     "romaji": "te irai",
     "level": "N2",
     "meaning": "ever since",
+    "meaning_ne": "त्यसबेलादेखि अहिलेसम्म",
     "formation": "Verb-te + 以来 / Noun + 以来",
     "examples": [
       {
@@ -1947,6 +2016,7 @@
     "romaji": "ni suginai",
     "level": "N2",
     "meaning": "merely; nothing more than; only",
+    "meaning_ne": "केवल त्यति मात्रै हुनु",
     "formation": "Verb-plain / Noun + に過ぎない",
     "examples": [
       {
@@ -1979,6 +2049,7 @@
     "romaji": "ni kagiru",
     "level": "N2",
     "meaning": "nothing beats; the best thing is",
+    "meaning_ne": "त्यही सबैभन्दा राम्रो विकल्प हुनु",
     "formation": "Verb-dict / Verb-nai / Noun + に限る",
     "examples": [
       {
@@ -2010,6 +2081,7 @@
     "romaji": "ni kagirazu",
     "level": "N2",
     "meaning": "not only; not limited to",
+    "meaning_ne": "मात्र नभई अरू पनि",
     "formation": "Noun + に限らず",
     "examples": [
       {
@@ -2036,6 +2108,7 @@
     "romaji": "ni kagitte",
     "level": "N2",
     "meaning": "of all (times/people); precisely when; (someone) of all people wouldn't",
+    "meaning_ne": "विशेषगरी त्यही अवस्थामा",
     "formation": "Noun + に限って",
     "examples": [
       {
@@ -2067,6 +2140,7 @@
     "romaji": "ni kagiri",
     "level": "N2",
     "meaning": "limited to; only (for)",
+    "meaning_ne": "यही समूह वा समयमा मात्र सीमित",
     "formation": "Noun + に限り",
     "examples": [
       {
@@ -2097,6 +2171,7 @@
     "romaji": "kagiri",
     "level": "N2",
     "meaning": "as long as; as far as (to the limit of)",
+    "meaning_ne": "जबसम्म वा ज्ञान/सीमाको हदसम्म",
     "formation": "Verb-dict / Verb-te + いる / i-Adj / na-Adj + である / Noun + である + かぎり",
     "examples": [
       {
@@ -2128,6 +2203,7 @@
     "romaji": "nai kagiri",
     "level": "N2",
     "meaning": "unless; as long as ... not",
+    "meaning_ne": "नगरेसम्म; त्यस शर्तबिना होइन",
     "formation": "Verb-nai + かぎり",
     "examples": [
       {
@@ -2153,6 +2229,7 @@
     "romaji": "ni kakete wa",
     "level": "N2",
     "meaning": "when it comes to; in terms of (skill)",
+    "meaning_ne": "कुनै विशेष क्षेत्रमा अरूभन्दा राम्रो",
     "formation": "Noun + にかけては / Noun + にかけても",
     "examples": [
       {
@@ -2178,6 +2255,7 @@
     "romaji": "ni kotaete",
     "level": "N2",
     "meaning": "in response to; meeting (expectations, requests)",
+    "meaning_ne": "आशा वा अनुरोधको जवाफमा",
     "formation": "Noun + にこたえて / Noun + にこたえる + Noun",
     "examples": [
       {
@@ -2209,6 +2287,7 @@
     "romaji": "ni sakidatte",
     "level": "N2",
     "meaning": "prior to; before",
+    "meaning_ne": "अगाडि नै",
     "formation": "Noun + に先立って / Verb-dict + に先立って / Noun + に先立つ + Noun",
     "examples": [
       {
@@ -2235,6 +2314,7 @@
     "romaji": "ni shiro / ni seyo",
     "level": "N2",
     "meaning": "even if; whether ... or ...; in any case",
+    "meaning_ne": "जे भए पनि; जस्तो अवस्थामा पनि",
     "formation": "Verb-plain / i-Adj / na-Adj / Noun + にしろ・にせよ",
     "examples": [
       {
@@ -2265,6 +2345,7 @@
     "romaji": "ni sureba / ni shitara",
     "level": "N2",
     "meaning": "from the standpoint of; for (someone), (it would seem)",
+    "meaning_ne": "को दृष्टिकोणबाट हेर्दा",
     "formation": "Noun + にすれば / Noun + にしたら",
     "examples": [
       {
@@ -2290,6 +2371,7 @@
     "romaji": "ni soui nai",
     "level": "N2",
     "meaning": "without doubt; must be; surely",
+    "meaning_ne": "निस्सन्देह त्यस्तै हो",
     "formation": "Verb-plain / i-Adj / na-Adj / Noun + に相違ない",
     "examples": [
       {
@@ -2317,6 +2399,7 @@
     "romaji": "ni koshita koto wa nai",
     "level": "N2",
     "meaning": "it's best to; nothing is better than",
+    "meaning_ne": "यही गर्नु सबैभन्दा राम्रो",
     "formation": "Verb-dict / Verb-nai / i-Adj / na-Adj / Noun + に越したことはない",
     "examples": [
       {
@@ -2347,6 +2430,7 @@
     "romaji": "ni hoka naranai",
     "level": "N2",
     "meaning": "nothing other than; none other than; precisely",
+    "meaning_ne": "अरू केही नभई यही हो",
     "formation": "Noun + にほかならない / Verb-plain + から + にほかならない",
     "examples": [
       {
@@ -2372,6 +2456,7 @@
     "romaji": "ni mo kakawarazu",
     "level": "N2",
     "meaning": "despite; in spite of; although",
+    "meaning_ne": "हुँदाहुँदै पनि; त्यसको विपरीत",
     "formation": "Verb-plain / i-Adj / na-Adj + である / Noun + にもかかわらず",
     "examples": [
       {
@@ -2397,6 +2482,7 @@
     "romaji": "ni atatte",
     "level": "N2",
     "meaning": "when; at the time of; on the occasion of (starting something important)",
+    "meaning_ne": "विशेष अवसरमा वा सुरु गर्दा",
     "formation": "Noun + にあたって / Verb-dict + にあたって / Noun + にあたっての + Noun",
     "examples": [
       {
@@ -2427,6 +2513,7 @@
     "romaji": "ni oite / ni okeru",
     "level": "N2",
     "meaning": "in; at; in the field of (formal)",
+    "meaning_ne": "औपचारिक सन्दर्भमा स्थान वा क्षेत्रभित्र",
     "formation": "Noun + において / Noun + における + Noun",
     "examples": [
       {
@@ -2458,6 +2545,7 @@
     "romaji": "ni kakawarazu",
     "level": "N2",
     "meaning": "regardless of; irrespective of",
+    "meaning_ne": "जे भए पनि; वास्ता नगरी",
     "formation": "Noun + にかかわらず / Verb-dict + Verb-nai + にかかわらず",
     "examples": [
       {
@@ -2489,6 +2577,7 @@
     "romaji": "ni kakawaru",
     "level": "N2",
     "meaning": "affecting; concerning (something important); relating to",
+    "meaning_ne": "सम्बन्ध राख्नु वा गम्भीर असर पार्नु",
     "formation": "Noun + にかかわる",
     "examples": [
       {
@@ -2513,6 +2602,7 @@
     "romaji": "ni tsuki",
     "level": "N2",
     "meaning": "per; for each; due to (in formal notices)",
+    "meaning_ne": "कारणले वा प्रतिको हिसाबले (सूचना)",
     "formation": "Noun + につき",
     "examples": [
       {
@@ -2545,6 +2635,7 @@
     "romaji": "ni mukete",
     "level": "N2",
     "meaning": "toward; aimed at; in preparation for; addressed to",
+    "meaning_ne": "लक्ष्यतर्फ वा तयारीका लागि",
     "formation": "Noun + に向けて / Noun + に向けた + Noun",
     "examples": [
       {
@@ -2575,6 +2666,7 @@
     "romaji": "no moto de / no moto ni",
     "level": "N2",
     "meaning": "under (guidance, influence, a rule); with",
+    "meaning_ne": "को नेतृत्व/परिस्थितिमा",
     "formation": "Noun + のもとで / Noun + のもとに",
     "examples": [
       {
@@ -2607,6 +2699,7 @@
     "romaji": "nuki de / nuki ni",
     "level": "N2",
     "meaning": "without; leaving out",
+    "meaning_ne": "बाहेक राखेर; नगरीकन",
     "formation": "Noun + 抜きで / Noun + 抜きに / Noun + 抜きの + Noun",
     "examples": [
       {
@@ -2637,6 +2730,7 @@
     "romaji": "o komete",
     "level": "N2",
     "meaning": "with (feeling); full of; putting ... into",
+    "meaning_ne": "मनको भावना वा मनसाय समेटेर",
     "formation": "Noun + をこめて",
     "examples": [
       {
@@ -2663,6 +2757,7 @@
     "romaji": "o chuushin ni",
     "level": "N2",
     "meaning": "centered on; focusing on; mainly",
+    "meaning_ne": "मुख्य रूपमा केन्द्रित",
     "formation": "Noun + を中心に / Noun + を中心として / Noun + を中心とした + Noun",
     "examples": [
       {
@@ -2693,6 +2788,7 @@
     "romaji": "o moto ni",
     "level": "N2",
     "meaning": "based on; using ... as a basis or source",
+    "meaning_ne": "आधार बनाएर",
     "formation": "Noun + をもとに / Noun + をもとにして / Noun + をもとにした + Noun",
     "examples": [
       {
@@ -2719,6 +2815,7 @@
     "romaji": "o towazu",
     "level": "N2",
     "meaning": "regardless of; irrespective of",
+    "meaning_ne": "जेसुकै भए पनि",
     "formation": "Noun + を問わず",
     "examples": [
       {
@@ -2749,6 +2846,7 @@
     "romaji": "o hajime",
     "level": "N2",
     "meaning": "starting with; including; such as (a representative example)",
+    "meaning_ne": "लाई उदाहरण मानेर सुरु गर्दै",
     "formation": "Noun + をはじめ / Noun + をはじめとして / Noun + をはじめとする + Noun",
     "examples": [
       {
@@ -2779,6 +2877,7 @@
     "romaji": "o ... to shite",
     "level": "N2",
     "meaning": "treating (A) as (B); with A as B",
+    "meaning_ne": "कुनै वस्तु/व्यक्तिलाई निश्चित भूमिकामा राखेर",
     "formation": "Noun + を + Noun + として / Noun + を + Noun + とする",
     "examples": [
       {
@@ -2804,6 +2903,7 @@
     "romaji": "ka to iu to",
     "level": "N2",
     "meaning": "if you ask whether (actually, not); the reason why ... is",
+    "meaning_ne": "किन/के हो भनेर सोध्दा भने",
     "formation": "Verb-plain / i-Adj / na-Adj / Noun + かというと / Question word + … + かというと",
     "examples": [
       {
@@ -2835,6 +2935,7 @@
     "romaji": "ka to omottara / ka to omou to",
     "level": "N2",
     "meaning": "just when; no sooner than; the moment",
+    "meaning_ne": "त्यस्तो भयो जस्तो लाग्नासाथ अर्को घटना हुनु",
     "formation": "Verb-ta + かと思ったら / Verb-ta + かと思うと",
     "examples": [
       {
@@ -2866,6 +2967,7 @@
     "romaji": "ka ... nai ka no uchi ni",
     "level": "N2",
     "meaning": "as soon as; barely ... when",
+    "meaning_ne": "काम पूरा हुन नपाउँदै अर्को घटना हुनु",
     "formation": "Verb-dict + か + Verb-nai + かのうちに / Verb-ta + か + Verb-nai + かのうちに",
     "examples": [
       {
@@ -2891,6 +2993,7 @@
     "romaji": "kiri",
     "level": "N2",
     "meaning": "since (and nothing after); only; just",
+    "meaning_ne": "त्यस समयदेखि; त्यति मात्र",
     "formation": "Verb-ta + きり / Noun + きり",
     "examples": [
       {
@@ -2921,6 +3024,7 @@
     "romaji": "ge",
     "level": "N2",
     "meaning": "seeming; looking (as if); with an air of",
+    "meaning_ne": "त्यस्तो देखिने वा भावना झल्किने",
     "formation": "i-Adj stem + げ / na-Adj + げ / Verb-stem + たげ",
     "examples": [
       {
@@ -2952,6 +3056,7 @@
     "romaji": "kko nai",
     "level": "N2",
     "meaning": "no way; there's absolutely no chance",
+    "meaning_ne": "कुनै हालतमा सम्भव छैन",
     "formation": "Verb-stem + っこない",
     "examples": [
       {
@@ -2978,6 +3083,7 @@
     "romaji": "dokoro ka",
     "level": "N2",
     "meaning": "far from; let alone; on the contrary",
+    "meaning_ne": "उल्टै; त्यति मात्र होइन, बिल्कुल विपरीत",
     "formation": "Verb-plain / i-Adj / na-Adj / Noun + どころか",
     "examples": [
       {
@@ -3008,6 +3114,7 @@
     "romaji": "dokoro de wa nai",
     "level": "N2",
     "meaning": "this is no time for; out of the question",
+    "meaning_ne": "त्यस्तो गर्ने फुर्सद/अवस्था नै नहुनु",
     "formation": "Verb-dict / Noun + どころではない",
     "examples": [
       {
@@ -3034,6 +3141,7 @@
     "romaji": "to wa kagiranai",
     "level": "N2",
     "meaning": "not necessarily; not always",
+    "meaning_ne": "सधैँ वा सबै अवस्थामा सही नहुनु",
     "formation": "Verb-plain / i-Adj / na-Adj / Noun + とは限らない",
     "examples": [
       {
@@ -3059,6 +3167,7 @@
     "romaji": "to iu mono da",
     "level": "N2",
     "meaning": "that's what (A) is; that's just how it is; that's really",
+    "meaning_ne": "यस्तो नै हो; स्वाभाविक मूल्याङ्कन",
     "formation": "Verb-plain / i-Adj / na-Adj / Noun + というものだ",
     "examples": [
       {
@@ -3089,6 +3198,7 @@
     "romaji": "to iu mono de wa nai",
     "level": "N2",
     "meaning": "it's not (necessarily) the case that; it doesn't follow that",
+    "meaning_ne": "त्यो मात्र पर्याप्त वा सही होइन",
     "formation": "Verb-plain / i-Adj / na-Adj / Noun + というものではない",
     "examples": [
       {
@@ -3114,6 +3224,7 @@
     "romaji": "to itte mo",
     "level": "N2",
     "meaning": "although I say; even though (it's called)",
+    "meaning_ne": "भने पनि वास्तवमा",
     "formation": "Verb-plain / i-Adj / na-Adj / Noun + といっても",
     "examples": [
       {
@@ -3139,6 +3250,7 @@
     "romaji": "to ieba / to iu to",
     "level": "N2",
     "meaning": "speaking of; when you think of; if you mention",
+    "meaning_ne": "त्यो विषय आयो भने सम्झिने कुरा",
     "formation": "Noun + といえば / Noun + というと",
     "examples": [
       {
@@ -3169,6 +3281,7 @@
     "romaji": "hoka nai",
     "level": "N2",
     "meaning": "have no choice but to; there's nothing to do but",
+    "meaning_ne": "अर्को उपाय नै छैन",
     "formation": "Verb-dict + ほかない / Verb-dict + よりほかない",
     "examples": [
       {
@@ -3194,6 +3307,7 @@
     "romaji": "mai",
     "level": "N2",
     "meaning": "will not (resolve); probably won't (conjecture)",
+    "meaning_ne": "नगर्ने संकल्प वा सायद नगर्ला",
     "formation": "Verb-dict + まい / Verb-stem (ichidan verbs) + まい",
     "examples": [
       {
@@ -3220,6 +3334,7 @@
     "romaji": "you de wa nai ka",
     "level": "N2",
     "meaning": "let's (formal call to action); why don't we",
+    "meaning_ne": "आउनुहोस्, सँगै गरौँ भन्ने आह्वान",
     "formation": "Verb-volitional + ではないか / Verb-volitional + ではありませんか",
     "examples": [
       {
@@ -3245,6 +3360,7 @@
     "romaji": "mo kamawazu",
     "level": "N2",
     "meaning": "without caring about; regardless of; paying no attention to",
+    "meaning_ne": "बेवास्ता गरेर पनि",
     "formation": "Noun + もかまわず / Verb-plain + の + もかまわず",
     "examples": [
       {
@@ -3271,6 +3387,7 @@
     "romaji": "jou",
     "level": "N2",
     "meaning": "from the standpoint of; in terms of; for reasons of",
+    "meaning_ne": "व्यावहारिक/नियमगत दृष्टिले",
     "formation": "Noun + 上 / Noun + 上の + Noun",
     "examples": [
       {
@@ -3302,6 +3419,7 @@
     "romaji": "osore ga aru",
     "level": "N2",
     "meaning": "there is a risk that; could (bad outcome)",
+    "meaning_ne": "नराम्रो घटना हुने जोखिम",
     "formation": "Verb-dict + おそれがある / Noun + の + おそれがある",
     "examples": [
       {
@@ -3332,6 +3450,7 @@
     "romaji": "sei ka",
     "level": "N2",
     "meaning": "perhaps because; maybe due to",
+    "meaning_ne": "सायद त्यस कारणले नकारात्मक असर",
     "formation": "Verb-plain / i-Adj / na-Adj + な / Noun + の + せいか",
     "examples": [
       {
@@ -3362,6 +3481,7 @@
     "romaji": "dake atte / dake ni",
     "level": "N2",
     "meaning": "as might be expected (since); precisely because; all the more because",
+    "meaning_ne": "त्यही स्तरको अपेक्षा गरिएअनुसार; खास कारणले",
     "formation": "Verb-plain / i-Adj / na-Adj + な / Noun + だけあって・だけに",
     "examples": [
       {
@@ -3392,6 +3512,7 @@
     "romaji": "dake no koto wa aru",
     "level": "N2",
     "meaning": "it's no wonder; it lives up to; as expected of",
+    "meaning_ne": "त्यति परिश्रम वा प्रतिष्ठाको मूल्य हुनु",
     "formation": "Verb-plain / i-Adj / na-Adj + な / Noun + だけのことはある",
     "examples": [
       {
@@ -3417,6 +3538,7 @@
     "romaji": "tatoe ... te mo",
     "level": "N2",
     "meaning": "even if; no matter",
+    "meaning_ne": "जे भए पनि; यस्तो भए पनि",
     "formation": "たとえ + Verb-te + も / たとえ + i-Adj-ku + ても / たとえ + na-Adj + でも / たとえ + Noun + でも",
     "examples": [
       {
@@ -3448,6 +3570,7 @@
     "romaji": "yara ... yara",
     "level": "N2",
     "meaning": "what with ... and ...; and ... and (among other things)",
+    "meaning_ne": "यो पनि त्यो पनि; थुप्रै कुरा",
     "formation": "Noun + やら + Noun + やら / Verb-dict + やら + Verb-dict + やら / i-Adj + やら + i-Adj + やら",
     "examples": [
       {
@@ -3474,6 +3597,7 @@
     "romaji": "zu ni sumu / naide sumu",
     "level": "N2",
     "meaning": "get by without; not have to; be spared from",
+    "meaning_ne": "कुनै काम नगरी नै समाधान हुनु",
     "formation": "Verb-nai stem + ずに済む / Verb-nai + で済む",
     "examples": [
       {
@@ -3499,6 +3623,7 @@
     "romaji": "you ni yotte wa",
     "level": "N2",
     "meaning": "depending on how (one does it)",
+    "meaning_ne": "गर्ने तरिकामा निर्भर गर्दै",
     "formation": "Verb-stem + ようによっては",
     "examples": [
       {
