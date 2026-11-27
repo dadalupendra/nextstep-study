@@ -3,13 +3,12 @@
 (()=>{'use strict';
 const DATA=window.NextStepDailySource,COMPOUNDS=window.NextStepKanjiCompounds;
 const LEVELS=DATA.LEVELS,PER_PAGE=24;
-const LANGS='ne en ja hi bn zh-CN ko fr es de ar th vi id pt ru it tr uk pl nl sv fi da no el he fa ur ta te mr gu pa ms sw fil my km lo af sq am hy az eu be bs bg ca hr cs et gl ka ht hu is ig ga jv kk ku ky lv lt mk mn ps ro sr sk sl so su tg uz cy zu yo xh si or as tk fy lb mt ny st sd yi ceb'.split(' ');
-const NAMES={ne:'नेपाली',en:'English',ja:'日本語',hi:'हिन्दी','zh-CN':'中文',ko:'한국어',bn:'বাংলা',ur:'اردو'};
+const languages=window.NextStepLanguages, NAMES=languages.names, mark=window.NextStepMeanings.mark;
 const $=id=>document.getElementById(id);
 const u=new URL(location.href);
 let level=LEVELS.includes(u.searchParams.get('level'))?u.searchParams.get('level'):'N2';
 let prefs={};try{prefs=JSON.parse(localStorage.getItem('nextstep-unified-prefs')||'{}')||{}}catch{}
-let lang=LANGS.includes(prefs.lang)?prefs.lang:'ne',dark=!!prefs.dark,furi=prefs.furi!==false;
+let lang=languages.get(),dark=!!prefs.dark,furi=prefs.furi!==false;
 let source=null,items=[],page=0,search='',learned={},active=null,detailVersion=0,allRelated=[];
 const node=(tag,str,cls)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(str!==undefined)n.textContent=String(str);return n};
 const gloss=x=>DATA.getGloss(x||{});
@@ -19,10 +18,11 @@ const localKey=()=> 'nextstep-kanji-3d-progress-v1-'+level;
 const storePrefs=()=>{try{localStorage.setItem('nextstep-unified-prefs',JSON.stringify({...prefs,lang,level,dark,furi}))}catch{}};
 const storeLearned=()=>{try{localStorage.setItem(localKey(),JSON.stringify(learned))}catch{}};
 const term=x=>active?.type==='kanji'?x.character:x.word;
-function line(parent,label,val){
+function line(parent,label,val,isMeaning=false){
  if(val===undefined||val===null||val===''||(Array.isArray(val)&&!val.length))return;
  const box=node('div',undefined,'detail-group');
- box.append(node('strong',label),node('span',Array.isArray(val)?val.join(' · '):val));
+ const field=node('span',Array.isArray(val)?val.join(' · '):val);
+ box.append(node('strong',label),isMeaning?mark(field):field);
  parent.append(box)
 }
 function japanese(parent,example){
@@ -45,7 +45,7 @@ function examples(parent,item){
  if(!actual.length){parent.append(node('p','No verified full example sentence is supplied in the source.','small'));return}
  actual.forEach((ex,i)=>{
   const box=node('div',undefined,'compound-example');box.append(node('strong','例文 '+(i+1)));
-  japanese(box,ex);if(ex.en)box.append(node('p',ex.en,'small'));parent.append(box)
+  japanese(box,ex);if(ex.en)box.append(mark(node('p',ex.en,'small'),{ja:ex.ja}));parent.append(box)
  })
 }
 function cardForKanji(item){
@@ -56,7 +56,7 @@ function cardForKanji(item){
  const front=node('div',undefined,'face front kanji');
  front.append(node('small',level+' · KANJI'),node('div',character,'word'),node('small','Tap → すべての関連語を表示'));
  const back=node('div',undefined,'face back');
- back.append(node('small','音読み・訓読み'),node('div',readings(item)||'No reading in source','meaning'),node('div',gloss(item).slice(0,120),'meaning'));
+ back.append(node('small','音読み・訓読み'),node('div',readings(item)||'No reading in source','meaning'),mark(node('div',gloss(item),'meaning')));
  inner.append(front,back);flip.append(inner);
  flip.onclick=()=>openKanji(item);
  const controls=node('div',undefined,'card-actions');
@@ -120,7 +120,7 @@ function appendCompounds(character,root,version){
     const entry=node('article',undefined,'compound-entry');
     const top=node('div',undefined,'compound-head');
     top.append(node('strong',word.word,'compound-word'),node('span',word.reading,'compound-reading'),node('span',(word.levels||[]).join(' · '),'compound-levels'));
-    entry.append(top,node('p',gloss(word),'compound-meaning'));
+    entry.append(top,mark(node('p',gloss(word),'compound-meaning')));
     const ex=node('div',undefined,'compound-examples');examples(ex,word);entry.append(ex);
     const open=node('button','📖 Full meaning + translation','action indigo compound-translate');
     open.onclick=()=>openWord(word);entry.append(open);container.append(entry)
@@ -143,10 +143,10 @@ function initDetail(item,type){
  root.append(node('h2',type==='kanji'?item.character:item.word,'detail-main'));
  const grid=node('div',undefined,'detail-grid');
  if(type==='kanji'){
-  line(grid,'意味 · Meaning',gloss(item));line(grid,'音読み · On-yomi',item.onyomi);line(grid,'訓読み · Kun-yomi',item.kunyomi);
+  line(grid,'意味 · Meaning',gloss(item),true);line(grid,'音読み · On-yomi',item.onyomi);line(grid,'訓読み · Kun-yomi',item.kunyomi);
   line(grid,'部首 · Radical',item.radical);line(grid,'画数 · Stroke count',item.strokes);line(grid,'Other known compounds',item.words)
  }else{
-  line(grid,'意味 · Meaning',gloss(item));line(grid,'よみかた · Reading',item.reading);line(grid,'品詞 · Word class',wordClass(item))
+  line(grid,'意味 · Meaning',gloss(item),true);line(grid,'よみかた · Reading',item.reading);line(grid,'品詞 · Word class',wordClass(item))
  }
  root.append(grid);
  root.append(node('h3','📝 Original example sentences'));
@@ -202,10 +202,11 @@ function speak(){
  utterance.lang='ja-JP';utterance.rate=.8;const voice=speechSynthesis.getVoices().find(v=>v.lang.toLowerCase().startsWith('ja'));if(voice)utterance.voice=voice;speechSynthesis.speak(utterance)
 }
 function init(){
- for(const code of LANGS){const opt=node('option',(NAMES[code]||readName(code))+' ('+code+')');opt.value=code;$('lang').append(opt)}
+ languages.fill($('lang'),lang);
  $('level').value=level;$('lang').value=lang;
  $('level').onchange=e=>{level=e.target.value;storePrefs();u.searchParams.delete('kanji');load()};
- $('lang').onchange=e=>{lang=e.target.value;storePrefs();if(active){$('translate').textContent='🌍 Explain in '+(NAMES[lang]||readName(lang));$('translated').hidden=true;window.NextStepOfflineAI?.setLanguage(lang)}};
+ $('lang').onchange=e=>languages.set(e.target.value);
+ window.addEventListener(languages.event,e=>{lang=e.detail;$('lang').value=lang;if(active){$('translate').textContent='🌍 Explain in '+(NAMES[lang]||readName(lang));$('translated').hidden=true;window.NextStepOfflineAI?.setLanguage(lang)}});
  $('search').oninput=e=>{search=e.target.value;page=0;render()};
  $('prev').onclick=()=>{if(page>0){page--;render();$('kanjiCards').scrollIntoView({block:'start'})}};
  $('next').onclick=()=>{if((page+1)*PER_PAGE<filtered().length){page++;render();$('kanjiCards').scrollIntoView({block:'start'})}};

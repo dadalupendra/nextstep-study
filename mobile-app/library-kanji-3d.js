@@ -3,6 +3,7 @@
 (function(global){'use strict';
 const doc=document,API=global.NextStepDailySource,COMPOUNDS=global.NextStepKanjiCompounds;
 const node=(tag,cls,label)=>{const e=doc.createElement(tag);if(cls)e.className=cls;if(label!==undefined)e.textContent=String(label);return e};
+const mark=global.NextStepMeanings.mark;
 const getGloss=x=>API.getGloss(x||{}),getRead=x=>[...(x.onyomi||[]),...(x.kunyomi||[])].join(' · ');
 const state={level:'N2',items:[],lang:'ne',furigana:true,page:0,query:'',reviewMode:'all',current:null,related:[],request:0,learned:{}};
 function key(){return 'nextstep-kanji-3d-progress-v1-'+state.level}
@@ -18,19 +19,19 @@ function showExample(container,ex){
   ja.append(doc.createTextNode(f.slice(i)))
  }else ja.textContent=ex.ja||'';
  wrapper.append(ja);
- if(ex.en)wrapper.append(node('small',null,ex.en));
+ if(ex.en)wrapper.append(mark(node('small',null,ex.en),{ja:ex.ja,ne:ex.ne}));
  container.append(wrapper)
 }
-function field(parent,label,value){
+function field(parent,label,value,isMeaning=false){
  if(value===null||value===undefined||value===''||(Array.isArray(value)&&!value.length))return;
- const line=node('div','library-kanji-field');line.append(node('strong',null,label),node('span',null,Array.isArray(value)?value.join(' · '):value));parent.append(line)
+ const line=node('div','library-kanji-field');const content=node('span',null,Array.isArray(value)?value.join(' · '):value);line.append(node('strong',null,label),isMeaning?mark(content):content);parent.append(line)
 }
 function card(x){
  const article=node('article','library-kanji-card'+(state.learned[x.character]?' mastered':''));
  const button=node('button','library-kanji-flip');button.type='button';button.setAttribute('aria-label','Open '+x.character+' Kanji and compound words');
  const inside=node('span','library-kanji-inner');
  const face=node('span','library-kanji-front');face.append(node('small',null,state.level+' · 漢字'),node('b',null,x.character),node('small',null,'Tap → related words & examples'));
- const back=node('span','library-kanji-back');back.append(node('small',null,'音読み / 訓読み'),node('strong',null,getRead(x)||'No source reading'),node('small',null,getGloss(x).slice(0,100)));
+ const back=node('span','library-kanji-back');back.append(node('small',null,'音読み / 訓読み'),node('strong',null,getRead(x)||'No source reading'),mark(node('small',null,getGloss(x))));
  inside.append(face,back);button.append(inside);button.onclick=()=>openKanji(x);
  const actions=node('div','library-kanji-actions');
  const flip=node('button',null,'↻ Flip');flip.type='button';flip.onclick=()=>{article.classList.toggle('flipped');flip.setAttribute('aria-pressed',String(article.classList.contains('flipped')))};
@@ -96,7 +97,7 @@ function prepareDetail(item,type){
  const title=type==='kanji'?item.character:item.word;
  body.append(node('h2',null,title));
  const grid=node('div','library-kanji-details');
- field(grid,'English meaning / 意味',getGloss(item));
+ field(grid,'Meaning / 意味',getGloss(item),true);
  if(type==='kanji'){
   field(grid,'音読み / On-yomi',item.onyomi);field(grid,'訓読み / Kun-yomi',item.kunyomi);
   field(grid,'部首 / Radical',item.radical);field(grid,'画数 / Strokes',item.strokes);
@@ -146,7 +147,7 @@ function openKanji(item){
    words.slice(0,limit).forEach(item=>{
     const box=node('article','library-kanji-compound');
     box.append(node('strong',null,item.word),node('span','library-kanji-reading',item.reading||''),node('small','pill',item.levels.join(' · ')));
-    box.append(node('p',null,getGloss(item)));
+    box.append(mark(node('p',null,getGloss(item))));
     const example=API.validExamples(item);
     if(example.length)example.slice(0,2).forEach(e=>showExample(box,e));
     else box.append(node('p','hint','No verified full example in source.'));
@@ -170,5 +171,6 @@ function show({level,items,language,furigana}){
  state.level=level;state.items=items.filter(x=>x&&typeof x.character==='string'&&x.character.length===1);
  state.lang=language;state.furigana=furigana;state.page=0;state.query='';getProgress();draw()
 }
+window.addEventListener(global.NextStepLanguages.event,e=>{state.lang=e.detail});
 global.NextStepLibraryKanji3D={show};
 })(window);

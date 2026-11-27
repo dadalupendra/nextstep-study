@@ -17,7 +17,7 @@
 </section>
 <section class="controls" aria-label="Daily study settings">
 <label>🎓 JLPT Level<select id="level"><option>N5</option><option>N4</option><option>N3</option><option>N2</option><option>N1</option></select></label>
-<label>🌍 Translation language<select id="lang" aria-label="Language used for detailed explanations"></select></label>
+<label>🌍 Meaning language<select id="lang" aria-label="Meaning language"></select></label>
 <label>📚 Show<select id="filter"><option value="all">Kanji + Vocabulary</option><option value="kanji">Kanji only</option><option value="vocab">Vocabulary only</option><option value="pending">Not learned yet</option></select></label>
 <button class="action light" type="button" id="theme" aria-label="Toggle dark and light mode">🌙 Dark mode</button>
 <button class="action" type="button" id="furigana" aria-pressed="true">ふりがな ON</button>
@@ -49,7 +49,9 @@
 </dialog>
 </main><footer class="footer">NextStep Study · Original Japanese source and license information preserved with the existing N1–N5 study books.</footer>
 <script src="./data.js?v=4" defer></script>
+<script src="../mobile-app/shared-languages.js" defer></script>
 <script src="../mobile-app/translate.js?v=2" defer></script>
+<script src="../mobile-app/book-meanings.js" defer></script>
 <script src="./compounds.js?v=4" defer></script>
 <script src="./offline-ai.js?v=1" defer></script>
 <script src="./app.js?v=4" defer></script>

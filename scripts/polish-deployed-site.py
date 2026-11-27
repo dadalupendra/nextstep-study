@@ -51,6 +51,13 @@ def inject_backlink(text,level):
         text=text.replace("<body>","<body>"+link,1)
     return text
 
+def add_meaning_controls(text):
+    scripts = ("shared-languages", "translate", "book-meanings", "notebook-language")
+    tail = "".join(f'<script src="../mobile-app/{name}.js" defer></script>' for name in scripts)
+    end = text.rindex("</body>")
+    return text[:end] + tail + text[end:]
+
+
 for level in ("N4","N5"):
     filepath=ROOT/level/"index.html"
     s=filepath.read_text(encoding="utf-8")
@@ -62,7 +69,7 @@ for level in ("N4","N5"):
     assert "</body>" in s
     s=s[:s.rfind("</body>")]+'<script src="../assets/legacy-responsive.js" defer></script>\n'+s[s.rfind("</body>"):]
     assert "const D=" in s and "function render" in s
-    filepath.write_text(s,encoding="utf-8")
+    filepath.write_text(add_meaning_controls(s),encoding="utf-8")
     print(f"Enhanced {level}: {before:,} → {len(s):,} characters; original embedded lessons untouched.")
 
 level="N3"
@@ -85,5 +92,5 @@ replacement='const NEXTSTEP_N3_RESPONSIVE_CSS='+json.dumps(N3_CSS,ensure_ascii=F
 assert s.count(needle)==1
 s=s.replace(needle,replacement,1)
 assert "window.NEXTSTEP_N3_DATA=" in s and "<style>${NEXTSTEP_N3_RESPONSIVE_CSS}</style>" in s
-filepath.write_text(s,encoding="utf-8")
+filepath.write_text(add_meaning_controls(s),encoding="utf-8")
 print(f"Enhanced N3: {before:,} → {len(s):,} characters; shadow-root CSS only, 500 pages preserved.")

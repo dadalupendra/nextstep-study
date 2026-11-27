@@ -10,7 +10,7 @@ try{const saved=JSON.parse(localStorage.getItem(KEY)||"null");if(saved){storage=
 const esc=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const words=D?.words||[],kanji=D?.kanji||[],grammar=G?.patterns||[];
 const key=(book,page)=>book+"-"+page;
-const en=x=>'<span class="meaning-en">'+esc(x)+'</span>';
+const en=(x,ne='')=>'<span class="meaning-en"'+(ne?' data-ne="'+esc(ne)+'"':'')+'>'+esc(x)+'</span>';
 const ne=x=>'<span class="guidance-ne ne" lang="ne">'+esc(x)+'</span>';
 function range(book,page){
  const n=words.length;
@@ -46,7 +46,7 @@ function kanjiPage(page,printing){
    return '<div class="eyebrow">N2 Kanji Revision · Page '+page+' / 400</div><h1>漢字 復習 · Review</h1>'+
    '<p class="high">Revision of N2-tagged characters '+(start+1)+'–'+end+'. There are 398 distinct N2-tagged kanji in this sourced list; these two pages are additional practice, not invented N2 kanji.</p>'+
    ne("यी दुई पृष्ठमा N2 का वास्तविक कान्जी दोहोर्याएर पढ्ने, अर्थ सम्झने र लेख्ने अभ्यास गर्नुहोस्।")+
-   '<table class="word-table"><thead><tr><th>N2 Kanji</th><th>English meaning</th><th>On-yomi / Kun-yomi</th></tr></thead><tbody>'+
+   '<table class="word-table"><thead><tr><th>N2 Kanji</th><th>Meaning</th><th>On-yomi / Kun-yomi</th></tr></thead><tbody>'+
    focus.map(k=>'<tr><td class="ja">'+esc(k[0])+'</td><td>'+en((k[2]||[]).join('; '))+'</td><td class="ja">'+esc([...(k[3]||[]),...(k[4]||[])].join('、'))+'</td></tr>').join('')+'</tbody></table>'+
    '<div class="task">Write five N2-character compounds you remember. Then take the 50-question test for Chapter 10.</div>'+commonFooter('kanji',page,printing);
  }
@@ -63,7 +63,7 @@ function kanjiPage(page,printing){
  (!printing&&focus?sayButton(focus[0]):'')+'</div></div>'+
  '<div class="high"><b>Meaning and reading</b><p>'+en('Read on-yomi and kun-yomi above, then recognize the character in the N2-level words below when available.')+'</p>'+
  ne("माथिका पढाइ सम्झेर N2 शब्दहरूको अर्थ मिलाउनुहोस्।")+'</div>'+
- (examples.length?'<h2>N2-tagged vocabulary with '+esc(char)+'</h2><table class="word-table"><thead><tr><th>N2 Word / Reading</th><th>English meaning and example</th></tr></thead><tbody>'+
+ (examples.length?'<h2>N2-tagged vocabulary with '+esc(char)+'</h2><table class="word-table"><thead><tr><th>N2 Word / Reading</th><th>Meaning and example</th></tr></thead><tbody>'+
  examples.map((x,i)=>card(x,printing,i===0)).join('')+'</tbody></table>':
  '<div class="card"><b>N2 word-matching note</b><p class="gloss">This N2-classified kanji has no matching word in this limited N2-only vocabulary dataset. Study its recorded readings and meaning; prerequisite-level words are deliberately not added as target entries.</p></div>')+
  '<h2>Kanji writing · 書き取り</h2><div class="gridwrite">'+Array.from({length:5},(_,i)=>'<span>'+(i?'':esc(char))+'</span>').join('')+'</div>'+
@@ -81,7 +81,7 @@ function vocabPage(page,printing){
  '<span class="ja" lang="ja">読み方・意味・例文を確認して覚えましょう。</span><br>'+
  ne("यो पाठका सबै N2 शब्दहरू र उदाहरण वाक्य ध्यानपूर्वक पढ्नुहोस्।")+'</p>'+
  '<div class="flex">'+(printing?'':sayButton(first[0]))+'<span class="mini">Words '+(Math.floor((page-1)*words.length/300)+1)+'–'+Math.floor(page*words.length/300)+'</span></div>'+
- '<table class="word-table"><thead><tr><th>日本語 / Reading</th><th>English gloss / Examples</th></tr></thead><tbody>'+
+ '<table class="word-table"><thead><tr><th>日本語 / Reading</th><th>Meaning / Examples</th></tr></thead><tbody>'+
  entries.map((x,i)=>card(x,printing,i<2)).join('')+'</tbody></table>'+
  '<div class="card"><h3>Recall and apply / 練習</h3><p>① Read '+esc(first[0])+' and recall its meaning.</p>'+
  '<p>② What N2 word means: '+en(last[2])+'?</p>'+
@@ -116,12 +116,12 @@ function grammarPage(page,printing){
    model(examples[0]||["",""])+
    '<div class="task"><b>Review questions</b><p>① Explain the nuance in Nepali and English.</p><p>② Complete the structure: '+esc(formation)+'</p><p>③ Create three original sentences and compare with the source examples.</p></div>';
  }else if(where.phase===0){
-   part='<div class="high"><h2>Meaning and formation / 意味・接続</h2><p>'+en(meaning)+'</p><p>'+ne(meaningNepali)+'</p></div>'+
+   part='<div class="high"><h2>Meaning and formation / 意味・接続</h2><p>'+en(meaning,meaningNepali)+'</p><p>'+ne(meaningNepali)+'</p></div>'+
     '<h2>Sentence formation</h2><div class="card"><p>'+esc(formation)+'</p><p class="gloss">Usage: '+en(note)+'</p></div>'+
     '<h2>Authentic N2-level examples</h2>'+examples.map(model).join('')+
     '<div class="task"><b>Analysis practice</b><p>Identify the grammar connection and the relationship between clauses. Compare with similar patterns from this chapter.</p>'+ne("बनावट, अर्थ र उदाहरणलाई मिलाएर पढ्नुहोस्।")+'</div>';
  }else{
-   part='<h2>Nuance and interpretation / 用法</h2><div class="high"><p>'+en(meaning)+'</p><p>'+ne(meaningNepali)+'</p><p><b>Formation:</b> '+esc(formation)+'</p><p><b>Usage:</b> '+en(note)+'</p></div>'+
+   part='<h2>Nuance and interpretation / 用法</h2><div class="high"><p>'+en(meaning,meaningNepali)+'</p><p>'+ne(meaningNepali)+'</p><p><b>Formation:</b> '+esc(formation)+'</p><p><b>Usage:</b> '+en(note)+'</p></div>'+
     '<h2>Read and analyze</h2>'+examples.slice(0,2).map(model).join('')+
     '<div class="task"><b>Try it yourself</b><p>① Rewrite the first example in your own words.</p><p>② Create two original Japanese sentences using the target grammar.</p><p>③ Explain the difference in meaning if the target grammar is removed.</p>'+ne("कम्तीमा दुईवटा नयाँ जापानी वाक्य बनाउनुहोस्।")+'</div>';
  }
@@ -150,7 +150,7 @@ function boot(){
    viewer.querySelectorAll('.guidance-ne').forEach(x=>x.classList.toggle('hide',!storage.showNepali));
    $("toggle-en").setAttribute('aria-pressed',String(storage.showEnglish));
    $("toggle-ne").setAttribute('aria-pressed',String(storage.showNepali));
-   $("toggle-en").textContent='English '+(storage.showEnglish?'✓':'×');
+   $("toggle-en").textContent='Meaning '+(storage.showEnglish?'✓':'×');
    $("toggle-ne").textContent='नेपाली '+(storage.showNepali?'✓':'×');
  }
  function changePage(p){current=Math.max(1,Math.min(LIMITS[book],Number(p)||1));storage.page[book]=current;save();render()}
